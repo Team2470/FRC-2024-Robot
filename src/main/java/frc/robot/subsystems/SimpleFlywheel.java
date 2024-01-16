@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.CAN;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.FlyWheelConstants;
 
+import java.util.function.DoubleSupplier;
 
 import com.revrobotics.CANSparkFlex;
 import com.revrobotics.RelativeEncoder;
@@ -21,23 +22,24 @@ import com.revrobotics.CANSparkLowLevel.PeriodicFrame;
 
 public class SimpleFlywheel extends SubsystemBase {
   private final CANSparkFlex m_leader;
-  private final CANSparkFlex m_follower;
+  //private final CANSparkFlex m_follower;
 
   private final RelativeEncoder m_encoder;
+  private final boolean m_isLeft;
 
-  public SimpleFlywheel() {
-    m_leader = new CANSparkFlex(FlyWheelConstants.kLeaderID, MotorType.kBrushless);
+  public SimpleFlywheel(int canID, boolean isLeft) {
+    m_leader = new CANSparkFlex(canID, MotorType.kBrushless);
     m_leader.restoreFactoryDefaults();
-    m_follower = new CANSparkFlex(FlyWheelConstants.kFollowerID, MotorType.kBrushless);
-    m_follower.restoreFactoryDefaults();
+    //m_follower = new CANSparkFlex(FlyWheelConstants.kFollowerID, MotorType.kBrushless);
+    //m_follower.restoreFactoryDefaults();
 
-    m_follower.follow(m_leader, true);
+    //m_follower.follow(m_leader, true);
 
-    m_leader.setInverted(true);
-    
+    m_leader.setInverted(!isLeft);
+    m_isLeft = isLeft;
 
     m_leader.setSmartCurrentLimit(40);
-    m_follower.setSmartCurrentLimit(40);
+    //m_follower.setSmartCurrentLimit(40);
 
     // m_follower.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 100);
     // m_follower.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 500);
@@ -45,7 +47,7 @@ public class SimpleFlywheel extends SubsystemBase {
 
     m_encoder = m_leader.getEncoder();
     m_leader.burnFlash();
-    m_follower.burnFlash();
+    //m_follower.burnFlash();
   }
 
   public double getVelocity() {
@@ -55,14 +57,14 @@ public class SimpleFlywheel extends SubsystemBase {
 
   @Override
   public void periodic() {
-    SmartDashboard.putNumber("Flywheel Velocity", getVelocity());
+    SmartDashboard.putNumber("Flywheel " + (m_isLeft ? "Left" : "Right")+" Velocity", getVelocity());
   }
 
   public void setOutputVoltage(double OutputVoltage) {
     m_leader.setVoltage(OutputVoltage);
-    SmartDashboard.putNumber("Flywheel output voltage", OutputVoltage);
+    SmartDashboard.putNumber("Flywheel "+ (m_isLeft ? "Left" : "Right") +  " output voltage", OutputVoltage);
   }
-
+ 
   public void stop() {
     setOutputVoltage(0);
   }
@@ -73,13 +75,17 @@ public class SimpleFlywheel extends SubsystemBase {
    *
    * @return a command
    */
-  public Command spinCommand(double OutputVoltage) {
+  public Command spinCommand(DoubleSupplier OutputVoltageSupplier) {
 
 
     // Inline construction of command goes here.
     // Subsystem::RunOnce implicitly requires `this` subsystem.
     return Commands.runEnd(
-        () -> this.setOutputVoltage(OutputVoltage), this::stop, this);
+        () -> this.setOutputVoltage(OutputVoltageSupplier.getAsDouble()), this::stop, this);
         
+  }
+
+  public Command spinCommand(double OutputVoltage) {
+    return spinCommand(()-> OutputVoltage);
   }
 }

@@ -14,8 +14,8 @@ package frc.robot;
  */
 public final class Constants {
   public static class FlyWheelConstants {
-    public static final int kLeaderID = 1;
-    public static final int kFollowerID = 2;
+    public static final int kRightID = 1;
+    public static final int kLeftID = 2;
   }
 }
 
