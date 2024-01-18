@@ -7,10 +7,12 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.CAN;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.FlyWheelConstants;
 
+import java.util.ResourceBundle.Control;
 import java.util.function.DoubleSupplier;
 
 import com.revrobotics.CANSparkFlex;
@@ -21,11 +23,29 @@ import com.revrobotics.CANSparkLowLevel.PeriodicFrame;
 
 
 public class SimpleFlywheel extends SubsystemBase {
+  // private final int kOpenLoop = 0;
+  // private final int kPID = 1;
+  // private final int kStateSpace = 2;
+  private enum ControlMode {
+    kOpenLoop, 
+    kPID,
+    kStateSpace
+  }
+
   private final CANSparkFlex m_leader;
   //private final CANSparkFlex m_follower;
 
   private final RelativeEncoder m_encoder;
   private final boolean m_isLeft;
+
+  private ControlMode m_controlMode = ControlMode.kOpenLoop;
+  private double m_demand;
+
+  //
+  // PID
+  //
+
+  private final PIDController m_pidController = new PIDController(FlyWheelConstants.kP, FlyWheelConstants.kI, FlyWheelConstants.kD);
 
   public SimpleFlywheel(int canID, boolean isLeft) {
     m_leader = new CANSparkFlex(canID, MotorType.kBrushless);
@@ -57,12 +77,41 @@ public class SimpleFlywheel extends SubsystemBase {
 
   @Override
   public void periodic() {
+    // Determine output voltage
+    double outputVoltage = 0;
+
+    switch (m_controlMode) {
+      case kOpenLoop:
+        // Do openloop stuff here
+        outputVoltage = m_demand;
+        break;
+    
+      case kPID:
+        // Do PID stuff 
+        outputVoltage = FlyWheelConstants.kF * m_demand + m_pidController.calculate(getVelocity(), m_demand);
+        
+        break;
+      case kStateSpace:
+        // Do statespace stuff here
+        break;
+      default:
+        // What happened!?
+        break;
+    }
+
+
+    // Do something with the motor    
+    m_leader.setVoltage(outputVoltage);
+
+    
+    // Publish to smart dashboard
     SmartDashboard.putNumber("Flywheel " + (m_isLeft ? "Left" : "Right")+" Velocity", getVelocity());
+    SmartDashboard.putNumber("Flywheel "+ (m_isLeft ? "Left" : "Right") +  " output voltage", outputVoltage);
   }
 
   public void setOutputVoltage(double OutputVoltage) {
-    m_leader.setVoltage(OutputVoltage);
-    SmartDashboard.putNumber("Flywheel "+ (m_isLeft ? "Left" : "Right") +  " output voltage", OutputVoltage);
+    m_controlMode = ControlMode.kOpenLoop;
+    m_demand = OutputVoltage;
   }
  
   public void stop() {
@@ -75,7 +124,7 @@ public class SimpleFlywheel extends SubsystemBase {
    *
    * @return a command
    */
-  public Command spinCommand(DoubleSupplier OutputVoltageSupplier) {
+  public Command openLoopCommand(DoubleSupplier OutputVoltageSupplier) {
 
 
     // Inline construction of command goes here.
@@ -85,7 +134,7 @@ public class SimpleFlywheel extends SubsystemBase {
         
   }
 
-  public Command spinCommand(double OutputVoltage) {
-    return spinCommand(()-> OutputVoltage);
+  public Command openLoopCommand(double OutputVoltage) {
+    return openLoopCommand(()-> OutputVoltage);
   }
 }
