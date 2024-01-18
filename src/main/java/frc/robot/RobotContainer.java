@@ -39,6 +39,8 @@ public class RobotContainer {
 
     SmartDashboard.putNumber("Select Left Voltage", 0);
     SmartDashboard.putNumber("Select Right Voltage", 0);
+    SmartDashboard.putNumber("Select Left RPM", 100);
+    SmartDashboard.putNumber("Select Right RPM", 0);
   }
 
   /**
@@ -58,7 +60,8 @@ public class RobotContainer {
     //m_controller.rightBumper().whileTrue(m_simpleFlywheel.spinCommand(-2));
     m_controller.rightTrigger().whileTrue(m_simpleFlywheelLeft.openLoopCommand(()-> SmartDashboard.getNumber("Select Left Voltage", 0)));
     m_controller.rightTrigger().whileTrue(m_simpleFlywheelRight.openLoopCommand(()-> SmartDashboard.getNumber("Select Right Voltage", 0)));
-
+    m_controller.leftTrigger().whileTrue(m_simpleFlywheelLeft.pidCommand(()-> SmartDashboard.getNumber("Select Left RPM", 0)));
+    m_controller.leftTrigger().whileTrue(m_simpleFlywheelRight.pidCommand(()-> SmartDashboard.getNumber("Select Right RPM", 0)));
 
   }
 
