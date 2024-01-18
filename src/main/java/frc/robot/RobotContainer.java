@@ -56,8 +56,8 @@ public class RobotContainer {
     // m_controller.x().whileTrue(m_simpleFlywheel.spinCommand(6));
     // m_controller.y().whileTrue(m_simpleFlywheel.spinCommand(8));
     //m_controller.rightBumper().whileTrue(m_simpleFlywheel.spinCommand(-2));
-    m_controller.rightTrigger().whileTrue(m_simpleFlywheelLeft.spinCommand(()-> SmartDashboard.getNumber("Select Left Voltage", 0)));
-    m_controller.rightTrigger().whileTrue(m_simpleFlywheelRight.spinCommand(()-> SmartDashboard.getNumber("Select Right Voltage", 0)));
+    m_controller.rightTrigger().whileTrue(m_simpleFlywheelLeft.openLoopCommand(()-> SmartDashboard.getNumber("Select Left Voltage", 0)));
+    m_controller.rightTrigger().whileTrue(m_simpleFlywheelRight.openLoopCommand(()-> SmartDashboard.getNumber("Select Right Voltage", 0)));
 
 
   }

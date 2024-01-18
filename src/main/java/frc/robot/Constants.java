@@ -16,6 +16,12 @@ public final class Constants {
   public static class FlyWheelConstants {
     public static final int kRightID = 1;
     public static final int kLeftID = 2;
+
+    public static final double kP = 0;
+    public static final double kI = 0;
+    public static final double kD = 0;
+    public static final double kF = 0;
+
   }
 }
 
