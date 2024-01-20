@@ -10,22 +10,22 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import java.util.ResourceBundle.Control;
 import java.util.function.DoubleSupplier;
 
-import com.revrobotics.CANSparkFlex;
+import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
 
 public class SimpleShooterFeeder extends SubsystemBase {
-    private final CANSparkFlex m_SimpleShooterFeeder;
+    private final CANSparkMax m_SimpleShooterFeeder;
     private final RelativeEncoder m_Encoder;
 
     public SimpleShooterFeeder(int canID) {
 
-        m_SimpleShooterFeeder = new CANSparkFlex(canID:1, MotorType.kBrushless);
+        m_SimpleShooterFeeder = new CANSparkMax(canID, MotorType.kBrushless);
         m_SimpleShooterFeeder.restoreFactoryDefaults();
-        m_SimpleShooterFeeder.setInverted(isInverted:false);
-        m_SimpleShooterFeeder.setSmartCurrentLimit(limit: 40);
-        m_encoder = m_SimpleShooterFeeder.getEncoder();
+        m_SimpleShooterFeeder.setInverted(false);
+        m_SimpleShooterFeeder.setSmartCurrentLimit(40);
+        m_Encoder = m_SimpleShooterFeeder.getEncoder();
         m_SimpleShooterFeeder.burnFlash();
 
 
@@ -33,34 +33,31 @@ public class SimpleShooterFeeder extends SubsystemBase {
     }
 
     public double getVelocity() {
-        return m_encoder.getVelocity();
+        return m_Encoder.getVelocity();
     }
 
     @Override
     public void periodic() {
-        SmartDashboard.putNumber(key:"Feeder Velocity", getVelocity());
-    }
-    public Command SimpleShooterFeeder_forwards() {
-        return Commands.runEnd(run:null, end:null, ...requirments:null)
+        SmartDashboard.putNumber("Feeder Velocity", getVelocity());
     }
 
 
-    public void feedshooter() {
-        m_SimpleShooterFeeder.setVoltage(outputVoltage:5);
+    public void feedShooter() {
+        m_SimpleShooterFeeder.setVoltage(5);
     }
-    public void reverse_feeder() {
-        m_SimpleShooterFeeder.setVoltage(outputVoltage:(-5));
+    public void reverseFeeder() {
+        m_SimpleShooterFeeder.setVoltage((-5));
     }
 
     public void stop() {
-        m_SimpleShooterFeeder.stopMotor()
+        m_SimpleShooterFeeder.stopMotor();
 
     }
 
 
     public Command SimpleShooterFeeder_forwardsCommand() {
         return Commands.runEnd(
-            ()-> this.SimpleShooterFeeder_forwards(),
+            ()-> this.feedShooter(),
             this::stop,
             this);
     }
@@ -68,7 +65,7 @@ public class SimpleShooterFeeder extends SubsystemBase {
 
     public Command SimpleShooterFeeder_reverseCommand() {
         return Commands.runEnd(
-            ()-> this.SimpleShooterFeeder_reverse(),
+            ()-> this.reverseFeeder(),
             this::stop,
             this);
     }

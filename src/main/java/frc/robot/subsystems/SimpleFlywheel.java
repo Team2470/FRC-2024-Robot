@@ -8,17 +8,14 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.wpilibj.CAN;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.FlyWheelConstants;
 
-import java.util.ResourceBundle.Control;
 import java.util.function.DoubleSupplier;
 
 import com.revrobotics.CANSparkFlex;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkLowLevel.MotorType;
-import com.revrobotics.CANSparkLowLevel.PeriodicFrame;
 
 
 
@@ -50,20 +47,13 @@ public class SimpleFlywheel extends SubsystemBase {
   public SimpleFlywheel(int canID, boolean isLeft) {
     m_leader = new CANSparkFlex(canID, MotorType.kBrushless);
     m_leader.restoreFactoryDefaults();
-    //m_follower = new CANSparkFlex(FlyWheelConstants.kFollowerID, MotorType.kBrushless);
-    //m_follower.restoreFactoryDefaults();
-
-    //m_follower.follow(m_leader, true);
+  
 
     m_leader.setInverted(!isLeft);
     m_isLeft = isLeft;
 
     m_leader.setSmartCurrentLimit(40);
-    //m_follower.setSmartCurrentLimit(40);
 
-    // m_follower.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 100);
-    // m_follower.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 500);
-    // m_follower.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 500);
 
     m_encoder = m_leader.getEncoder();
     m_leader.burnFlash();

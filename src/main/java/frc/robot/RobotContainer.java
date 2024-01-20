@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants.FlyWheelConstants;
 import frc.robot.subsystems.SimpleFlywheel;
+import frc.robot.subsystems.SimpleShooterFeeder;
 
 
 
@@ -25,10 +26,12 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final SimpleFlywheel m_simpleFlywheelLeft = new SimpleFlywheel(FlyWheelConstants.kLeftID, true);
   private final SimpleFlywheel m_simpleFlywheelRight = new SimpleFlywheel(FlyWheelConstants.kRightID, false);
+  private final SimpleShooterFeeder m_SimpleShooterFeeder = new SimpleShooterFeeder(1);
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_controller = new CommandXboxController(0);
   private final CommandXboxController m_sysIDcontroller = new CommandXboxController(1);
+
 
   
 
@@ -55,10 +58,9 @@ public class RobotContainer {
     // m_controller.b().whileTrue(m_simpleFlywheel.spinCommand(4));
     // m_controller.x().whileTrue(m_simpleFlywheel.spinCommand(6));
     // m_controller.y().whileTrue(m_simpleFlywheel.spinCommand(8));
-    //m_controller.rightBumper().whileTrue(m_simpleFlywheel.spinCommand(-2));
-    m_controller.rightTrigger().whileTrue(m_simpleFlywheelLeft.openLoopCommand(()-> SmartDashboard.getNumber("Select Left Voltage", 0)));
-    m_controller.rightTrigger().whileTrue(m_simpleFlywheelRight.openLoopCommand(()-> SmartDashboard.getNumber("Select Right Voltage", 0)));
-
+    // m_controller.rightBumper().whileTrue(m_simpleFlywheel.spinCommand(-2));
+    m_controller.a().whileTrue(m_SimpleShooterFeeder.SimpleShooterFeeder_forwardsCommand());
+    m_controller.b().whileTrue(m_SimpleShooterFeeder.SimpleShooterFeeder_reverseCommand());
 
   }
 
