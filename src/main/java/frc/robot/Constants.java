@@ -25,5 +25,24 @@ public final class Constants {
     public static final double kF = 12.0/6784.0;
 
   }
+  public static class ShooterPivotConstants {
+    public static final int MotorID = 2;
+    public static final int EncoderID = 2;
+    public static final String MotorCANBus = "rio"; 
+    public static final String EncoderCANBus = "rio";
+    public static final int reverseSoftLimit = 0;
+    public static final int forwardSoftLimit = 0;
+    public static final boolean encoderDirection = true;
+    public static final int encoderOffset = 0;
+
+
+
+
+    public static final double kP = 0;
+    public static final double kI = 0;
+    public static final double kD = 0;
+    public static final double kF = 0;
+
+  }
 }
 
