@@ -41,6 +41,10 @@ public class RobotContainer {
     SmartDashboard.putNumber("Select Right Voltage", 0);
     SmartDashboard.putNumber("Select Left RPM", 100);
     SmartDashboard.putNumber("Select Right RPM", 0);
+    SmartDashboard.putNumber("kP", FlyWheelConstants.kP);
+    SmartDashboard.putNumber("kI", FlyWheelConstants.kI);
+    SmartDashboard.putNumber("kD", FlyWheelConstants.kD);
+    SmartDashboard.putNumber("kF", FlyWheelConstants.kF);
   }
 
   /**
