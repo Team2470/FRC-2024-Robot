@@ -5,15 +5,15 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-import com.revrobotics.CANSparkFlex;
+import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
 public class IntakeSubsystem extends SubsystemBase {
-    private final CANSparkFlex m_intake; 
+    private final CANSparkMax m_intake; 
     private final RelativeEncoder m_encoder;
     public IntakeSubsystem(int canID) {
-        m_intake = new CANSparkFlex(canID, MotorType.kBrushless);
+        m_intake = new CANSparkMax(canID, MotorType.kBrushless);
 
         m_intake.restoreFactoryDefaults();
         m_intake.setInverted(false);
@@ -49,7 +49,7 @@ public class IntakeSubsystem extends SubsystemBase {
   }
     public Command test_reverseCommand() {
         return Commands.runEnd(
-        ()-> this.intake(),
+        ()-> this.reverse_intake(),
         this::stop,
         this);
   }

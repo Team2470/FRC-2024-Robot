@@ -4,16 +4,12 @@
 
 package frc.robot;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-import frc.robot.Constants.FlyWheelConstants;
-import frc.robot.subsystems.SimpleFlywheel;
-
-
-
+//import frc.robot.subsystems.SimpleFlywheel;
+import frc.robot.subsystems.IntakeSubsystem;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -23,22 +19,16 @@ import frc.robot.subsystems.SimpleFlywheel;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  private final SimpleFlywheel m_simpleFlywheelLeft = new SimpleFlywheel(FlyWheelConstants.kLeftID, true);
-  private final SimpleFlywheel m_simpleFlywheelRight = new SimpleFlywheel(FlyWheelConstants.kRightID, false);
-
+  //private final SimpleFlywheel m_simpleFlywheel = new SimpleFlywheel();
+  private final IntakeSubsystem m_intake = new IntakeSubsystem(1); 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_controller = new CommandXboxController(0);
-  private final CommandXboxController m_sysIDcontroller = new CommandXboxController(1);
-
-  
-
+  private final CommandXboxController m_sysIDcontroller  = new CommandXboxController(1);
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+  
     // Configure the trigger bindings
     configureBindings();
-
-    SmartDashboard.putNumber("Select Left Voltage", 0);
-    SmartDashboard.putNumber("Select Right Voltage", 0);
   }
 
   /**
@@ -51,15 +41,14 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    // m_controller.a().whileTrue(m_simpleFlywheel.spinCommand(2));
-    // m_controller.b().whileTrue(m_simpleFlywheel.spinCommand(4));
-    // m_controller.x().whileTrue(m_simpleFlywheel.spinCommand(6));
-    // m_controller.y().whileTrue(m_simpleFlywheel.spinCommand(8));
-    //m_controller.rightBumper().whileTrue(m_simpleFlywheel.spinCommand(-2));
-    m_controller.rightTrigger().whileTrue(m_simpleFlywheelLeft.openLoopCommand(()-> SmartDashboard.getNumber("Select Left Voltage", 0)));
-    m_controller.rightTrigger().whileTrue(m_simpleFlywheelRight.openLoopCommand(()-> SmartDashboard.getNumber("Select Right Voltage", 0)));
+   // m_controller.a().whileTrue(m_simpleFlywheel.spinCommand(2));
+   // m_controller.b().whileTrue(m_simpleFlywheel.spinCommand(4));
+   // m_controller.x().whileTrue(m_simpleFlywheel.spinCommand(6));
+   // m_controller.y().whileTrue(m_simpleFlywheel.spinCommand(8));
 
-
+  m_controller.a().whileTrue(m_intake.test_forwardsCommand());
+  m_controller.b().whileTrue(m_intake.test_reverseCommand());
+  
   }
 
   /**
@@ -68,8 +57,11 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    // An example command will be run in autonomous
     return Commands.print("No autonomous command configured");
   }
-  
+public void teleopInit(){
+
+}
+
+
 }
