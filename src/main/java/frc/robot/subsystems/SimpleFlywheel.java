@@ -55,7 +55,7 @@ public class SimpleFlywheel extends SubsystemBase {
 
     //m_follower.follow(m_leader, true);
 
-    m_leader.setInverted(!isLeft);
+    m_leader.setInverted(isLeft);
     m_isLeft = isLeft;
 
     m_leader.setSmartCurrentLimit(40);
@@ -71,7 +71,7 @@ public class SimpleFlywheel extends SubsystemBase {
   }
 
   public double getVelocity() {
-    return m_encoder.getVelocity();
+    return m_encoder.getVelocity()*(30.0/18.0);
   }
 
 
