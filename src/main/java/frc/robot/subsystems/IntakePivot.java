@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.CAN;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
 import frc.robot.Constants.FlyWheelConstants;
+import frc.robot.Constants.IntakePivotConstants;
 import frc.robot.Constants.ShooterPivotConstants;
 
 import java.util.ResourceBundle.Control;
@@ -32,17 +33,13 @@ import com.revrobotics.CANSparkLowLevel.PeriodicFrame;
 
 
 
-public class ShooterPivot extends SubsystemBase {
-  // private final int kOpenLoop = 0;
-  // private final int kPID = 1;
-  // private final int kStateSpace = 2;
+public class IntakePivot extends SubsystemBase {
   private enum ControlMode {
     kOpenLoop, 
     kPID
   }
 
   private final WPI_TalonFX m_motor;
-  //private final CANSparkFlex m_follower;
 
   private final CANCoder m_encoder;
 
@@ -53,32 +50,35 @@ public class ShooterPivot extends SubsystemBase {
   // PID
   //
 
-  private final PIDController m_pidController = new PIDController(ShooterPivotConstants.kP, ShooterPivotConstants.kI, ShooterPivotConstants.kD);
+  private final PIDController m_pidController = new PIDController(IntakePivotConstants.kP, IntakePivotConstants.kI, IntakePivotConstants.kD);
 
-  public ShooterPivot() {
-    m_motor = new WPI_TalonFX(Constants.ShooterPivotConstants.MotorID, Constants.ShooterPivotConstants.MotorCANBus);
+  public IntakePivot() {
+    m_motor = new WPI_TalonFX(Constants.IntakePivotConstants.MotorID, Constants.IntakePivotConstants.MotorCANBus);
     m_motor.configFactoryDefault();
     m_motor.setInverted(false);
     m_motor.setNeutralMode(NeutralMode.Brake);
 
-    m_encoder = new CANCoder(Constants.ShooterPivotConstants.EncoderID, Constants.ShooterPivotConstants.EncoderCANBus);
+    m_encoder = new CANCoder(Constants.IntakePivotConstants.EncoderID, Constants.IntakePivotConstants.EncoderCANBus);
     m_encoder.configFactoryDefault();
 
     m_motor.configForwardSoftLimitEnable(true);
     m_motor.configReverseSoftLimitEnable(true);
-    m_motor.configReverseSoftLimitThreshold(ShooterPivotConstants.reverseSoftLimit);
-    m_motor.configForwardSoftLimitThreshold(ShooterPivotConstants.forwardSoftLimit);
+    m_motor.configReverseSoftLimitThreshold(IntakePivotConstants.reverseSoftLimit);
+    m_motor.configForwardSoftLimitThreshold(IntakePivotConstants.forwardSoftLimit);
     m_motor.setNeutralMode(NeutralMode.Brake);
 
 
     m_encoder.configFactoryDefault();
-    m_encoder.configSensorDirection(ShooterPivotConstants.encoderDirection);
-    m_encoder.configMagnetOffset(ShooterPivotConstants.encoderOffset);
+    m_encoder.configSensorDirection(IntakePivotConstants.encoderDirection);
+    m_encoder.configMagnetOffset(IntakePivotConstants.encoderOffset);
     m_encoder.configAbsoluteSensorRange(AbsoluteSensorRange.Signed_PlusMinus180);
     m_encoder.configSensorInitializationStrategy(SensorInitializationStrategy.BootToAbsolutePosition);
 
+    //Tells to use the non-motor encoder
     m_motor.configRemoteFeedbackFilter(m_encoder, 0);
+    //Tells what encoder to use
     m_motor.configSelectedFeedbackSensor(RemoteFeedbackDevice.RemoteSensor0);
+    //??
     m_motor.setSensorPhase(true);
   }
 
@@ -112,13 +112,13 @@ public class ShooterPivot extends SubsystemBase {
     // Do something with the motor    
     m_motor.setVoltage(outputVoltage);
 
-    SmartDashboard.putNumber("Shooter Pivot" + " encoderAbosoluteAngle", m_encoder.getAbsolutePosition());
-    SmartDashboard.putNumber("Shooter Pivot" + " encoderAngle", m_encoder.getPosition());
-    SmartDashboard.putNumber("Shooter Pivot" + " Motor Selected Sensor position", m_motor.getSelectedSensorPosition());
-    SmartDashboard.putNumber("Shooter Pivot" + " Motor Error", getErrorAngle());
-    SmartDashboard.putNumber("Shooter Pivot" + " get measurement", getAngle());
-    SmartDashboard.putNumber("shooter Pivot" + " Motor Output Voltage", outputVoltage);
-    SmartDashboard.putNumber("shooter Pivot" + " Motor Setpoint Position", m_demand);
+    SmartDashboard.putNumber("Intake Pivot encoderAbosoluteAngle", m_encoder.getAbsolutePosition());
+    SmartDashboard.putNumber("Intake Pivot encoderAngle", m_encoder.getPosition());
+    SmartDashboard.putNumber("Intake Pivot Motor Selected Sensor position", m_motor.getSelectedSensorPosition());
+    SmartDashboard.putNumber("Intake Pivot Motor Error", getErrorAngle());
+    SmartDashboard.putNumber("Intake Pivot Get Measurement", getAngle());
+    SmartDashboard.putNumber("Intake Pivot Motor Output Voltage", outputVoltage);
+    SmartDashboard.putNumber("Intake Pivot Motor Setpoint Position", m_demand);
   }
 
   public double getErrorAngle(){
