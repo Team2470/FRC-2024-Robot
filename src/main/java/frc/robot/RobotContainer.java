@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants.FlyWheelConstants;
 import frc.robot.subsystems.SimpleFlywheel;
 import frc.robot.subsystems.SimpleShooterFeeder;
+import frc.robot.subsystems.TimeOfFlightSensorTest;
 
 
 
@@ -24,9 +25,10 @@ import frc.robot.subsystems.SimpleShooterFeeder;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  private final SimpleFlywheel m_simpleFlywheelLeft = new SimpleFlywheel(FlyWheelConstants.kLeftID, true);
-  private final SimpleFlywheel m_simpleFlywheelRight = new SimpleFlywheel(FlyWheelConstants.kRightID, false);
+  //private final SimpleFlywheel m_simpleFlywheelLeft = new SimpleFlywheel(FlyWheelConstants.kLeftID, true);
+  //private final SimpleFlywheel m_simpleFlywheelRight = new SimpleFlywheel(FlyWheelConstants.kRightID, false);
   private final SimpleShooterFeeder m_SimpleShooterFeeder = new SimpleShooterFeeder(1);
+  private final TimeOfFlightSensorTest m_TOF1 = new TimeOfFlightSensorTest();
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_controller = new CommandXboxController(0);
@@ -61,6 +63,7 @@ public class RobotContainer {
     // m_controller.rightBumper().whileTrue(m_simpleFlywheel.spinCommand(-2));
     m_controller.a().whileTrue(m_SimpleShooterFeeder.SimpleShooterFeeder_forwardsCommand());
     m_controller.b().whileTrue(m_SimpleShooterFeeder.SimpleShooterFeeder_reverseCommand());
+    m_controller.x().whileTrue(m_TOF1.sequenceTest(m_SimpleShooterFeeder));
 
   }
 

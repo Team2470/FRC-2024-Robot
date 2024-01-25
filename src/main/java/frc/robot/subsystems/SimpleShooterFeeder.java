@@ -35,10 +35,20 @@ public class SimpleShooterFeeder extends SubsystemBase {
     public double getVelocity() {
         return m_Encoder.getVelocity();
     }
+    public double getEncoderPosition() {
+        return m_Encoder.getPosition();
+    }
+
+    public double getEncoderCPR() {
+        return m_Encoder.getCountsPerRevolution();
+    }
+
 
     @Override
     public void periodic() {
         SmartDashboard.putNumber("Feeder Velocity", getVelocity());
+        SmartDashboard.putNumber("Encoder Position", getEncoderPosition());
+        SmartDashboard.putNumber("Encoder Counts Per Revolution", getEncoderCPR());
     }
 
 
@@ -66,6 +76,13 @@ public class SimpleShooterFeeder extends SubsystemBase {
     public Command SimpleShooterFeeder_reverseCommand() {
         return Commands.runEnd(
             ()-> this.reverseFeeder(),
+            this::stop,
+            this);
+    }
+
+    public Command SimpleShooterFeeder_stopCommand() {
+        return Commands.runEnd(
+            ()-> this.stop(),
             this::stop,
             this);
     }
