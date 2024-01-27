@@ -58,7 +58,7 @@ public class ShooterPivot extends SubsystemBase {
   public ShooterPivot() {
     m_motor = new WPI_TalonFX(Constants.ShooterPivotConstants.MotorID, Constants.ShooterPivotConstants.MotorCANBus);
     m_motor.configFactoryDefault();
-    m_motor.setInverted(false);
+    m_motor.setInverted(true);
     m_motor.setNeutralMode(NeutralMode.Brake);
 
     m_encoder = new CANCoder(Constants.ShooterPivotConstants.EncoderID, Constants.ShooterPivotConstants.EncoderCANBus);
@@ -69,6 +69,9 @@ public class ShooterPivot extends SubsystemBase {
     m_motor.configReverseSoftLimitThreshold(ShooterPivotConstants.reverseSoftLimit);
     m_motor.configForwardSoftLimitThreshold(ShooterPivotConstants.forwardSoftLimit);
     m_motor.setNeutralMode(NeutralMode.Brake);
+    m_motor.configVoltageCompSaturation(10);
+    m_motor.enableVoltageCompensation(true);
+    
 
 
     m_encoder.configFactoryDefault();

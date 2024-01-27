@@ -26,22 +26,23 @@ public final class Constants {
 
   }
   public static class ShooterPivotConstants {
-    public static final int MotorID = 2;
-    public static final int EncoderID = 2;
+    public static final int MotorID = 21;
+    public static final int EncoderID = 21;
     public static final String MotorCANBus = "rio"; 
     public static final String EncoderCANBus = "rio";
     public static final int reverseSoftLimit = 0;
-    public static final int forwardSoftLimit = 0;
-    public static final boolean encoderDirection = true;
-    public static final int encoderOffset = 0;
+    public static final int forwardSoftLimit = 1024;
+    public static final boolean encoderDirection = false;
+    public static final double encoderOffset = 144.31640625-1.669921875;
+;
 
 
 
 
-    public static final double kP = 0;
+    public static final double kP = 0.001;
     public static final double kI = 0;
     public static final double kD = 0;
-    public static final double kF = 0;
+    public static final double kF = 0.001155043488;
 
   }
 
