@@ -69,8 +69,9 @@ public class ShooterPivot extends SubsystemBase {
     m_motor.configReverseSoftLimitThreshold(ShooterPivotConstants.reverseSoftLimit);
     m_motor.configForwardSoftLimitThreshold(ShooterPivotConstants.forwardSoftLimit);
     m_motor.setNeutralMode(NeutralMode.Brake);
-    m_motor.configVoltageCompSaturation(10);
-    m_motor.enableVoltageCompensation(true);
+    // set voltage dosen't work with voltage compensation
+    // m_motor.configVoltageCompSaturation(10);
+    // m_motor.enableVoltageCompensation(true);
     
 
 
@@ -83,6 +84,11 @@ public class ShooterPivot extends SubsystemBase {
     m_motor.configRemoteFeedbackFilter(m_encoder, 0);
     m_motor.configSelectedFeedbackSensor(RemoteFeedbackDevice.RemoteSensor0);
     m_motor.setSensorPhase(true);
+
+    SmartDashboard.putNumber("SP kP", FlyWheelConstants.kP);
+    SmartDashboard.putNumber("SP kI", FlyWheelConstants.kI);
+    SmartDashboard.putNumber("SP kD", FlyWheelConstants.kD);
+    SmartDashboard.putNumber("SP kF", FlyWheelConstants.kF);
   }
 
   public double getAngle() {
@@ -103,7 +109,12 @@ public class ShooterPivot extends SubsystemBase {
     
       case kPID:
         // Do PID stuff 
-        outputVoltage = m_pidController.calculate(getAngle(), m_demand);
+        m_pidController.setP(SmartDashboard.getNumber("SP kP", ShooterPivotConstants.kP));
+        m_pidController.setI(SmartDashboard.getNumber("SP kI", ShooterPivotConstants.kI));
+        m_pidController.setD(SmartDashboard.getNumber("SP kD", ShooterPivotConstants.kD));
+        double kF = SmartDashboard.getNumber("SP kF", ShooterPivotConstants.kF);
+
+        outputVoltage = kF * Math.cos(Math.toRadians(m_demand)) + m_pidController.calculate(getAngle(), m_demand);
         
         break;
       default:

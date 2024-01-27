@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants.FlyWheelConstants;
 import frc.robot.subsystems.ShooterPivot;
@@ -70,7 +71,7 @@ public class RobotContainer {
     m_controller.leftTrigger().whileTrue(m_simpleFlywheelRight.pidCommand(()-> SmartDashboard.getNumber("Select Right RPM", 0)));
     m_controller.b().whileTrue(m_ShooterPivot.openLoopCommand(2));
     m_controller.a().whileTrue(m_ShooterPivot.openLoopCommand(-2));
-    m_controller.x().whileTrue(m_ShooterPivot.goToAngleCommand(45));
+    m_controller.x().whileTrue(m_ShooterPivot.goToAngleCommand(37.08984375));
   }
 
   /**
