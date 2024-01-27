@@ -87,8 +87,13 @@ public class SimpleFlywheel extends SubsystemBase {
         break;
     
       case kPID:
+        m_pidController.setP(SmartDashboard.getNumber("kP", FlyWheelConstants.kP));
+        m_pidController.setI(SmartDashboard.getNumber("kI", FlyWheelConstants.kI));
+        m_pidController.setD(SmartDashboard.getNumber("kD", FlyWheelConstants.kD));
+        double kF = SmartDashboard.getNumber("kF", FlyWheelConstants.kF);
+
         // Do PID stuff 
-        outputVoltage = FlyWheelConstants.kF * m_demand + m_pidController.calculate(getVelocity(), m_demand);
+        outputVoltage = kF * m_demand + m_pidController.calculate(getVelocity(), m_demand);
         
         break;
       case kStateSpace:
