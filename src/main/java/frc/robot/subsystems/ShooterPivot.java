@@ -7,8 +7,16 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.units.Angle;
+import edu.wpi.first.units.Measure;
+import edu.wpi.first.units.MutableMeasure;
+import edu.wpi.first.units.Units;
+import edu.wpi.first.units.Velocity;
+import edu.wpi.first.units.Voltage;
 import edu.wpi.first.wpilibj.CAN;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
 import frc.robot.Constants.FlyWheelConstants;
@@ -49,11 +57,33 @@ public class ShooterPivot extends SubsystemBase {
   private ControlMode m_controlMode = ControlMode.kOpenLoop;
   private double m_demand;
 
+  // Mutable holder for unit-safe voltage values, persisted to avoid reallocation.
+  private final MutableMeasure<Voltage> m_sysIDAppliedVoltage = MutableMeasure.mutable(Units.Volts.of(0));
+  private final MutableMeasure<Angle> m_sysIDAngle = MutableMeasure.mutable(Units.Degrees.of(0));
+  private final MutableMeasure<Velocity<Angle>> m_sysIDAngluarVelocity = MutableMeasure.mutable(Units.DegreesPerSecond.of(0));
+
   //
   // PID
   //
 
   private final PIDController m_pidController = new PIDController(ShooterPivotConstants.kP, ShooterPivotConstants.kI, ShooterPivotConstants.kD);
+
+  private final SysIdRoutine m_sysIdRoutine = new SysIdRoutine(
+    new SysIdRoutine.Config(), 
+    new SysIdRoutine.Mechanism(
+      // Tell SysId how to plumb the driving voltage to the motors.
+      (Measure<Voltage> volts)-> setOutputVoltage(volts.in(Units.Volts)),
+       // Tell SysId how to record a frame of data for each motor on the mechanism being
+      // characterized.
+      log->{
+        log.motor("shooter-pivot")
+          .voltage(m_sysIDAppliedVoltage)
+          .angularPosition(m_sysIDAngle)
+          .angularVelocity(m_sysIDAngluarVelocity);
+      },
+      this
+    )
+  );
 
   public ShooterPivot() {
     m_motor = new WPI_TalonFX(Constants.ShooterPivotConstants.MotorID, Constants.ShooterPivotConstants.MotorCANBus);
@@ -98,8 +128,13 @@ public class ShooterPivot extends SubsystemBase {
 
   @Override
   public void periodic() {
+    if (DriverStation.isDisabled()) {
+      m_encoder.setPositionToAbsolute();
+    }
+
     // Determine output voltage
     double outputVoltage = 0;
+    double currentAngle = getAngle();
 
     switch (m_controlMode) {
       case kOpenLoop:
@@ -114,7 +149,7 @@ public class ShooterPivot extends SubsystemBase {
         m_pidController.setD(SmartDashboard.getNumber("SP kD", ShooterPivotConstants.kD));
         double kF = SmartDashboard.getNumber("SP kF", ShooterPivotConstants.kF);
 
-        outputVoltage = kF * Math.cos(Math.toRadians(m_demand)) + m_pidController.calculate(getAngle(), m_demand);
+        outputVoltage = kF * Math.cos(Math.toRadians(m_demand)) + m_pidController.calculate(currentAngle, m_demand);
         
         break;
       default:
@@ -126,11 +161,16 @@ public class ShooterPivot extends SubsystemBase {
     // Do something with the motor    
     m_motor.setVoltage(outputVoltage);
 
+    // SysID
+    m_sysIDAppliedVoltage.mut_replace(outputVoltage, Units.Volts);
+    m_sysIDAngle.mut_replace(currentAngle, Units.Degrees);
+    m_sysIDAngluarVelocity.mut_replace(m_encoder.getVelocity(), Units.DegreesPerSecond);
+
     SmartDashboard.putNumber("Shooter Pivot" + " encoderAbosoluteAngle", m_encoder.getAbsolutePosition());
     SmartDashboard.putNumber("Shooter Pivot" + " encoderAngle", m_encoder.getPosition());
     SmartDashboard.putNumber("Shooter Pivot" + " Motor Selected Sensor position", m_motor.getSelectedSensorPosition());
     SmartDashboard.putNumber("Shooter Pivot" + " Motor Error", getErrorAngle());
-    SmartDashboard.putNumber("Shooter Pivot" + " get measurement", getAngle());
+    SmartDashboard.putNumber("Shooter Pivot" + " get measurement", currentAngle);
     SmartDashboard.putNumber("shooter Pivot" + " Motor Output Voltage", outputVoltage);
     SmartDashboard.putNumber("shooter Pivot" + " Motor Setpoint Position", m_demand);
   }
@@ -193,5 +233,13 @@ public class ShooterPivot extends SubsystemBase {
 
   public Command goToAngleCommand(double angleDegrees){
     return goToAngleCommand(()-> angleDegrees);
+  }
+
+  public Command sysIdQuasistatic(SysIdRoutine.Direction direction) {
+    return m_sysIdRoutine.quasistatic(direction);
+  }
+
+  public Command sysIdDynamic(SysIdRoutine.Direction direction) {
+    return m_sysIdRoutine.dynamic(direction);
   }
 }
