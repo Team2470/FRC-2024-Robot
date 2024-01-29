@@ -8,7 +8,10 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.units.Angle;
 import edu.wpi.first.units.Measure;
 import edu.wpi.first.units.MutableMeasure;
@@ -65,8 +68,13 @@ public class ShooterPivot extends SubsystemBase {
   //
   // PID
   //
-
-  private final PIDController m_pidController = new PIDController(ShooterPivotConstants.kP, ShooterPivotConstants.kI, ShooterPivotConstants.kD);
+  private final ArmFeedforward m_feedforward = new ArmFeedforward(0, 0, 0); 
+  private final ProfiledPIDController m_pidController = new ProfiledPIDController(
+      ShooterPivotConstants.kP, 
+      ShooterPivotConstants.kI, 
+      ShooterPivotConstants.kD,
+      new TrapezoidProfile.Constraints(30, 30)
+  );
 
   private final SysIdRoutine m_sysIdRoutine = new SysIdRoutine(
     new SysIdRoutine.Config(), 
@@ -134,7 +142,8 @@ public class ShooterPivot extends SubsystemBase {
 
     // Determine output voltage
     double outputVoltage = 0;
-    double currentAngle = getAngle();
+    double currentAngleDegrees = getAngle();
+    double currentAngleRadians = Math.toRadians(currentAngleDegrees);
 
     switch (m_controlMode) {
       case kOpenLoop:
@@ -147,10 +156,18 @@ public class ShooterPivot extends SubsystemBase {
         m_pidController.setP(SmartDashboard.getNumber("SP kP", ShooterPivotConstants.kP));
         m_pidController.setI(SmartDashboard.getNumber("SP kI", ShooterPivotConstants.kI));
         m_pidController.setD(SmartDashboard.getNumber("SP kD", ShooterPivotConstants.kD));
-        double kF = SmartDashboard.getNumber("SP kF", ShooterPivotConstants.kF);
+        // double kF = SmartDashboard.getNumber("SP kF", ShooterPivotConstants.kF);
 
-        outputVoltage = kF * Math.cos(Math.toRadians(m_demand)) + m_pidController.calculate(currentAngle, m_demand);
+        // outputVoltage = kF * Math.cos(Math.toRadians(m_demand)) + m_pidController.calculate(currentAngle, m_demand);
+
+        double pidOutputVoltage = m_pidController.calculate(currentAngleRadians, Math.toRadians(m_demand));
+        double ffOutputVoltage = m_feedforward.calculate(m_pidController.getSetpoint().position, m_pidController.getSetpoint().position);
         
+        outputVoltage = ffOutputVoltage + pidOutputVoltage;
+
+        SmartDashboard.putNumber("shooter Pivot" + " PID Output Voltage", pidOutputVoltage);
+        SmartDashboard.putNumber("shooter Pivot" + " FF Output Voltage", ffOutputVoltage);
+
         break;
       default:
         // What happened!?
@@ -163,21 +180,21 @@ public class ShooterPivot extends SubsystemBase {
 
     // SysID
     m_sysIDAppliedVoltage.mut_replace(outputVoltage, Units.Volts);
-    m_sysIDAngle.mut_replace(currentAngle, Units.Degrees);
+    m_sysIDAngle.mut_replace(currentAngleDegrees, Units.Degrees);
     m_sysIDAngluarVelocity.mut_replace(m_encoder.getVelocity(), Units.DegreesPerSecond);
 
     SmartDashboard.putNumber("Shooter Pivot" + " encoderAbosoluteAngle", m_encoder.getAbsolutePosition());
-    SmartDashboard.putNumber("Shooter Pivot" + " encoderAngle", m_encoder.getPosition());
+    SmartDashboard.putNumber("Shooter Pivot" + " encoderAngle", currentAngleDegrees);
     SmartDashboard.putNumber("Shooter Pivot" + " Motor Selected Sensor position", m_motor.getSelectedSensorPosition());
     SmartDashboard.putNumber("Shooter Pivot" + " Motor Error", getErrorAngle());
-    SmartDashboard.putNumber("Shooter Pivot" + " get measurement", currentAngle);
+    // SmartDashboard.putNumber("Shooter Pivot" + " get measurement", currentAngleDegrees);
     SmartDashboard.putNumber("shooter Pivot" + " Motor Output Voltage", outputVoltage);
     SmartDashboard.putNumber("shooter Pivot" + " Motor Setpoint Position", m_demand);
   }
 
   public double getErrorAngle(){
     if (m_controlMode == ControlMode.kPID){
-      return m_pidController.getPositionError();
+      return Math.toDegrees(m_pidController.getPositionError());
     }
     return 0;
   }
@@ -188,6 +205,9 @@ public class ShooterPivot extends SubsystemBase {
   }
  
   public void setPIDSetpoint(double angleDegrees) {
+    if (m_controlMode != ControlMode.kPID) {
+      m_pidController.reset(Math.toRadians( getAngle()));
+    }
     m_controlMode = ControlMode.kPID;
     m_demand = angleDegrees;
   }
