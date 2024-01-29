@@ -85,10 +85,10 @@ public class ShooterPivot extends SubsystemBase {
     m_motor.configSelectedFeedbackSensor(RemoteFeedbackDevice.RemoteSensor0);
     m_motor.setSensorPhase(true);
 
-    SmartDashboard.putNumber("SP kP", FlyWheelConstants.kP);
-    SmartDashboard.putNumber("SP kI", FlyWheelConstants.kI);
-    SmartDashboard.putNumber("SP kD", FlyWheelConstants.kD);
-    SmartDashboard.putNumber("SP kF", FlyWheelConstants.kF);
+    SmartDashboard.putNumber("SP kP", ShooterPivotConstants.kP);
+    SmartDashboard.putNumber("SP kI", ShooterPivotConstants.kI);
+    SmartDashboard.putNumber("SP kD", ShooterPivotConstants.kD);
+    SmartDashboard.putNumber("SP kF", ShooterPivotConstants.kF);
   }
 
   public double getAngle() {
