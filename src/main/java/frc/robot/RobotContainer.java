@@ -49,6 +49,7 @@ public class RobotContainer {
     SmartDashboard.putNumber("kI", FlyWheelConstants.kI);
     SmartDashboard.putNumber("kD", FlyWheelConstants.kD);
     SmartDashboard.putNumber("kF", FlyWheelConstants.kF);
+    SmartDashboard.putNumber("Select Shooter Pivot Angle", 0);
   }
 
   /**
@@ -75,6 +76,7 @@ public class RobotContainer {
     m_controller.b().whileTrue(m_ShooterPivot.openLoopCommand(2));
     m_controller.a().whileTrue(m_ShooterPivot.openLoopCommand(-2));
     m_controller.x().whileTrue(m_ShooterPivot.goToAngleCommand(37.08984375));
+    m_controller.y().whileTrue(m_ShooterPivot.goToAngleCommand(()->SmartDashboard.getNumber("Select Shooter Pivot Angle", 0)));
 
     m_sysIDcontroller.b().whileTrue(m_ShooterPivot.sysIdQuasistatic(Direction.kForward));
     m_sysIDcontroller.a().whileTrue(m_ShooterPivot.sysIdQuasistatic(Direction.kReverse));

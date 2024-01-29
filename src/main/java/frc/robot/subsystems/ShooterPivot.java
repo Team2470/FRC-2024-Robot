@@ -68,12 +68,12 @@ public class ShooterPivot extends SubsystemBase {
   //
   // PID
   //
-  private final ArmFeedforward m_feedforward = new ArmFeedforward(0, 0, 0); 
+  private final ArmFeedforward m_feedforward = new ArmFeedforward(0, 0.32, 3.59, 0.002); 
   private final ProfiledPIDController m_pidController = new ProfiledPIDController(
       ShooterPivotConstants.kP, 
       ShooterPivotConstants.kI, 
       ShooterPivotConstants.kD,
-      new TrapezoidProfile.Constraints(30, 30)
+      new TrapezoidProfile.Constraints(Math.toRadians(90), Math.toRadians(90))
   );
 
   private final SysIdRoutine m_sysIdRoutine = new SysIdRoutine(
@@ -161,7 +161,7 @@ public class ShooterPivot extends SubsystemBase {
         // outputVoltage = kF * Math.cos(Math.toRadians(m_demand)) + m_pidController.calculate(currentAngle, m_demand);
 
         double pidOutputVoltage = m_pidController.calculate(currentAngleRadians, Math.toRadians(m_demand));
-        double ffOutputVoltage = m_feedforward.calculate(m_pidController.getSetpoint().position, m_pidController.getSetpoint().position);
+        double ffOutputVoltage = m_feedforward.calculate(m_pidController.getSetpoint().position, m_pidController.getSetpoint().velocity);
         
         outputVoltage = ffOutputVoltage + pidOutputVoltage;
 
@@ -206,7 +206,7 @@ public class ShooterPivot extends SubsystemBase {
  
   public void setPIDSetpoint(double angleDegrees) {
     if (m_controlMode != ControlMode.kPID) {
-      m_pidController.reset(Math.toRadians( getAngle()));
+      m_pidController.reset(Math.toRadians(getAngle()));
     }
     m_controlMode = ControlMode.kPID;
     m_demand = angleDegrees;
