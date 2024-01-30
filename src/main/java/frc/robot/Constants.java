@@ -31,7 +31,7 @@ public final class Constants {
     public static final String MotorCANBus = "rio"; 
     public static final String EncoderCANBus = "rio";
     public static final int reverseSoftLimit = 0;
-    public static final int forwardSoftLimit = (int)(1024 * (80.0/90.0));
+    public static final int forwardSoftLimit = (int)(1024 * (75.0/90.0));
     public static final boolean encoderDirection = false;
     public static final double encoderOffset = 143.349609375+20+4.39453125+90;
 ;

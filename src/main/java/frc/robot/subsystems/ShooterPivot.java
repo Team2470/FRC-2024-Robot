@@ -8,9 +8,18 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import edu.wpi.first.math.Nat;
+import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.controller.ArmFeedforward;
-import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.LinearQuadraticRegulator;
 import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.estimator.KalmanFilter;
+import edu.wpi.first.math.numbers.N1;
+import edu.wpi.first.math.numbers.N2;
+import edu.wpi.first.math.system.LinearSystem;
+import edu.wpi.first.math.system.LinearSystemLoop;
+import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.units.Angle;
 import edu.wpi.first.units.Measure;
@@ -18,28 +27,21 @@ import edu.wpi.first.units.MutableMeasure;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.units.Velocity;
 import edu.wpi.first.units.Voltage;
-import edu.wpi.first.wpilibj.CAN;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
-import frc.robot.Constants.FlyWheelConstants;
 import frc.robot.Constants.ShooterPivotConstants;
 
-import java.util.ResourceBundle.Control;
 import java.util.function.DoubleSupplier;
 
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.RemoteFeedbackDevice;
-import com.ctre.phoenix.motorcontrol.can.TalonFX;
+import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.sensors.AbsoluteSensorRange;
 import com.ctre.phoenix.sensors.CANCoder;
 import com.ctre.phoenix.sensors.SensorInitializationStrategy;
-import com.revrobotics.CANSparkFlex;
-import com.revrobotics.RelativeEncoder;
-import com.revrobotics.CANSparkLowLevel.MotorType;
-import com.revrobotics.CANSparkLowLevel.PeriodicFrame;
 
 
 
@@ -49,7 +51,8 @@ public class ShooterPivot extends SubsystemBase {
   // private final int kStateSpace = 2;
   private enum ControlMode {
     kOpenLoop, 
-    kPID
+    kPID,
+    kLQR
   }
 
   private final WPI_TalonFX m_motor;
@@ -59,11 +62,6 @@ public class ShooterPivot extends SubsystemBase {
 
   private ControlMode m_controlMode = ControlMode.kOpenLoop;
   private double m_demand;
-
-  // Mutable holder for unit-safe voltage values, persisted to avoid reallocation.
-  private final MutableMeasure<Voltage> m_sysIDAppliedVoltage = MutableMeasure.mutable(Units.Volts.of(0));
-  private final MutableMeasure<Angle> m_sysIDAngle = MutableMeasure.mutable(Units.Degrees.of(0));
-  private final MutableMeasure<Velocity<Angle>> m_sysIDAngluarVelocity = MutableMeasure.mutable(Units.DegreesPerSecond.of(0));
 
   //
   // PID
@@ -76,8 +74,83 @@ public class ShooterPivot extends SubsystemBase {
       new TrapezoidProfile.Constraints(Math.toRadians(90), Math.toRadians(90))
   );
 
+  //
+  // StateSpace
+  //
+
+  
+  // Moment of inertia of the arm, in kg * m^2. Can be estimated with CAD. If finding this constant
+  // is difficult, LinearSystem.identifyPositionSystem may be better.
+  private static final double kArmMOI = 1.2; // 1.2;
+
+  // Reduction between motors and encoder, as output over input. If the arm spins slower than
+  // the motors, this number should be greater than one.
+  private static final double kArmGearing = 200.0;
+
+  private final TrapezoidProfile m_profile =
+  new TrapezoidProfile(
+      new TrapezoidProfile.Constraints(
+          Math.toRadians(30),
+          Math.toRadians(30))); // Max arm speed and acceleration.
+  private TrapezoidProfile.State m_lastProfiledReference = new TrapezoidProfile.State();
+
+  //
+  // States: [position, velocity], in radians and radians per second.
+  // Inputs (what we can "put in"): [voltage], in volts.
+  // Outputs (what we can measure): [position], in radians.
+  private final LinearSystem<N2, N1, N1> m_armPlant =
+      LinearSystemId.createSingleJointedArmSystem(DCMotor.getFalcon500(1), kArmMOI, kArmGearing);
+      // LinearSystemId.identifyPositionSystem(3.59, 0.002);
+      
+
+  // The observer fuses our encoder data and voltage inputs to reject noise.
+  private final KalmanFilter<N2, N1, N1> m_observer =
+      new KalmanFilter<>(
+          Nat.N2(),
+          Nat.N1(),
+          m_armPlant,
+          VecBuilder.fill(0.015, 0.17), // How accurate we
+          // think our model is, in radians and radians/sec
+          VecBuilder.fill(0.01), // How accurate we think our encoder position
+          // data is. In this case we very highly trust our encoder position reading.
+          0.020);
+
+  // A LQR uses feedback to create voltage commands.
+  private final LinearQuadraticRegulator<N2, N1, N1> m_controller =
+      new LinearQuadraticRegulator<>(
+          m_armPlant,
+          VecBuilder.fill(Math.toRadians(1.0), Math.toRadians(10.0)), // qelms.
+          // Position and velocity error tolerances, in radians and radians per second. Decrease
+          // this
+          // to more heavily penalize state excursion, or make the controller behave more
+          // aggressively. In this example we weight position much more highly than velocity, but
+          // this
+          // can be tuned to balance the two.
+          VecBuilder.fill(12.0), // relms. Control effort (voltage) tolerance. Decrease this to more
+          // heavily penalize control effort, or make the controller less aggressive. 12 is a good
+          // starting point because that is the (approximate) maximum voltage of a battery.
+          0.020 // Nominal time between loops. 0.020 for TimedRobot, but can be lower if using notifiers.
+      );
+
+      
+  // The state-space loop combines a controller, observer, feedforward and plant for easy control.
+  private final LinearSystemLoop<N2, N1, N1> m_loop =
+      new LinearSystemLoop<>(m_armPlant, m_controller, m_observer, 12.0, 0.020);
+
+  //
+  // SysID
+  //
+  // Mutable holder for unit-safe voltage values, persisted to avoid reallocation.
+  private final MutableMeasure<Voltage> m_sysIDAppliedVoltage = MutableMeasure.mutable(Units.Volts.of(0));
+  private final MutableMeasure<Angle> m_sysIDAngle = MutableMeasure.mutable(Units.Degrees.of(0));
+  private final MutableMeasure<Velocity<Angle>> m_sysIDAngluarVelocity = MutableMeasure.mutable(Units.DegreesPerSecond.of(0));
+
   private final SysIdRoutine m_sysIdRoutine = new SysIdRoutine(
-    new SysIdRoutine.Config(), 
+    new SysIdRoutine.Config(
+      Units.Volts.per(Units.Second).of(0.25),
+      Units.Volts.of(5),
+      Units.Seconds.of(20)
+    ), 
     new SysIdRoutine.Mechanism(
       // Tell SysId how to plumb the driving voltage to the motors.
       (Measure<Voltage> volts)-> setOutputVoltage(volts.in(Units.Volts)),
@@ -111,6 +184,7 @@ public class ShooterPivot extends SubsystemBase {
     // m_motor.configVoltageCompSaturation(10);
     // m_motor.enableVoltageCompensation(true);
     
+    m_motor.setStatusFramePeriod(StatusFrameEnhanced.Status_21_FeedbackIntegrated, 10);
 
 
     m_encoder.configFactoryDefault();
@@ -169,6 +243,28 @@ public class ShooterPivot extends SubsystemBase {
         SmartDashboard.putNumber("shooter Pivot" + " FF Output Voltage", ffOutputVoltage);
 
         break;
+      case kLQR:
+        // Sets the target position of our arm. This is similar to setting the setpoint of a
+        // PID controller.
+        TrapezoidProfile.State goal = new TrapezoidProfile.State(Math.toRadians(m_demand), 0);
+
+        // Step our TrapezoidalProfile forward 20ms and set it as our next reference
+        m_lastProfiledReference = m_profile.calculate(0.020, m_lastProfiledReference, goal);
+        m_loop.setNextR(m_lastProfiledReference.position, m_lastProfiledReference.velocity);
+        // Correct our Kalman filter's state vector estimate with encoder data.
+        m_loop.correct(VecBuilder.fill(currentAngleRadians));
+
+
+        // Update our LQR to generate new voltage commands and use the voltages to predict the next
+        // state with out Kalman filter.
+        m_loop.predict(0.020);
+
+        // Send the new calculated voltage to the motors.
+        // voltage = duty cycle * battery voltage, so
+        // duty cycle = voltage / battery voltage
+        outputVoltage = m_loop.getU(0);
+
+        break;  
       default:
         // What happened!?
         break;
@@ -180,8 +276,9 @@ public class ShooterPivot extends SubsystemBase {
 
     // SysID
     m_sysIDAppliedVoltage.mut_replace(outputVoltage, Units.Volts);
-    m_sysIDAngle.mut_replace(currentAngleDegrees, Units.Degrees);
-    m_sysIDAngluarVelocity.mut_replace(m_encoder.getVelocity(), Units.DegreesPerSecond);
+    var sc = m_motor.getSensorCollection();
+    m_sysIDAngle.mut_replace(sc.getIntegratedSensorPosition(), Units.Degrees);
+    m_sysIDAngluarVelocity.mut_replace(sc.getIntegratedSensorVelocity(), Units.DegreesPerSecond);
 
     SmartDashboard.putNumber("Shooter Pivot" + " encoderAbosoluteAngle", m_encoder.getAbsolutePosition());
     SmartDashboard.putNumber("Shooter Pivot" + " encoderAngle", currentAngleDegrees);
@@ -195,6 +292,8 @@ public class ShooterPivot extends SubsystemBase {
   public double getErrorAngle(){
     if (m_controlMode == ControlMode.kPID){
       return Math.toDegrees(m_pidController.getPositionError());
+    } else if (m_controlMode == ControlMode.kLQR) {
+      return getAngle() - m_demand;
     }
     return 0;
   }
@@ -209,6 +308,18 @@ public class ShooterPivot extends SubsystemBase {
       m_pidController.reset(Math.toRadians(getAngle()));
     }
     m_controlMode = ControlMode.kPID;
+    m_demand = angleDegrees;
+  }
+
+  public void setLQRSetpoint(double angleDegrees) {
+    if (m_controlMode != ControlMode.kLQR) {
+      // Reset our loop to make sure it's in a known state.
+      m_loop.reset(VecBuilder.fill(Math.toRadians(getAngle()), Math.toRadians(m_encoder.getVelocity())));
+
+      // Reset our last reference to the current state.
+      m_lastProfiledReference = new TrapezoidProfile.State(Math.toRadians(getAngle()), Math.toRadians(m_encoder.getVelocity()));
+    }
+    m_controlMode = ControlMode.kLQR;
     m_demand = angleDegrees;
   }
 
@@ -254,6 +365,17 @@ public class ShooterPivot extends SubsystemBase {
   public Command goToAngleCommand(double angleDegrees){
     return goToAngleCommand(()-> angleDegrees);
   }
+
+
+  public Command goToAngleCommandFancy(DoubleSupplier angleSupplier){
+    return Commands.runEnd(
+      () -> this.setLQRSetpoint(angleSupplier.getAsDouble()), this::stop, this);
+  }
+
+  public Command goToAngleCommandFancy(double angleDegrees){
+    return goToAngleCommandFancy(()-> angleDegrees);
+  }
+
 
   public Command sysIdQuasistatic(SysIdRoutine.Direction direction) {
     return m_sysIdRoutine.quasistatic(direction);
