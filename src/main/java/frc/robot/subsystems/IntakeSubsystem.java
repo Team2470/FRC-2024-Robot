@@ -11,7 +11,7 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 
 public class IntakeSubsystem extends SubsystemBase {
     private final CANSparkMax m_intake; 
-    private final RelativeEncoder m_encoder;
+    public final RelativeEncoder m_encoder;
     public IntakeSubsystem(int canID) {
         m_intake = new CANSparkMax(canID, MotorType.kBrushless);
 
@@ -26,10 +26,18 @@ public class IntakeSubsystem extends SubsystemBase {
     public double getVelocity(){
         return m_encoder.getVelocity();
   }
+  public double getEncoderPosition() {
+    return m_encoder.getPosition();
+  }
+    public double getEncoderCPR() {
+    return m_encoder.getCountsPerRevolution();
+  }
   @Override
   public void periodic() {
     SmartDashboard.putNumber("Intake Velocity", getVelocity());
-
+    SmartDashboard.putNumber("Encoder counts per rev", getEncoderCPR());
+    SmartDashboard.putNumber("Encoder Pos", getEncoderPosition());
+    SmartDashboard.putBoolean("is encoder past 5 rotations", isEncoderPast5Rotation());
   }
   public void intake() {
     m_intake.setVoltage(5);
@@ -53,4 +61,21 @@ public class IntakeSubsystem extends SubsystemBase {
         this::stop,
         this);
   }
+    public Command test_stopCommand() {
+        return Commands.runEnd(
+        ()-> this.stop(),
+        this::stop,
+        this);
+      }
+    public void zeroEncoderValue() {
+        m_encoder.setPosition(0);
+      }      
+    public Command zeroEncoderCommand() {
+        return Commands.runOnce(() -> this.zeroEncoderValue(), this);
+    }
+    public boolean isEncoderPast5Rotation () {
+      return (getEncoderPosition() > 5 || getEncoderPosition() < -5 );
+  }
+
 }
+

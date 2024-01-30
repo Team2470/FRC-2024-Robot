@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 //import frc.robot.subsystems.SimpleFlywheel;
 import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.TimeOfFlightSensorTest;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -21,13 +22,16 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   //private final SimpleFlywheel m_simpleFlywheel = new SimpleFlywheel();
   private final IntakeSubsystem m_intake = new IntakeSubsystem(1); 
+  private final TimeOfFlightSensorTest m_TOF1 = new TimeOfFlightSensorTest();
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_controller = new CommandXboxController(0);
   private final CommandXboxController m_sysIDcontroller  = new CommandXboxController(1);
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+        
+
+
   
-    // Configure the trigger bindings
     configureBindings();
   }
 
@@ -48,9 +52,14 @@ public class RobotContainer {
 
   m_controller.a().whileTrue(m_intake.test_forwardsCommand());
   m_controller.b().whileTrue(m_intake.test_reverseCommand());
-  
-  }
+  m_controller.x().whileTrue(m_TOF1.sequenceTest(m_intake));
+    }
 
+
+
+
+  
+  
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *
@@ -62,6 +71,7 @@ public class RobotContainer {
 public void teleopInit(){
 
 }
-
-
 }
+
+
+
