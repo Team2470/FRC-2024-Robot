@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 import com.fasterxml.jackson.core.StreamWriteCapability;
 import com.playingwithfusion.TimeOfFlight;
+import com.revrobotics.RelativeEncoder;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -11,13 +12,13 @@ import frc.robot.subsystems.SimpleShooterFeeder;
 
 public class TimeOfFlightSensorTest extends SubsystemBase {
     private final TimeOfFlight m_TimeOfFlight_1;
-    //private final TimeOfFlight m_TimeOfFlight_2;
+    private final TimeOfFlight m_TimeOfFlight_2;
 
     private double initialEncoderValue;
 
     public TimeOfFlightSensorTest(){
         m_TimeOfFlight_1 = new TimeOfFlight(1);
-        //m_TimeOfFlight_2 = new TimeOfFlight(2);
+        m_TimeOfFlight_2 = new TimeOfFlight(2);
     }
 
    
@@ -42,9 +43,9 @@ public class TimeOfFlightSensorTest extends SubsystemBase {
         return m_TimeOfFlight_1.getRangingMode();
     }
 
-    // public double getRange_TOF2(){
-    //     return m_TimeOfFlight_2.getRange();
-    // }
+    public double getRange_TOF2(){
+         return m_TimeOfFlight_2.getRange();
+     }
 
     // public double getAmbientLightLevel_TOF2(){
     //     return m_TimeOfFlight_2.getAmbientLightLevel();
@@ -63,46 +64,60 @@ public class TimeOfFlightSensorTest extends SubsystemBase {
     // }
 
     public boolean isTOF1WithinRange() {
-        return (this.getRange_TOF1() > 200 && this.getRange_TOF1() < 400);
+        return (this.getRange_TOF1() < 200);
 
     }
 
-    public Command waitUntilInRange(){
+    public boolean isTOF2WithinRange() {
+        return (this.getRange_TOF2() < 200);
+
+    }
+
+    public double variableVoltage(){
+        double range = this.getRange_TOF1();
+        double volts;
+        if (range > 0 && range <= 200){
+            volts = range / 40;
+        }
+        if (range > 200) {
+            volts = 5;
+        }
+        else {
+            volts = range / 40;
+        }
+        return volts;
+    }
+
+    public Command waitUntilTOF1InRange(){
         return Commands.waitUntil(()-> this.isTOF1WithinRange());
+    }
+
+    public Command waitUntilTOF2InRange(){
+        return Commands.waitUntil(()-> this.isTOF2WithinRange());
     }
 
     public Command waitUntilOutOfRange(){
         return Commands.waitUntil(()-> !this.isTOF1WithinRange());
     }
 
-    public Command wait5SecondsCommand(){
-        return Commands.waitSeconds(5);
+    public Command wait1SecondsCommand(){
+        return Commands.waitSeconds(1);
     }
 
-    public Command sequenceTest(SimpleShooterFeeder m_feeder) {
+    public Command variableVoltageTest(SimpleShooterFeeder m_feeder) {
         return Commands.repeatingSequence(
-            //wait5SecondsCommand(),
             this.waitUntilOutOfRange(),
-            m_feeder.SimpleShooterFeeder_forwardsCommand().until(()->!this.isTOF1WithinRange())//,
-            /*m_feeder.SimpleShooterFeeder_stopCommand()*/
+            m_feeder.simpleShooterFeeder_forwardsVaribleCommand(() ->variableVoltage()).until(()-> !this.isTOF1WithinRange())
         );
     }
 
-    public boolean isEncoderWithin10(SimpleShooterFeeder m_feeder) {
-        return (this.initialEncoderValue - m_feeder.getEncoderPosition() > 10);
-    }
-
-    public void readInitialEncoderValue(SimpleShooterFeeder m_feeder) {
-        this.initialEncoderValue = m_feeder.getEncoderPosition();
-    }
-
-    // public Command encoderRotationTest(SimpleShooterFeeder m_feeder) {
-    //     return Commands.repeatingSequence(
-    //         this.readInitialEncoderValue(m_feeder),
-    //         m_feeder.SimpleShooterFeeder_forwardsCommand().until(()->!this.isEncoderPastT10Rotations())//,
-    //         /*m_feeder.SimpleShooterFeeder_stopCommand()*/
-    //     );
-    // }
+    public Command feedBack5Rotations(SimpleShooterFeeder m_feeder) {
+         return Commands.repeatingSequence(
+            m_feeder.zeroEncoderCommand(),
+            m_feeder.SimpleShooterFeeder_reverseCommand().until(()-> m_feeder.isEncoderPast5Rotations()),
+            this.wait1SecondsCommand()
+         );
+     }
 
 
     @Override
@@ -111,13 +126,10 @@ public class TimeOfFlightSensorTest extends SubsystemBase {
         SmartDashboard.putNumber("Ambient Light_TOF1", getRange_TOF1());
         SmartDashboard.putNumber("Range Sigma_TOF1", getRange_TOF1());
         SmartDashboard.putNumber("Sample Time_TOF1", getRange_TOF1());
-        SmartDashboard.putBoolean("Is Within Range",isTOF1WithinRange());
-        //SmartDashboard.putData("Ranging Mode Time_TOF1", getRange_TOF1());
-        // SmartDashboard.putNumber("Range_TOF2", getRange_TOF2());
-        // SmartDashboard.putNumber("Ambient Light_TOF2", getRange_TOF2());
-        // SmartDashboard.putNumber("Range Sigma_TOF2", getRange_TOF2());
-        // SmartDashboard.putNumber("Sample Time_TOF2", getRange_TOF2());
-        //SmartDashboard.putData("Ranging Mode_TOF2", getRange_TOF2());
+        SmartDashboard.putBoolean("Is TOF1 Within Range",isTOF1WithinRange());
+        SmartDashboard.putNumber("Range_TOF2", getRange_TOF2());
+        SmartDashboard.putBoolean("Is TOF2 Within Range",isTOF2WithinRange());
+        SmartDashboard.putNumber("Variable Voltage", variableVoltage());
     }
 
 

@@ -17,7 +17,7 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 
 public class SimpleShooterFeeder extends SubsystemBase {
     private final CANSparkMax m_SimpleShooterFeeder;
-    private final RelativeEncoder m_Encoder;
+    public final RelativeEncoder m_encoder;
 
     public SimpleShooterFeeder(int canID) {
 
@@ -25,7 +25,7 @@ public class SimpleShooterFeeder extends SubsystemBase {
         m_SimpleShooterFeeder.restoreFactoryDefaults();
         m_SimpleShooterFeeder.setInverted(false);
         m_SimpleShooterFeeder.setSmartCurrentLimit(40);
-        m_Encoder = m_SimpleShooterFeeder.getEncoder();
+        m_encoder = m_SimpleShooterFeeder.getEncoder();
         m_SimpleShooterFeeder.burnFlash();
 
 
@@ -33,15 +33,26 @@ public class SimpleShooterFeeder extends SubsystemBase {
     }
 
     public double getVelocity() {
-        return m_Encoder.getVelocity();
+        return m_encoder.getVelocity();
     }
     public double getEncoderPosition() {
-        return m_Encoder.getPosition();
+        return m_encoder.getPosition();
     }
 
     public double getEncoderCPR() {
-        return m_Encoder.getCountsPerRevolution();
+        return m_encoder.getCountsPerRevolution();
     }
+
+    public boolean isEncoderPast5Rotations( ) {
+        return (getEncoderPosition() > 5 || getEncoderPosition() < -5);
+    }
+
+
+    public void zeroEncoderValue(){
+        m_encoder.setPosition(0);
+    }
+
+
 
 
     @Override
@@ -49,19 +60,27 @@ public class SimpleShooterFeeder extends SubsystemBase {
         SmartDashboard.putNumber("Feeder Velocity", getVelocity());
         SmartDashboard.putNumber("Encoder Position", getEncoderPosition());
         SmartDashboard.putNumber("Encoder Counts Per Revolution", getEncoderCPR());
+        SmartDashboard.putBoolean("Is Encoder Past 5 Rotations", isEncoderPast5Rotations());
     }
 
 
     public void feedShooter() {
-        m_SimpleShooterFeeder.setVoltage(5);
+        m_SimpleShooterFeeder.setVoltage(1);
     }
     public void reverseFeeder() {
-        m_SimpleShooterFeeder.setVoltage((-5));
+        m_SimpleShooterFeeder.setVoltage((-1));
     }
 
     public void stop() {
         m_SimpleShooterFeeder.stopMotor();
 
+    }
+
+    public void forwardsVariableVoltage(double volts) {
+        m_SimpleShooterFeeder.setVoltage(volts);
+    }
+    public void reverseVariableVoltage(double volts) {
+        m_SimpleShooterFeeder.setVoltage(volts);
     }
 
 
@@ -86,6 +105,27 @@ public class SimpleShooterFeeder extends SubsystemBase {
             this::stop,
             this);
     }
+
+    public Command zeroEncoderCommand() {
+        return Commands.runOnce(() -> this.zeroEncoderValue(), this);
+    }
+
+    public Command simpleShooterFeeder_forwardsVaribleCommand(DoubleSupplier volts) {
+        return Commands.runEnd(
+            ()-> this.forwardsVariableVoltage(volts.getAsDouble()),
+            this::stop,
+            this);
+    }
+
+    public Command simpleShooterFeeder_reverseVariableCommand(DoubleSupplier volts) {
+        return Commands.runEnd(
+            ()-> this.reverseVariableVoltage(volts.getAsDouble()),
+            this::stop,
+            this);
+    }
+
+
+
 
 
 
