@@ -36,11 +36,31 @@ public class TimeOfFlightSensorTest extends SubsystemBase{
             return m_TimeOfFlight_1.getSampleTime();
     }
     public boolean  isTOF1_withinRange() {
-        return (this.getRange_TOF1() < 200 && this.getRange_TOF1() > 0);
+        return (this.getRange_TOF1() < 300 && this.getRange_TOF1() > 0);
     }
     public boolean  isTOF2_withinRange() {
-        return (this.getRange_TOF2() < 200 && this.getRange_TOF2() > 0);
+        return (this.getRange_TOF2() < 300 && this.getRange_TOF2() > 0);
     }
+
+
+    public double  variableVoltage() {
+      double range = this.getRange_TOF1();
+      double volts;
+        if (range > 0 && range <= 200) {
+            volts = range/40;
+        }
+
+       else if (range > 200 && range < 300) {
+        volts = 5;
+      } else {
+        volts = 0;
+      }
+      return volts;
+    }
+    
+
+
+
     public Command waitUntilTOF1InRange() {
         return Commands.waitUntil(() -> this.isTOF1_withinRange());
     }
@@ -58,7 +78,14 @@ public class TimeOfFlightSensorTest extends SubsystemBase{
             this.waitUntilTOF1InRange(), 
             m_intake.test_forwardsCommand().until(() -> this.isTOF2_withinRange()),
             this.wait1secondCommand(),
-            feedBack5Rotations(m_intake)
+             m_intake.zeroEncoderCommand(),
+            m_intake.test_reverseCommand().until(() -> m_intake.isEncoderPast5Rotation())
+            );
+    }
+        public Command variableVoltageTest(IntakeSubsystem m_intake) {
+        return Commands.repeatingSequence(
+            this.waitUntilTOF1InRange(), 
+            m_intake.forwardsVariableCommand(variableVoltage()).until(() -> !this.isTOF1_withinRange())
             );
     }
     public Command wait1secondCommand() {
@@ -84,6 +111,7 @@ public class TimeOfFlightSensorTest extends SubsystemBase{
 
         SmartDashboard.putNumber("Range TOF2", getRange_TOF2());
         SmartDashboard.putBoolean("Is TOF2 within range", isTOF2_withinRange());
+        SmartDashboard.putNumber("Variable volts", variableVoltage());
 }
 
         

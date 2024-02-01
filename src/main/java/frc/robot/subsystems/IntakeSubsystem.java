@@ -40,12 +40,20 @@ public class IntakeSubsystem extends SubsystemBase {
     SmartDashboard.putBoolean("is encoder past 5 rotations", isEncoderPast5Rotation());
   }
   public void intake() {
-    m_intake.setVoltage(5);
+    m_intake.setVoltage(1);
   }
   public void reverse_intake () {
-    m_intake.setVoltage(-5);
+    m_intake.setVoltage(-1);
 
   }
+  public void forwardsVariableVoltage(double volts) {
+    m_intake.setVoltage(volts);
+  }
+  public void reverseVariableVoltage (double volts) {
+    m_intake.setVoltage(volts);
+
+  }
+
   public void stop() {
     m_intake.stopMotor();
   }
@@ -55,12 +63,25 @@ public class IntakeSubsystem extends SubsystemBase {
         this::stop,
         this);
   }
+    public Command reverseVariableCommand(double volts) {
+        return Commands.runEnd(
+        ()-> this.reverseVariableVoltage(volts),
+        this::stop,
+        this);
+  }
+    public Command forwardsVariableCommand(double volts) {
+    return Commands.runEnd(
+        ()-> this.forwardsVariableVoltage(volts),
+        this::stop,
+        this);
+  }
     public Command test_reverseCommand() {
         return Commands.runEnd(
         ()-> this.reverse_intake(),
         this::stop,
         this);
   }
+
     public Command test_stopCommand() {
         return Commands.runEnd(
         ()-> this.stop(),

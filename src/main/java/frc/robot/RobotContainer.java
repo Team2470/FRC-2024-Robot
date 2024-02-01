@@ -52,7 +52,8 @@ public class RobotContainer {
 
   m_controller.a().whileTrue(m_intake.test_forwardsCommand());
   m_controller.b().whileTrue(m_intake.test_reverseCommand());
-  m_controller.x().whileTrue(m_TOF1.sequenceTest(m_intake));
+  //m_controller.x().whileTrue(m_TOF1.sequenceTest(m_intake));
+  m_controller.x().whileTrue(m_TOF1.variableVoltageTest(m_intake));
     }
 
 
