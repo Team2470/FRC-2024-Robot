@@ -55,7 +55,7 @@ public class SimpleFlywheel extends SubsystemBase {
 
     //m_follower.follow(m_leader, true);
 
-    m_leader.setInverted(!isLeft);
+    m_leader.setInverted(isLeft);
     m_isLeft = isLeft;
 
     m_leader.setSmartCurrentLimit(40);
@@ -71,7 +71,7 @@ public class SimpleFlywheel extends SubsystemBase {
   }
 
   public double getVelocity() {
-    return m_encoder.getVelocity();
+    return m_encoder.getVelocity()*(30.0/18.0);
   }
 
 
@@ -87,8 +87,13 @@ public class SimpleFlywheel extends SubsystemBase {
         break;
     
       case kPID:
+        m_pidController.setP(SmartDashboard.getNumber("kP", FlyWheelConstants.kP));
+        m_pidController.setI(SmartDashboard.getNumber("kI", FlyWheelConstants.kI));
+        m_pidController.setD(SmartDashboard.getNumber("kD", FlyWheelConstants.kD));
+        double kF = SmartDashboard.getNumber("kF", FlyWheelConstants.kF);
+
         // Do PID stuff 
-        outputVoltage = FlyWheelConstants.kF * m_demand + m_pidController.calculate(getVelocity(), m_demand);
+        outputVoltage = kF * m_demand + m_pidController.calculate(getVelocity(), m_demand);
         
         break;
       case kStateSpace:
@@ -107,6 +112,25 @@ public class SimpleFlywheel extends SubsystemBase {
     // Publish to smart dashboard
     SmartDashboard.putNumber("Flywheel " + (m_isLeft ? "Left" : "Right")+" Velocity", getVelocity());
     SmartDashboard.putNumber("Flywheel "+ (m_isLeft ? "Left" : "Right") +  " output voltage", outputVoltage);
+    SmartDashboard.putNumber("Flywheel "+ (m_isLeft ? "Left" : "Right") + " RPM Error", getErrorRPM());
+    SmartDashboard.putNumber("Flywheel " + (m_isLeft ? "Left" : "Right") + " RPM Percent Error", getErrorPercent());
+    SmartDashboard.putString("Flywheel "+ (m_isLeft ? "Left" : "Right")+ " Control Mode", m_controlMode.toString());
+
+  }
+
+  public double getErrorRPM(){
+    if (m_controlMode == ControlMode.kPID){
+      return m_pidController.getPositionError();
+    }
+    return 0;
+  }
+
+  public double getErrorPercent(){
+    if (m_controlMode == ControlMode.kPID){
+      return (m_demand - m_encoder.getVelocity()) / m_demand * 100;
+    }
+
+    return 0;
   }
 
   public void setOutputVoltage(double OutputVoltage) {
@@ -114,6 +138,11 @@ public class SimpleFlywheel extends SubsystemBase {
     m_demand = OutputVoltage;
   }
  
+  public void setPIDSetpoint(double rpm) {
+    m_controlMode = ControlMode.kPID;
+    m_demand = rpm;
+  }
+
   public void stop() {
     setOutputVoltage(0);
   }
@@ -136,5 +165,15 @@ public class SimpleFlywheel extends SubsystemBase {
 
   public Command openLoopCommand(double OutputVoltage) {
     return openLoopCommand(()-> OutputVoltage);
+  }
+
+
+  public Command pidCommand(DoubleSupplier rpmSupplier){
+    return Commands.runEnd(
+      () -> this.setPIDSetpoint(rpmSupplier.getAsDouble()), this::stop, this);
+  }
+
+  public Command pidCommand(double rpm){
+    return pidCommand(()-> rpm);
   }
 }
