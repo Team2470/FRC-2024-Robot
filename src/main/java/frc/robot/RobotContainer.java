@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 //import frc.robot.subsystems.SimpleFlywheel;
 import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.PhotonVisionSubsystem;
 import frc.robot.subsystems.TimeOfFlightSensorTest;
 
 /**
@@ -23,6 +24,7 @@ public class RobotContainer {
   //private final SimpleFlywheel m_simpleFlywheel = new SimpleFlywheel();
   private final IntakeSubsystem m_intake = new IntakeSubsystem(1); 
   private final TimeOfFlightSensorTest m_TOF1 = new TimeOfFlightSensorTest();
+  private final PhotonVisionSubsystem m_camera1 = new PhotonVisionSubsystem();
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_controller = new CommandXboxController(0);
   private final CommandXboxController m_sysIDcontroller  = new CommandXboxController(1);

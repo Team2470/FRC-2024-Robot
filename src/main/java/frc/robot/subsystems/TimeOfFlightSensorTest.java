@@ -85,7 +85,7 @@ public class TimeOfFlightSensorTest extends SubsystemBase{
         public Command variableVoltageTest(IntakeSubsystem m_intake) {
         return Commands.repeatingSequence(
             this.waitUntilTOF1InRange(), 
-            m_intake.forwardsVariableCommand(variableVoltage()).until(() -> !this.isTOF1_withinRange())
+            m_intake.forwardsVariableCommand(() -> variableVoltage()).until(() -> !this.isTOF1_withinRange())
             );
     }
     public Command wait1secondCommand() {

@@ -5,6 +5,8 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
+import java.util.function.DoubleSupplier;
+
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkLowLevel.MotorType;
@@ -69,9 +71,9 @@ public class IntakeSubsystem extends SubsystemBase {
         this::stop,
         this);
   }
-    public Command forwardsVariableCommand(double volts) {
+    public Command forwardsVariableCommand(DoubleSupplier volts) {
     return Commands.runEnd(
-        ()-> this.forwardsVariableVoltage(volts),
+        ()-> this.forwardsVariableVoltage(volts.getAsDouble()),
         this::stop,
         this);
   }
