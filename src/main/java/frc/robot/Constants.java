@@ -4,7 +4,9 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.interpolation.InterpolatingTreeMap;
 import edu.wpi.first.math.system.plant.DCMotor;
+
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -24,6 +26,27 @@ public final class Constants {
     public static final double kD = 0;
     public static final double kF = 0.001155043488;
 
+    public static double[][] kRPMValues = {
+      {219, 6000},
+      {169, 6000},
+      {145, 4000},
+      {121, 4000},
+      {95, 2500},
+      {71, 2500},
+      {51.5, 2500},
+  };
+
+  public static double[][] kAngleValues = {
+      {219, 22.06},
+      {169, 27.3},
+      {145, 30.23},
+      {121, 33.57},
+      {95, 45.35},
+      {71, 50.18},
+      {51.5, 60,38},
+  };
+
+ 
   }
   public static class ShooterPivotConstants {
     public static final int MotorID = 21;
@@ -33,16 +56,19 @@ public final class Constants {
     public static final int reverseSoftLimit = 0;
     public static final int forwardSoftLimit = 1024;
     public static final boolean encoderDirection = false;
-    public static final double encoderOffset = 143.349609375+20;
+    public static final double encoderOffset = 143.349609375+20+4.39453125+90-3;
 ;
 
 
 
 
-    public static final double kP = 0;
-    public static final double kI = 0;
-    public static final double kD = 0;
+    public static final double kP = 35;
+    public static final double kI = 11;
+    public static final double kD = 0.2;
     public static final double kF = 0;
+    public static final double kG = 0.45;
+    public static final double kV = 3.9;
+    public static final double kA = 0.002;
   }
 
   public static class IntakePivotConstants{
