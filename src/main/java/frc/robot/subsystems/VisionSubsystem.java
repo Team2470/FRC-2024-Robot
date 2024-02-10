@@ -10,7 +10,6 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.vision.VisionIO;
 
-import java.sql.Driver;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -58,7 +57,7 @@ public class VisionSubsystem extends SubsystemBase {
       // 2910 had: !DriverStation.isAutonomous()
       // Going to try to accept updates all the time. This should maybe settable/toggle by the driver or elsewhere to control
       // when to accept updates
-      if (true) {
+      if (!DriverStation.isAutonomous()) {
         SmartDashboard.putBoolean("Vision accepting updates", true);
         if (inputs[i].hasTarget && inputs[i].isNew && inputs[i].maxDistance < LOWEST_DISTANCE && inputs[i].maxAmbiguity < 0.4) {
           if (useSingleTag) {

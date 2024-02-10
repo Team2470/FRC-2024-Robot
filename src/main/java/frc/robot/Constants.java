@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.util.PIDConstants;
 import com.swervedrivespecialties.swervelib.SdsModuleConfigurations;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -142,6 +143,10 @@ public final class Constants {
         new PIDConstants(5.0, 0, 0); // : PID constants for translation error
     public static final PIDConstants kPIDRotation =
         new PIDConstants(2.0, 0, 0); // : Theta rotation,
+
+    public static final PathConstraints kPathConstraints = 
+      new PathConstraints(3, 2, Constants.DriveConstants.kMaxAngularVelocityRadiansPerSecond, 
+                                Constants.DriveConstants.kMaxAngularVelocityRadiansPerSecond);
   }
 
   public static class VisionConstants {

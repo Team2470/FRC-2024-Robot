@@ -1,6 +1,6 @@
 package frc.robot.util;
 
-public enum GamePiece {
+public enum Note {
   CONE,
   CUBE
 }

@@ -3,8 +3,9 @@ package com.swervedrivespecialties.swervelib.rev;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.RelativeEncoder;
-import com.revrobotics.CANSparkMaxLowLevel;
 import com.swervedrivespecialties.swervelib.*;
+
+import edu.wpi.first.hal.CANAPITypes.CANDeviceType;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardContainer;
 
 import static com.swervedrivespecialties.swervelib.rev.RevUtils.checkNeoError;
@@ -68,10 +69,10 @@ public final class NeoSteerControllerFactoryBuilder {
         public ControllerImplementation create(SteerConfiguration<T> steerConfiguration, String _canbus, MechanicalConfiguration mechConfiguration) {
             AbsoluteEncoder absoluteEncoder = encoderFactory.create(steerConfiguration.getEncoderConfiguration());
 
-            CANSparkMax motor = new CANSparkMax(steerConfiguration.getMotorPort(), CANSparkMaxLowLevel.MotorType.kBrushless);
-            checkNeoError(motor.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus0, 100), "Failed to set periodic status frame 0 rate");
-            checkNeoError(motor.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus1, 20), "Failed to set periodic status frame 1 rate");
-            checkNeoError(motor.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus2, 20), "Failed to set periodic status frame 2 rate");
+            CANSparkMax motor = new CANSparkMax(steerConfiguration.getMotorPort(), CANSparkMax.MotorType.kBrushless);
+            checkNeoError(motor.setPeriodicFramePeriod(CANSparkMax.PeriodicFrame.kStatus0, 100), "Failed to set periodic status frame 0 rate");
+            checkNeoError(motor.setPeriodicFramePeriod(CANSparkMax.PeriodicFrame.kStatus1, 20), "Failed to set periodic status frame 1 rate");
+            checkNeoError(motor.setPeriodicFramePeriod(CANSparkMax.PeriodicFrame.kStatus2, 20), "Failed to set periodic status frame 2 rate");
             checkNeoError(motor.setIdleMode(CANSparkMax.IdleMode.kBrake), "Failed to set NEO idle mode");
             motor.setInverted(!mechConfiguration.isSteerInverted());
             if (hasVoltageCompensation()) {

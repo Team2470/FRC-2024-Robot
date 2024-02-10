@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import java.util.HashMap;
+
 import com.kennedyrobotics.auto.AutoSelector;
 import com.kennedyrobotics.hardware.misc.RevDigit;
 import com.pathplanner.lib.path.PathConstraints;
@@ -18,10 +20,7 @@ import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.commands.DriveWithController;
 import frc.robot.subsystems.Drivetrain;
-import frc.robot.subsystems.PivotLEDs;
-import frc.robot.subsystems.PivotTemp;
 import frc.robot.subsystems.VisionSubsystem;
-import frc.robot.subsystems.PivotLEDs.Side;
 import frc.robot.vision.VisionIOPhoton;
 
 /**
@@ -38,10 +37,7 @@ public class RobotContainer {
       new VisionSubsystem(
           new VisionIOPhoton("Back-Left", VisionConstants.kBackLeftCamera),
           new VisionIOPhoton("Back-Right", VisionConstants.kBackRightCamera));
-  private final PivotLEDs m_pivotLEDsLeft = new PivotLEDs(Side.kLeft, m_vision.getCameras()[0]);
-  private final PivotLEDs m_pivotLEDsRight = new PivotLEDs(Side.kRight, m_vision.getCameras()[1]);
   private final Drivetrain m_drivetrain = new Drivetrain(m_vision);
-  private final PivotTemp m_pivotTemp = new PivotTemp();
 
   // Auto
   private final RevDigit m_revDigit;
@@ -67,11 +63,7 @@ public class RobotContainer {
     // Initialize other autos here
     // TODO
     m_autoSelector.registerCommand("Test", "TEST", m_drivetrain.createAutoPath(
-      null, "New Auto", 
-      new PathConstraints(3, 2, 
-        Constants.DriveConstants.kMaxAngularVelocityRadiansPerSecond, 
-        Constants.DriveConstants.kMaxAngularVelocityRadiansPerSecond)
-    ));
+      null, "New Auto", AutoConstants.kPathConstraints));
 
     m_autoSelector.initialize();
   }
@@ -134,11 +126,6 @@ public class RobotContainer {
     // m_controller.povRight().whileTrue(new RobotTurnToAngle(m_drivetrain, 0));
 
     // m_controller.povLeft().whileTrue(new RobotTurnToAngle(m_drivetrain, 180));
-
-    // m_controller.povUp().whileTrue(m_pivotTemp.setPowerCmd(0.6));
-    // m_controller.povDown().whileTrue(m_pivotTemp.setPowerCmd(-0.6));
-
-    m_controller.back().onTrue(m_pivotTemp.resetEncoderCmd());
   }
 
   /**
@@ -165,5 +152,9 @@ public class RobotContainer {
 
   public void disabledPeriodic() {
     m_drivetrain.resetSteerEncoders();
+  }
+
+  private Command createTestAuto() {
+    return m_drivetrain.createAutoPath(null, "New Path", AutoConstants.kPathConstraints);
   }
 }

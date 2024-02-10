@@ -1,7 +1,6 @@
 package frc.robot.commands;
 
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -12,7 +11,6 @@ import edu.wpi.first.util.CircularBuffer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
-import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.subsystems.Drivetrain;
 import java.util.function.BooleanSupplier;
@@ -50,10 +48,10 @@ public class DriveWithController extends Command {
   private static final int kAngleHistoryMilliseconds = 100;
   private static final int kAngleHistoryLength = kAngleHistoryMilliseconds / 20;
   private CircularBuffer[] lastModuleAngles = {
-    new CircularBuffer(kAngleHistoryLength),
-    new CircularBuffer(kAngleHistoryLength),
-    new CircularBuffer(kAngleHistoryLength),
-    new CircularBuffer(kAngleHistoryLength)
+    new CircularBuffer<Object>(kAngleHistoryLength),
+    new CircularBuffer<Object>(kAngleHistoryLength),
+    new CircularBuffer<Object>(kAngleHistoryLength),
+    new CircularBuffer<Object>(kAngleHistoryLength)
   };
 
   public DriveWithController(
