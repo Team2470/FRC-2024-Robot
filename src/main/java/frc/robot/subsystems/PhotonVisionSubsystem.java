@@ -107,6 +107,7 @@ public class PhotonVisionSubsystem extends SubsystemBase {
 
 
             DistanceToTarget = cameraBestTarget.getBestCameraToTarget().getTranslation().getNorm();
+            DistanceToTarget = Units.metersToInches(DistanceToTarget);
             
 
         }

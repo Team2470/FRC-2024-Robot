@@ -15,7 +15,6 @@ import frc.robot.Constants.FlyWheelConstants;
 import frc.robot.Constants.ShooterPivotConstants;
 import frc.robot.subsystems.ShooterPivot;
 import frc.robot.subsystems.SimpleFlywheel;
-import frc.robot.subsystems.Vision;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -29,7 +28,6 @@ public class RobotContainer {
   private final SimpleFlywheel m_simpleFlywheelLeft = new SimpleFlywheel(FlyWheelConstants.kLeftID, true);
   private final SimpleFlywheel m_simpleFlywheelRight = new SimpleFlywheel(FlyWheelConstants.kRightID, false);
   private final ShooterPivot m_ShooterPivot = new ShooterPivot();
-  private final Vision m_Vision = new Vision();
   private final Constants m_Constants = new Constants();
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
@@ -77,9 +75,9 @@ public class RobotContainer {
     m_controller.a().whileTrue(m_ShooterPivot.openLoopCommand(-2));
     // m_controller.x().whileTrue(m_ShooterPivot.goToAngleCommand(37.08984375));
     m_controller.x().whileTrue(m_ShooterPivot.goToAngleCommand(()-> SmartDashboard.getNumber("Select Shooter Pivot Angle", 0)));
-    m_controller.y().whileTrue(m_ShooterPivot.goToAngleCommand(()-> ShooterPivotConstants.getAngle(m_Vision.getDistance())));
-    m_controller.y().whileTrue(m_simpleFlywheelLeft.pidCommand(()-> FlyWheelConstants.getRPM(m_Vision.getDistance())));
-    m_controller.y().whileTrue(m_simpleFlywheelRight.pidCommand(()-> FlyWheelConstants.getRPM(m_Vision.getDistance())));
+    m_controller.y().whileTrue(m_ShooterPivot.goToAngleCommand(()-> ShooterPivotConstants.getAngle(m_camera1.getDistanceToTarget())));
+    m_controller.y().whileTrue(m_simpleFlywheelLeft.pidCommand(()-> FlyWheelConstants.getRPM(m_camera1.getDistanceToTarget())));
+    m_controller.y().whileTrue(m_simpleFlywheelRight.pidCommand(()-> FlyWheelConstants.getRPM(m_camera1.getDistanceToTarget())));
     //dont go 2800-3200 rpm (Harmonics ;] )
   }
 
