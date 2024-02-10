@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants.FlyWheelConstants;
+import frc.robot.Constants.ShooterPivotConstants;
 import frc.robot.subsystems.ShooterPivot;
 import frc.robot.subsystems.SimpleFlywheel;
 import frc.robot.subsystems.Vision;
@@ -30,6 +31,7 @@ public class RobotContainer {
   private final SimpleFlywheel m_simpleFlywheelRight = new SimpleFlywheel(FlyWheelConstants.kRightID, false);
   private final ShooterPivot m_ShooterPivot = new ShooterPivot();
   private final Vision m_Vision = new Vision();
+  private final Constants m_Constants = new Constants();
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_controller = new CommandXboxController(0);
@@ -77,9 +79,9 @@ public class RobotContainer {
     m_controller.a().whileTrue(m_ShooterPivot.openLoopCommand(-2));
     // m_controller.x().whileTrue(m_ShooterPivot.goToAngleCommand(37.08984375));
     m_controller.x().whileTrue(m_ShooterPivot.goToAngleCommand(()-> SmartDashboard.getNumber("Select Shooter Pivot Angle", 0)));
-    m_controller.y().whileTrue(m_ShooterPivot.goToAngleCommand(()-> m_Vision.getAngle()));
-    m_controller.y().whileTrue(m_simpleFlywheelLeft.pidCommand(()-> m_Vision.getRPM()));
-    m_controller.y().whileTrue(m_simpleFlywheelRight.pidCommand(()-> m_Vision.getRPM()));
+    m_controller.y().whileTrue(m_ShooterPivot.goToAngleCommand(()-> ShooterPivotConstants.getAngle(m_Vision.getDistance())));
+    m_controller.y().whileTrue(m_simpleFlywheelLeft.pidCommand(()-> FlyWheelConstants.getRPM(m_Vision.getDistance())));
+    m_controller.y().whileTrue(m_simpleFlywheelRight.pidCommand(()-> FlyWheelConstants.getRPM(m_Vision.getDistance())));
     //dont go 2800-3200 rpm (Harmonics ;] )
   }
 

@@ -46,6 +46,10 @@ public final class Constants {
       {51.5, 60,38},
   };
 
+    public static double getRPM(double distance){
+      return (227*(Math.pow(distance, 0.578)));
+    }
+
  
   }
   public static class ShooterPivotConstants {
@@ -69,6 +73,13 @@ public final class Constants {
     public static final double kG = 0.45;
     public static final double kV = 3.9;
     public static final double kA = 0.002;
+
+
+    public static double getAngle(double distance) {
+      return (1166*(Math.pow(distance,-0.736)));
+    } 
+
+
   }
 
   public static class IntakePivotConstants{

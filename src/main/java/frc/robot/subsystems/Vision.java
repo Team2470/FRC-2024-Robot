@@ -10,9 +10,6 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 
 public class Vision extends SubsystemBase {
-  double RPM = 0;
-  double Angle = 0;
-  double distance = 0;
   /** Creates a new Vision. */
   public Vision() {
   }
@@ -20,23 +17,12 @@ public class Vision extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    SmartDashboard.putNumber("Vision RPM", getRPM());
-    SmartDashboard.putNumber("Vision Angle", getAngle());
 
   }
 
   public double getDistance(){
-  distance = SmartDashboard.getNumber("Select Distance", 0);
-  return distance;
+  return SmartDashboard.getNumber("Select Distance", 0);
   }
 
-  public double getRPM(){
-    RPM = (227*(Math.pow(getDistance(), 0.578)));
-    return RPM;
-  }
-  public double getAngle(){
-    Angle = (1166*(Math.pow(getDistance(),-0.736)));
-    return Angle;
-  }
 
 }
