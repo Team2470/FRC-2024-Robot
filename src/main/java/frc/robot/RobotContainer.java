@@ -8,10 +8,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-//import frc.robot.subsystems.SimpleFlywheel;
-import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.PhotonVisionSubsystem;
-import frc.robot.subsystems.TimeOfFlightSensorTest;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -21,9 +18,6 @@ import frc.robot.subsystems.TimeOfFlightSensorTest;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  //private final SimpleFlywheel m_simpleFlywheel = new SimpleFlywheel();
-  private final IntakeSubsystem m_intake = new IntakeSubsystem(1); 
-  private final TimeOfFlightSensorTest m_TOF1 = new TimeOfFlightSensorTest();
   private final PhotonVisionSubsystem m_camera1 = new PhotonVisionSubsystem();
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_controller = new CommandXboxController(0);
@@ -47,15 +41,7 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-   // m_controller.a().whileTrue(m_simpleFlywheel.spinCommand(2));
-   // m_controller.b().whileTrue(m_simpleFlywheel.spinCommand(4));
-   // m_controller.x().whileTrue(m_simpleFlywheel.spinCommand(6));
-   // m_controller.y().whileTrue(m_simpleFlywheel.spinCommand(8));
-
-  m_controller.a().whileTrue(m_intake.test_forwardsCommand());
-  m_controller.b().whileTrue(m_intake.test_reverseCommand());
-  //m_controller.x().whileTrue(m_TOF1.sequenceTest(m_intake));
-  m_controller.x().whileTrue(m_TOF1.variableVoltageTest(m_intake));
+    
     }
 
 
