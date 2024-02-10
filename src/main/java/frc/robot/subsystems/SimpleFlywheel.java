@@ -58,6 +58,7 @@ public class SimpleFlywheel extends SubsystemBase {
     m_leader.setInverted(isLeft);
     m_isLeft = isLeft;
 
+    m_leader.setOpenLoopRampRate(0.2);
     m_leader.setSmartCurrentLimit(40);
     //m_follower.setSmartCurrentLimit(40);
 

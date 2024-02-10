@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
+import edu.wpi.first.math.filter.MedianFilter;
 import edu.wpi.first.math.util.Units;
 
 import java.util.List;
@@ -24,6 +25,8 @@ public class PhotonVisionSubsystem extends SubsystemBase {
 
     private boolean isDataValid;
     private double DistanceToTarget;
+    private double FilteredDistanceToTarget;
+    private final MedianFilter m_distanceFilter = new MedianFilter(5);
    
     private final double CAMERA_HEIGHT_METERES = Units.inchesToMeters(10);
     private final double TARGET_HEIGHT_METERS = Units.inchesToMeters(50);
@@ -88,6 +91,10 @@ public class PhotonVisionSubsystem extends SubsystemBase {
         return DistanceToTarget;
     }
 
+    public double getFilteredDistance(){
+        return FilteredDistanceToTarget;
+    }
+
     public boolean isDataValid() {
         return isDataValid;
     }
@@ -108,17 +115,18 @@ public class PhotonVisionSubsystem extends SubsystemBase {
 
             DistanceToTarget = cameraBestTarget.getBestCameraToTarget().getTranslation().getNorm();
             DistanceToTarget = Units.metersToInches(DistanceToTarget);
-            
+            FilteredDistanceToTarget = m_distanceFilter.calculate(DistanceToTarget);
 
         }
         
-            if ((DistanceToTarget > 0 && DistanceToTarget < 5.5) &&  
+            if ((DistanceToTarget > 0 && DistanceToTarget < 216.5) &&  
                 (cameraBestTarget.getFiducialId() == 7 || cameraBestTarget.getFiducialId() == 4)) {
                 isDataValid = true;
             }
 
       }
             SmartDashboard.putNumber("Distance to target", getDistanceToTarget());
+            SmartDashboard.putNumber("Filtered Distance", FilteredDistanceToTarget);
             SmartDashboard.putBoolean("is data valid?", isDataValid());
 
 

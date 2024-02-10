@@ -67,8 +67,8 @@ public class RobotContainer {
     // m_controller.x().whileTrue(m_simpleFlywheel.spinCommand(6));
     // m_controller.y().whileTrue(m_simpleFlywheel.spinCommand(8));
     //m_controller.rightBumper().whileTrue(m_simpleFlywheel.spinCommand(-2));
-    // m_controller.rightTrigger().whileTrue(m_simpleFlywheelLeft.openLoopCommand(()-> SmartDashboard.getNumber("Select Left Voltage", 0)));
-    // m_controller.rightTrigger().whileTrue(m_simpleFlywheelRight.openLoopCommand(()-> SmartDashboard.getNumber("Select Right Voltage", 0)));
+    m_controller.rightTrigger().whileTrue(m_simpleFlywheelLeft.openLoopCommand(()-> SmartDashboard.getNumber("Select Left Voltage", 0)));
+    m_controller.rightTrigger().whileTrue(m_simpleFlywheelRight.openLoopCommand(()-> SmartDashboard.getNumber("Select Right Voltage", 0)));
     m_controller.leftTrigger().whileTrue(m_simpleFlywheelLeft.pidCommand(()-> SmartDashboard.getNumber("Select Left RPM", 0)));
     m_controller.leftTrigger().whileTrue(m_simpleFlywheelRight.pidCommand(()-> SmartDashboard.getNumber("Select Right RPM", 0)));
     m_controller.b().whileTrue(m_ShooterPivot.openLoopCommand(2));
@@ -95,6 +95,12 @@ public class RobotContainer {
 public void teleopInit(){
 
 }
+
+  public void periodic() {
+    SmartDashboard.putNumber("Angle", ShooterPivotConstants.getAngle(m_camera1.getDistanceToTarget()));
+    SmartDashboard.putNumber("RPM", FlyWheelConstants.getRPM(m_camera1.getDistanceToTarget()));
+  }
+
 }
 
 
