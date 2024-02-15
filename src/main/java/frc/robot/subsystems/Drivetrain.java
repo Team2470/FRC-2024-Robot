@@ -41,7 +41,6 @@ public class Drivetrain extends SubsystemBase {
   private final SwerveDrivePoseEstimator m_odometry;
   // private final SwerveDriveOdometry m_odometry; // TODO make this selectable
   private final Field2d m_field = new Field2d();
-  private final VisionSubsystem m_vision;
 
   // : Hardware
   private final Pigeon2 m_imu;
@@ -57,9 +56,7 @@ public class Drivetrain extends SubsystemBase {
     m_slowMode = slowMode;
   }
 
-  public Drivetrain(VisionSubsystem vision) {
-    m_vision = vision;
-
+  public Drivetrain() {
     // : IMU setup
     m_imu =
         new Pigeon2(
@@ -215,17 +212,17 @@ public class Drivetrain extends SubsystemBase {
     // Update robot pose
     m_odometry.update(getIMUHeading(), getModulePositions());
 
-    // Feed in Vision measurements
-    for (int i = 0; i < m_vision.getVisionOdometry().size(); i++) {
-      m_odometry.addVisionMeasurement(
-          m_vision.getVisionOdometry().get(i).getPose(),
-          m_vision.getVisionOdometry().get(i).getTimestamp(),
-          VecBuilder.fill(
-              m_vision.getMinDistance(i) * ESTIMATION_COEFFICIENT,
-              m_vision.getMinDistance(i) * ESTIMATION_COEFFICIENT,
-              5.0));
-    }
-    m_vision.setReferencePose(getPose());
+    // // Feed in Vision measurements
+    // for (int i = 0; i < m_vision.getVisionOdometry().size(); i++) {
+    //   m_odometry.addVisionMeasurement(
+    //       m_vision.getVisionOdometry().get(i).getPose(),
+    //       m_vision.getVisionOdometry().get(i).getTimestamp(),
+    //       VecBuilder.fill(
+    //           m_vision.getMinDistance(i) * ESTIMATION_COEFFICIENT,
+    //           m_vision.getMinDistance(i) * ESTIMATION_COEFFICIENT,
+    //           5.0));
+    // }
+    // m_vision.setReferencePose(getPose());
 
     m_field.setRobotPose(getPose());
 
