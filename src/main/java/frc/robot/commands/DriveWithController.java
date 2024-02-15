@@ -4,6 +4,8 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.geometry.proto.Translation2dProto;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.State;
@@ -36,8 +38,8 @@ public class DriveWithController extends Command {
   private boolean fieldOrient;
   private boolean lastMovingState = false;
   private SwerveModuleState[] latchedModuleStates;
-  private final SlewRateLimiter xFilter = new SlewRateLimiter(3);
-  private final SlewRateLimiter yFilter = new SlewRateLimiter(3);
+  private final SlewRateLimiter xFilter = new SlewRateLimiter(5);
+  private final SlewRateLimiter yFilter = new SlewRateLimiter(5);
   private final SlewRateLimiter rotateFilter = new SlewRateLimiter(5);
 
   private final TrapezoidProfile.Constraints headingControllerConstraints =  new TrapezoidProfile.Constraints(DriveConstants.kMaxAngularVelocityRadiansPerSecond/4.0, 4*Math.PI);
@@ -48,10 +50,10 @@ public class DriveWithController extends Command {
   private static final int kAngleHistoryMilliseconds = 100;
   private static final int kAngleHistoryLength = kAngleHistoryMilliseconds / 20;
   private CircularBuffer[] lastModuleAngles = {
-    new CircularBuffer<Object>(kAngleHistoryLength),
-    new CircularBuffer<Object>(kAngleHistoryLength),
-    new CircularBuffer<Object>(kAngleHistoryLength),
-    new CircularBuffer<Object>(kAngleHistoryLength)
+    new CircularBuffer(kAngleHistoryLength),
+    new CircularBuffer(kAngleHistoryLength),
+    new CircularBuffer(kAngleHistoryLength),
+    new CircularBuffer(kAngleHistoryLength)
   };
 
   public DriveWithController(
@@ -131,13 +133,20 @@ public class DriveWithController extends Command {
     }
 
     if (moving) {
-      xMove = Math.copySign(xMove * xMove, xMove);
-      yMove = Math.copySign(yMove * yMove, yMove);
+      // xMove = Math.copySign(xMove * xMove, xMove);
+      // yMove = Math.copySign(yMove * yMove, yMove);
       rotate = Math.copySign(rotate * rotate, rotate);
 
+      Translation2d moveTranslation = new Translation2d(xMove, yMove);
+      double moveSpeed = Math.pow(moveTranslation.getNorm(), 2);
+      Rotation2d angle = moveTranslation.getAngle();
+
+      xMove = moveSpeed * angle.getCos();
+      yMove = moveSpeed * angle.getSin();
+
       if (slowModeSupplier.getAsBoolean()) {
-        xMove *= 0.3;
-        yMove *= 0.3;
+        xMove *= 0.15;
+        yMove *= 0.15;
         rotate *= 0.25;
       } else {
         xMove *= 1.0;

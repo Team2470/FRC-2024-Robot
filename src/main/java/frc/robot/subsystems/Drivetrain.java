@@ -79,14 +79,10 @@ public class Drivetrain extends SubsystemBase {
     moduleConfig.setDriveCurrentLimit(40);
 
     // : Swerve setup
-    this.m_swerve_modules[0] =
-        this.createModule(Constants.DriveConstants.kFrontLeft, moduleConfig, tab);
-    this.m_swerve_modules[1] =
-        this.createModule(Constants.DriveConstants.kFrontRight, moduleConfig, tab);
-    this.m_swerve_modules[2] =
-        this.createModule(Constants.DriveConstants.kBackLeft, moduleConfig, tab);
-    this.m_swerve_modules[3] =
-        this.createModule(Constants.DriveConstants.kBackRight, moduleConfig, tab);
+    this.m_swerve_modules[0] = this.createModule(Constants.DriveConstants.kFrontLeft, moduleConfig, tab);
+    this.m_swerve_modules[1] = this.createModule(Constants.DriveConstants.kFrontRight, moduleConfig, tab);
+    this.m_swerve_modules[2] = this.createModule(Constants.DriveConstants.kBackLeft, moduleConfig, tab);
+    this.m_swerve_modules[3] = this.createModule(Constants.DriveConstants.kBackRight, moduleConfig, tab);
 
     // Setup odometry
     m_odometry =
@@ -149,9 +145,9 @@ public class Drivetrain extends SubsystemBase {
   }
 
   public void setNominalVoltages(double voltage) {
-    for (SwerveModule swerveModule : m_swerve_modules) {
-      ((CANSparkMax) swerveModule.getDriveMotor()).enableVoltageCompensation(voltage);
-    }
+    // for (SwerveModule swerveModule : m_swerve_modules) {
+    //   (() swerveModule.getDriveMotor()).enableVoltageCompensation(voltage);
+    // }
   }
 
   public SwerveModuleState[] getModuleStates() {
