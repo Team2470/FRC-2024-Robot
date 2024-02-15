@@ -4,8 +4,14 @@
 
 package frc.robot;
 
+import javax.xml.crypto.dsig.Transform;
+
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.interpolation.InterpolatingTreeMap;
 import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.math.util.Units;
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform3d;
 
 
 /**
@@ -100,6 +106,17 @@ public final class Constants {
     public static final double kD = 0;
     public static final double kF = 0;
   }
+
+public static class VisionConstants{ 
+  public static final Transform3d kFrontRightCamera = new Transform3d(
+    new Translation3d(Units.inchesToMeters(-5.1), Units.inchesToMeters(14.391), Units.inchesToMeters(6.626)),
+    new Rotation3d(0, Units.degreesToRadians(25.0), 0
+    )
+
+
+  );
+}
+
 
 }
 
