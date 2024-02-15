@@ -35,6 +35,12 @@ import frc.robot.commands.DriveWithController;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.vision.VisionIOPhoton;
+import frc.robot.subsystems.SimpleShooterFeeder;
+import frc.robot.subsystems.TimeOfFlightSensorTest;
+import frc.robot.subsystems.PhotonVisionSubsystem;
+
+
+
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -54,12 +60,17 @@ public class RobotContainer {
   private final ShooterPivot m_ShooterPivot = new ShooterPivot();
   private final Constants m_Constants = new Constants();
   private final Drivetrain m_drivetrain = new Drivetrain();
-
+  private final SimpleShooterFeeder m_SimpleShooterFeeder = new SimpleShooterFeeder(1);
+  private final TimeOfFlightSensorTest m_TOF1 = new TimeOfFlightSensorTest();
   // Auto
   private final RevDigit m_revDigit;
   private final AutoSelector m_autoSelector;
 
-  /** The container for the robot. Contains subsystems, OI devices, and commands. */
+
+
+
+  
+
   public RobotContainer() {
     // CameraServer.startAutomaticCapture();
 
@@ -124,6 +135,11 @@ public class RobotContainer {
     m_controller.y().whileTrue(m_simpleFlywheelRight.pidCommand(()-> FlyWheelConstants.getRPM(m_camera1.getFilteredDistance())));
     m_controller.rightBumper().whileTrue(m_ShooterPivot.goToAngleCommand(()-> ShooterPivotConstants.getAngle(m_camera1.getFilteredDistance())));
 
+    // // m_controller.rightBumper().whileTrue(m_simpleFlywheel.spinCommand(-2));
+    // m_controller.a().whileTrue(m_SimpleShooterFeeder.SimpleShooterFeeder_forwardsCommand());
+    // m_controller.b().whileTrue(m_SimpleShooterFeeder.SimpleShooterFeeder_reverseCommand());
+    // //m_controller.x().whileTrue(m_TOF1.sequenceTest(m_SimpleShooterFeeder));
+    // m_controller.y().whileTrue(m_TOF1.variableVoltageTest(m_SimpleShooterFeeder));
 
     m_controller.leftBumper().whileTrue(new ParallelCommandGroup(
           m_ShooterPivot.goToAngleCommand(56.92836363),
