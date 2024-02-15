@@ -7,6 +7,9 @@ package frc.robot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
@@ -35,7 +38,13 @@ public class RobotContainer {
   private final CommandXboxController m_sysIDcontroller  = new CommandXboxController(1);
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-        
+
+
+    m_simpleFlywheelLeft.setDefaultCommand(m_simpleFlywheelLeft.pidCommand(500));
+    m_simpleFlywheelRight.setDefaultCommand(m_simpleFlywheelRight.pidCommand(500));
+    m_ShooterPivot.setDefaultCommand(m_ShooterPivot.goToAngleCommand(45));
+    
+      
 
     SmartDashboard.putNumber("Select Left Voltage", 0);
     SmartDashboard.putNumber("Select Right Voltage", 0);
@@ -67,17 +76,41 @@ public class RobotContainer {
     // m_controller.x().whileTrue(m_simpleFlywheel.spinCommand(6));
     // m_controller.y().whileTrue(m_simpleFlywheel.spinCommand(8));
     //m_controller.rightBumper().whileTrue(m_simpleFlywheel.spinCommand(-2));
-    m_controller.rightTrigger().whileTrue(m_simpleFlywheelLeft.openLoopCommand(()-> SmartDashboard.getNumber("Select Left Voltage", 0)));
-    m_controller.rightTrigger().whileTrue(m_simpleFlywheelRight.openLoopCommand(()-> SmartDashboard.getNumber("Select Right Voltage", 0)));
+    // m_controller.rightTrigger().whileTrue(m_simpleFlywheelLeft.openLoopCommand(()-> SmartDashboard.getNumber("Select Left Voltage", 0)));
+    // m_controller.rightTrigger().whileTrue(m_simpleFlywheelRight.openLoopCommand(()-> SmartDashboard.getNumber("Select Right Voltage", 0)));
     m_controller.leftTrigger().whileTrue(m_simpleFlywheelLeft.pidCommand(()-> SmartDashboard.getNumber("Select Left RPM", 0)));
     m_controller.leftTrigger().whileTrue(m_simpleFlywheelRight.pidCommand(()-> SmartDashboard.getNumber("Select Right RPM", 0)));
     m_controller.b().whileTrue(m_ShooterPivot.openLoopCommand(2));
     m_controller.a().whileTrue(m_ShooterPivot.openLoopCommand(-2));
     // m_controller.x().whileTrue(m_ShooterPivot.goToAngleCommand(37.08984375));
-    m_controller.x().whileTrue(m_ShooterPivot.goToAngleCommand(()-> SmartDashboard.getNumber("Select Shooter Pivot Angle", 0)));
+    // m_controller.x().whileTrue(m_ShooterPivot.goToAngleCommand(()-> SmartDashboard.getNumber("Select Shooter Pivot Angle", 0)));
     m_controller.y().whileTrue(m_ShooterPivot.goToAngleCommand(()-> ShooterPivotConstants.getAngle(m_camera1.getFilteredDistance())));
     m_controller.y().whileTrue(m_simpleFlywheelLeft.pidCommand(()-> FlyWheelConstants.getRPM(m_camera1.getFilteredDistance())));
     m_controller.y().whileTrue(m_simpleFlywheelRight.pidCommand(()-> FlyWheelConstants.getRPM(m_camera1.getFilteredDistance())));
+    m_controller.rightBumper().whileTrue(m_ShooterPivot.goToAngleCommand(()-> ShooterPivotConstants.getAngle(m_camera1.getFilteredDistance())));
+
+
+    m_controller.leftBumper().whileTrue(new ParallelCommandGroup(
+          m_ShooterPivot.goToAngleCommand(56.92836363),
+          m_simpleFlywheelLeft.pidCommand(2326.626089),
+          m_simpleFlywheelRight.pidCommand(2326.626089)
+
+    ));
+
+    m_controller.x().whileTrue(new ParallelCommandGroup(
+          m_ShooterPivot.goToAngleCommand(48.779296875),
+          m_simpleFlywheelLeft.pidCommand(-1500),
+          m_simpleFlywheelRight.pidCommand(-1500)
+    ));
+    m_controller.rightTrigger().whileTrue(new ParallelCommandGroup(
+        m_ShooterPivot.goToAngleCommand(44),
+        m_simpleFlywheelLeft.pidCommand(1300),
+        m_simpleFlywheelRight.pidCommand(1300)
+
+    ));
+
+
+
     //dont go 2800-3200 rpm (Harmonics ;] )
   }
 
