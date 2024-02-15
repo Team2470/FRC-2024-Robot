@@ -13,6 +13,7 @@ import frc.robot.Constants.FlyWheelConstants;
 import frc.robot.subsystems.SimpleFlywheel;
 import frc.robot.subsystems.SimpleShooterFeeder;
 import frc.robot.subsystems.TimeOfFlightSensorTest;
+import frc.robot.subsystems.PhotonVisionSubsystem;
 
 
 
@@ -29,6 +30,7 @@ public class RobotContainer {
   //private final SimpleFlywheel m_simpleFlywheelRight = new SimpleFlywheel(FlyWheelConstants.kRightID, false);
   private final SimpleShooterFeeder m_SimpleShooterFeeder = new SimpleShooterFeeder(1);
   private final TimeOfFlightSensorTest m_TOF1 = new TimeOfFlightSensorTest();
+  private final PhotonVisionSubsystem m_camera1 = new PhotonVisionSubsystem();
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_controller = new CommandXboxController(0);
