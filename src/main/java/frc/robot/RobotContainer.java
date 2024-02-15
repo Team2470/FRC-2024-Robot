@@ -4,45 +4,74 @@
 
 package frc.robot;
 
+import java.util.HashMap;
+
+import com.kennedyrobotics.auto.AutoSelector;
+import com.kennedyrobotics.hardware.misc.RevDigit;
+import com.pathplanner.lib.path.PathConstraints;
+
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+
 import frc.robot.Constants.FlyWheelConstants;
 import frc.robot.Constants.ShooterPivotConstants;
 import frc.robot.subsystems.ShooterPivot;
 import frc.robot.subsystems.SimpleFlywheel;
 import frc.robot.subsystems.Vision;
-
-
-
+import frc.robot.Constants.AutoConstants;
+import frc.robot.Constants.DriveConstants;
+import frc.robot.Constants.VisionConstants;
+import frc.robot.commands.DriveWithController;
+import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.VisionSubsystem;
+import frc.robot.vision.VisionIOPhoton;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
  * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
  * periodic methods (other than the scheduler calls). Instead, the structure of the robot (including
- * subsystems, commands, and trigger mappings) should be declared here.
+ * subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
+  // The robot's subsystems and commands are defined here...
+
+
+  // Replace with CommandPS4Controller or CommandJoystick if needed
+  // OI
+  private final CommandXboxController m_controller = new CommandXboxController(0);
   // The robot's subsystems and commands are defined here...
   private final SimpleFlywheel m_simpleFlywheelLeft = new SimpleFlywheel(FlyWheelConstants.kLeftID, true);
   private final SimpleFlywheel m_simpleFlywheelRight = new SimpleFlywheel(FlyWheelConstants.kRightID, false);
   private final ShooterPivot m_ShooterPivot = new ShooterPivot();
-  private final Vision m_Vision = new Vision();
+  private final Vision m_vision = new Vision();
   private final Constants m_Constants = new Constants();
+  private final Drivetrain m_drivetrain = new Drivetrain();
 
-  // Replace with CommandPS4Controller or CommandJoystick if needed
-  private final CommandXboxController m_controller = new CommandXboxController(0);
-  private final CommandXboxController m_sysIDcontroller = new CommandXboxController(1);
-
-  
+  // Auto
+  private final RevDigit m_revDigit;
+  private final AutoSelector m_autoSelector;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-    // Configure the trigger bindings
-    configureBindings();
+    // CameraServer.startAutomaticCapture();
+
+    // Auto Selector
+    m_revDigit = new RevDigit();
+    m_revDigit.display("3081");
+    m_autoSelector = new AutoSelector(m_revDigit, "DFLT", new SequentialCommandGroup(new PrintCommand("OOPS")));
+
+    // Initialize other autos here
+    // TODO
+    m_autoSelector.registerCommand("Test", "TEST", m_drivetrain.createAutoPath(
+      null, "New Auto", AutoConstants.kPathConstraints));
+
+    m_autoSelector.initialize();
 
     SmartDashboard.putNumber("Select Left Voltage", 0);
     SmartDashboard.putNumber("Select Right Voltage", 0);
@@ -79,10 +108,66 @@ public class RobotContainer {
     m_controller.a().whileTrue(m_ShooterPivot.openLoopCommand(-2));
     // m_controller.x().whileTrue(m_ShooterPivot.goToAngleCommand(37.08984375));
     m_controller.x().whileTrue(m_ShooterPivot.goToAngleCommand(()-> SmartDashboard.getNumber("Select Shooter Pivot Angle", 0)));
-    m_controller.y().whileTrue(m_ShooterPivot.goToAngleCommand(()-> ShooterPivotConstants.getAngle(m_Vision.getDistance())));
-    m_controller.y().whileTrue(m_simpleFlywheelLeft.pidCommand(()-> FlyWheelConstants.getRPM(m_Vision.getDistance())));
-    m_controller.y().whileTrue(m_simpleFlywheelRight.pidCommand(()-> FlyWheelConstants.getRPM(m_Vision.getDistance())));
+    m_controller.y().whileTrue(m_ShooterPivot.goToAngleCommand(()-> ShooterPivotConstants.getAngle(m_vision.getDistance())));
+    m_controller.y().whileTrue(m_simpleFlywheelLeft.pidCommand(()-> FlyWheelConstants.getRPM(m_vision.getDistance())));
+    m_controller.y().whileTrue(m_simpleFlywheelRight.pidCommand(()-> FlyWheelConstants.getRPM(m_vision.getDistance())));
     //dont go 2800-3200 rpm (Harmonics ;] )
+    // Configure default commands
+
+    // Configure default commands
+    m_drivetrain.setDefaultCommand(
+        new DriveWithController(
+            m_drivetrain,
+            // X Move Velocity - Forward
+            () -> -m_controller.getHID().getLeftY(),
+
+            // Y Move Velocity - Strafe
+            () -> -m_controller.getHID().getLeftX(),
+
+            // Rotate Angular velocity
+            () -> {
+              double leftTrigger = m_controller.getHID().getLeftTriggerAxis();
+              double rightTrigger = m_controller.getHID().getRightTriggerAxis();
+
+              if (leftTrigger < rightTrigger) {
+                return -rightTrigger;
+              } else {
+                return leftTrigger;
+              }
+            },
+
+            // Field Orientated
+            () -> !m_controller.getHID().getAButton(),
+
+            // Slow Mode
+            () -> m_drivetrain.getSlowMode() || m_controller.getHID().getXButton(),
+
+            // Disable X Movement
+            () -> m_controller.getHID().getBButton(),
+
+            // Disable Y Movement
+            () -> false,
+
+            // Heading Override
+            () -> {
+              switch (m_controller.getHID().getPOV()) {
+                case 0: return 0.0;
+                case 180: return 180.0;
+                default: return null;
+              }
+            }));
+
+    m_controller
+        .start()
+        .onTrue(new InstantCommand(m_drivetrain::resetHeading)); // TODO this should also do
+    // something with odometry? As
+    // it freaks out
+
+    m_controller.rightStick().toggleOnTrue(m_drivetrain.xStop());
+
+    // m_controller.povRight().whileTrue(new RobotTurnToAngle(m_drivetrain, 0));
+
+    // m_controller.povLeft().whileTrue(new RobotTurnToAngle(m_drivetrain, 180));
   }
 
   /**
@@ -91,8 +176,27 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    // An example command will be run in autonomous
-    return Commands.print("No autonomous command configured");
+    // An ExampleCommand will run in autonomous
+    return m_autoSelector.selected();
   }
-  
+
+  public void autonomousInit() {
+    m_drivetrain.resetHeading();
+    m_drivetrain.setNominalVoltages(AutoConstants.kAutoVoltageCompensation);
+  }
+
+  public void teleopInit() {
+    m_drivetrain.setSlowMode(false);
+    m_drivetrain.setNominalVoltages(DriveConstants.kDriveVoltageCompensation);
+  }
+
+  public void robotPeriodic() {}
+
+  public void disabledPeriodic() {
+    m_drivetrain.resetSteerEncoders();
+  }
+
+  private Command createTestAuto() {
+    return m_drivetrain.createAutoPath(null, "New Path", AutoConstants.kPathConstraints);
+  }
 }
