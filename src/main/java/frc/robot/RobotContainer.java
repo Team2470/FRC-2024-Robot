@@ -35,8 +35,9 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final VisionSubsystem m_vision =
       new VisionSubsystem(
-          new VisionIOPhoton("Back-Left", VisionConstants.kBackLeftCamera),
-          new VisionIOPhoton("Back-Right", VisionConstants.kBackRightCamera));
+          // new VisionIOPhoton("Back-Left", VisionConstants.kBackLeftCamera),
+          // new VisionIOPhoton("Back-Right", VisionConstants.kBackRightCamera)
+        );
   private final Drivetrain m_drivetrain = new Drivetrain(m_vision);
 
   // Auto
@@ -106,12 +107,9 @@ public class RobotContainer {
             // Heading Override
             () -> {
               switch (m_controller.getHID().getPOV()) {
-                case 0:
-                  return 0.0;
-                case 180:
-                  return 180.0;
-                default:
-                  return null;
+                case 0: return 0.0;
+                case 180: return 180.0;
+                default: return null;
               }
             }));
 

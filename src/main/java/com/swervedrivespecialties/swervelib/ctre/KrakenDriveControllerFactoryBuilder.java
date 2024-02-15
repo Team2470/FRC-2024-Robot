@@ -46,13 +46,16 @@ public class KrakenDriveControllerFactoryBuilder {
 
             if (hasCurrentLimit()) {
                 motorConfig.CurrentLimits.SupplyCurrentLimit = currentLimit;
-                motorConfig.CurrentLimits.StatorCurrentLimitEnable = true;
+                motorConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
+                motorConfig.CurrentLimits.StatorCurrentLimitEnable = false;                
             }
 
             if (hasVoltageCompensation()) {
                 motorConfig.Voltage.PeakForwardVoltage = nominalVoltage;
                 motorConfig.Voltage.PeakReverseVoltage = -nominalVoltage;
             }
+
+            motorConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
 
             TalonFX motor = new TalonFX(driveConfiguration);
 
