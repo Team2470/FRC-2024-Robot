@@ -2,7 +2,7 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.36,
+      "x": 1.39,
       "y": 5.54
     },
     "rotation": 180.0
@@ -20,7 +20,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "P2 3R"
+            "pathName": "P2 4R"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "P3 4R"
           }
         }
       ]
