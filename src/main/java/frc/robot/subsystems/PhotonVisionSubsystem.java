@@ -9,14 +9,18 @@ import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.filter.MedianFilter;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.geometry.Pose3d;
 
 import java.util.List;
-
+import java.util.Optional;
 
 import org.photonvision.PhotonCamera;
+import org.photonvision.PhotonPoseEstimator;
 import org.photonvision.PhotonUtils;
 import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
+import org.photonvision.EstimatedRobotPose;
 
 public class PhotonVisionSubsystem extends SubsystemBase {
     private final PhotonCamera camera_1;
@@ -34,13 +38,20 @@ public class PhotonVisionSubsystem extends SubsystemBase {
 
     AprilTagFieldLayout AprilTagFieldLayout1 = AprilTagFields.k2024Crescendo.loadAprilTagLayoutField();
 
+    private final PhotonPoseEstimator odometry;
+    private double EstimatedPoseNorm;
+    private double FilteredEsimatedPoseNorm;
+    private double FilteredDistanceToTargetOnField;
 
 
 
-
-    public  PhotonVisionSubsystem() {
+    public  PhotonVisionSubsystem(Transform3d pose) {
         camera_1 = new PhotonCamera("Global_Shutter_Camera");
         camera1Data = getCamera1Data();
+
+        odometry = new PhotonPoseEstimator(AprilTagFieldLayout1, PhotonPoseEstimator.PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, camera_1, pose);
+
+        odometry.setMultiTagFallbackStrategy(PhotonPoseEstimator.PoseStrategy.LOWEST_AMBIGUITY);
     }
     public boolean doesCameraHaveTargets(PhotonPipelineResult cameraData) {
         boolean cameraHasTargets = cameraData.hasTargets();
@@ -105,34 +116,61 @@ public class PhotonVisionSubsystem extends SubsystemBase {
     camera1Data = getCamera1Data();
     isDataValid = false;
     DistanceToTarget = -1;
-
+    //if ( ) {
+        Optional <EstimatedRobotPose> currentPose =
+        checkValidResults(camera1Data.targets)? odometry.update(camera1Data) : Optional.empty();
+   // }
+    
       SmartDashboard.putBoolean("Does cam 1 have targets?", this.doesCameraHaveTargets(camera1Data));
-      PhotonTrackedTarget cameraBestTarget = getBestCamera1Target(camera1Data);
-      if (cameraBestTarget != null) {
+     // PhotonTrackedTarget cameraBestTarget = getBestCamera1Target(camera1Data);
+      if (currentPose.isPresent()) {
+                    
 
+        /* 
         if (cameraBestTarget.getFiducialId() == 7 || cameraBestTarget.getFiducialId() == 4) {
 
+             EstimatedPoseNorm = currentPose.get().estimatedPose.getTranslation().getNorm();
+            EstimatedPoseNorm = Units.metersToInches(EstimatedPoseNorm);
+            FilteredEsimatedPoseNorm = m_distanceFilter.calculate(EstimatedPoseNorm);
+            
 
             DistanceToTarget = cameraBestTarget.getBestCameraToTarget().getTranslation().getNorm();
             DistanceToTarget = Units.metersToInches(DistanceToTarget);
             FilteredDistanceToTarget = m_distanceFilter.calculate(DistanceToTarget);
 
-        }
+            FilteredDistanceToTargetOnField = FilteredEsimatedPoseNorm - FilteredDistanceToTarget;  
+
+       }
         
             if ((DistanceToTarget > 0 && DistanceToTarget < 216.5) &&  
                 (cameraBestTarget.getFiducialId() == 7 || cameraBestTarget.getFiducialId() == 4)) {
                 isDataValid = true;
             }
-
+            */
+                Pose3d Tag7Pose = AprilTagFieldLayout1.getTagPose(7).get();
+                EstimatedPoseNorm = currentPose.get().estimatedPose.getTranslation().minus(Tag7Pose.getTranslation()).getNorm();
+                EstimatedPoseNorm = Units.metersToInches(EstimatedPoseNorm);
+                FilteredEsimatedPoseNorm = m_distanceFilter.calculate(EstimatedPoseNorm);
+                isDataValid = true;
       }
             SmartDashboard.putNumber("Distance to target", getDistanceToTarget());
             SmartDashboard.putNumber("Filtered Distance", FilteredDistanceToTarget);
+            SmartDashboard.putNumber("Filtered Pose Dist", FilteredEsimatedPoseNorm);
+            SmartDashboard.putNumber("Calculated distance", FilteredDistanceToTargetOnField);       
             SmartDashboard.putBoolean("is data valid?", isDataValid());
 
 
     }
 
-
+    private boolean checkValidResults(List <PhotonTrackedTarget> result) {
+        for (PhotonTrackedTarget target: result) {
+            if (target.getFiducialId() ==  7 || target.getFiducialId() == 4 ) {
+                return true;
+            
+            }
+        }
+        return false;
+    }
 
 
 

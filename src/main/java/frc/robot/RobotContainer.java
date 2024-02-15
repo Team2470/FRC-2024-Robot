@@ -25,6 +25,7 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.subsystems.PhotonVisionSubsystem;
 import frc.robot.Constants.FlyWheelConstants;
 import frc.robot.Constants.ShooterPivotConstants;
+import frc.robot.Constants.VisionConstants;
 import frc.robot.subsystems.ShooterPivot;
 import frc.robot.subsystems.SimpleFlywheel;
 import frc.robot.Constants.AutoConstants;
@@ -47,11 +48,10 @@ public class RobotContainer {
   private final CommandXboxController m_controller = new CommandXboxController(0);
 
   // The robot's subsystems and commands are defined here...
+  private final PhotonVisionSubsystem m_camera1 = new PhotonVisionSubsystem(VisionConstants.kFrontRightCamera);
   private final SimpleFlywheel m_simpleFlywheelLeft = new SimpleFlywheel(FlyWheelConstants.kLeftID, true);
   private final SimpleFlywheel m_simpleFlywheelRight = new SimpleFlywheel(FlyWheelConstants.kRightID, false);
   private final ShooterPivot m_ShooterPivot = new ShooterPivot();
-
-  private final PhotonVisionSubsystem m_camera1 = new PhotonVisionSubsystem();
   private final Constants m_Constants = new Constants();
   private final Drivetrain m_drivetrain = new Drivetrain();
 
