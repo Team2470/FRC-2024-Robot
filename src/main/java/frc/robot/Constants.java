@@ -116,7 +116,7 @@ public final class Constants {
             .setDrivingID(12)
             .setEncoderID(12)
             .setSteeringID(12)
-            .setOffset(-205.117187 + 100)
+            .setOffset(-205.117187 + 180)
             .setTab(0, 2);
 
     public static final ModuleConfig kBackRight =
@@ -132,7 +132,7 @@ public final class Constants {
             .setDrivingID(13)
             .setEncoderID(13)
             .setSteeringID(13)
-            .setOffset(-119.091796875 + 100)
+            .setOffset(-119.091796875 + 180)
             .setTab(0, 4);
   }
 
