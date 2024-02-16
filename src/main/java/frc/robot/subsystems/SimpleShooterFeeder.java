@@ -21,7 +21,7 @@ public class SimpleShooterFeeder extends SubsystemBase {
 
     public SimpleShooterFeeder(int canID) {
 
-        m_SimpleShooterFeeder = new CANSparkMax(canID, MotorType.kBrushless);
+        m_SimpleShooterFeeder = new CANSparkMax(canID, MotorType.kBrushed);
         m_SimpleShooterFeeder.restoreFactoryDefaults();
         m_SimpleShooterFeeder.setInverted(false);
         m_SimpleShooterFeeder.setSmartCurrentLimit(40);

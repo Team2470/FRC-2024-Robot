@@ -104,6 +104,10 @@ public class TimeOfFlightSensorTest extends SubsystemBase {
         return Commands.waitSeconds(1);
     }
 
+    public Command wait10SecondsCommand(){
+        return Commands.waitSeconds(10);
+    }
+
     public Command variableVoltageTest(SimpleShooterFeeder m_feeder) {
         return Commands.repeatingSequence(
             this.waitUntilOutOfRange(),
@@ -118,7 +122,14 @@ public class TimeOfFlightSensorTest extends SubsystemBase {
             this.wait1SecondsCommand()
          );
      }
+     
 
+     public Command feederIntakeCommand(SimpleShooterFeeder m_feeder) {
+        return Commands.repeatingSequence(
+            m_feeder.SimpleShooterFeeder_reverseCommand().until(()->this.isTOF1WithinRange()),
+            this.wait10SecondsCommand()
+        );
+      }
 
     @Override
     public void periodic() {

@@ -131,8 +131,8 @@ public class RobotContainer {
     // m_controller.rightTrigger().whileTrue(m_simpleFlywheelRight.openLoopCommand(()-> SmartDashboard.getNumber("Select Right Voltage", 0)));
     // m_controller.leftTrigger().whileTrue(m_simpleFlywheelLeft.pidCommand(()-> SmartDashboard.getNumber("Select Left RPM", 0)));
     // m_controller.leftTrigger().whileTrue(m_simpleFlywheelRight.pidCommand(()-> SmartDashboard.getNumber("Select Right RPM", 0)));
-    // m_controller.b().whileTrue(m_ShooterPivot.openLoopCommand(2));
-    // m_controller.a().whileTrue(m_ShooterPivot.openLoopCommand(-2));
+    m_buttonPad.button(8).whileTrue(m_ShooterPivot.openLoopCommand(2));
+    m_buttonPad.button(12).whileTrue(m_ShooterPivot.openLoopCommand(-2));
     // m_controller.x().whileTrue(m_ShooterPivot.goToAngleCommand(37.08984375));
     // m_controller.x().whileTrue(m_ShooterPivot.goToAngleCommand(()-> SmartDashboard.getNumber("Select Shooter Pivot Angle", 0)));
     // m_controller.y().whileTrue(m_ShooterPivot.goToAngleCommand(()-> ShooterPivotConstants.getAngle(m_camera1.getFilteredDistance())));
@@ -147,10 +147,16 @@ public class RobotContainer {
     // m_controller.y().whileTrue(m_TOF1.variableVoltageTest(m_SimpleShooterFeeder));
 
     // m_buttonPad.button(1).whileTrue(m_ShooterPivot.goToAngleCommand(()-> ShooterPivotConstants.getAngle(m_camera1.getFilteredDistance())));
-    m_buttonPad.button(1).whileTrue(m_simpleFlywheelLeft.pidCommand(()-> FlyWheelConstants.getRPM(m_camera1.getFilteredDistance())));
-    m_buttonPad.button(1).whileTrue(m_simpleFlywheelRight.pidCommand(()-> FlyWheelConstants.getRPM(m_camera1.getFilteredDistance())));
-    m_buttonPad.button(1).whileTrue(m_ShooterPivot.goToAngleCommand(()-> ShooterPivotConstants.getAngle(m_camera1.getFilteredDistance())));
+    m_buttonPad.button(1).whileTrue(m_simpleFlywheelLeft.pidCommand(()-> FlyWheelConstants.getRPM(m_camera1.FilteredEsimatedPoseNorm())));
+    m_buttonPad.button(1).whileTrue(m_simpleFlywheelRight.pidCommand(()-> FlyWheelConstants.getRPM(m_camera1.FilteredEsimatedPoseNorm())));
+    m_buttonPad.button(1).whileTrue(m_ShooterPivot.goToAngleCommand(()-> ShooterPivotConstants.getAngle(m_camera1.FilteredEsimatedPoseNorm())));
 
+    m_buttonPad.button(1).whileTrue(new ParallelCommandGroup(
+      m_ShooterPivot.goToAngleCommand(()-> ShooterPivotConstants.getAngle((m_camera1.FilteredEsimatedPoseNorm()))),
+      m_simpleFlywheelLeft.pidCommand(()-> FlyWheelConstants.getRPM(m_camera1.FilteredEsimatedPoseNorm())),
+      m_simpleFlywheelRight.pidCommand(()-> FlyWheelConstants.getRPM(m_camera1.FilteredEsimatedPoseNorm())),
+      m_simpleFlywheelLeft.feederShooterCommand(m_SimpleShooterFeeder)
+    ));
 
     m_buttonPad.button(2).whileTrue(new ParallelCommandGroup(
           m_ShooterPivot.goToAngleCommand(56.92836363),
@@ -162,12 +168,21 @@ public class RobotContainer {
     m_buttonPad.button(3).whileTrue(new ParallelCommandGroup(
           m_ShooterPivot.goToAngleCommand(48.779296875),
           m_simpleFlywheelLeft.pidCommand(-1500),
-          m_simpleFlywheelRight.pidCommand(-1500)
+          m_simpleFlywheelRight.pidCommand(-1500),
+          m_TOF1.feederIntakeCommand(m_SimpleShooterFeeder)
+
     ));
     m_buttonPad.button(4).whileTrue(new ParallelCommandGroup(
         m_ShooterPivot.goToAngleCommand(44),
         m_simpleFlywheelLeft.pidCommand(1300),
         m_simpleFlywheelRight.pidCommand(1300)
+
+    ));
+
+    m_buttonPad.button(5).whileTrue(new ParallelCommandGroup(
+        m_ShooterPivot.goToAngleCommand(57.91),
+        m_simpleFlywheelLeft.pidCommand(2300),
+        m_simpleFlywheelRight.pidCommand(2300)
 
     ));
 
@@ -257,8 +272,8 @@ public class RobotContainer {
   }
 
   public void robotPeriodic() {
-    SmartDashboard.putNumber("Angle", ShooterPivotConstants.getAngle(m_camera1.getDistanceToTarget()));
-    SmartDashboard.putNumber("RPM", FlyWheelConstants.getRPM(m_camera1.getDistanceToTarget()));
+    SmartDashboard.putNumber("Angle", ShooterPivotConstants.getAngle(m_camera1.FilteredEsimatedPoseNorm()));
+    SmartDashboard.putNumber("RPM", FlyWheelConstants.getRPM(m_camera1.FilteredEsimatedPoseNorm()));
   }
 
   public void disabledPeriodic() {

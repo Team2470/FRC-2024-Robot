@@ -16,7 +16,7 @@ import java.util.function.DoubleSupplier;
 import com.revrobotics.CANSparkFlex;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkLowLevel.MotorType;
-
+import frc.robot.subsystems.SimpleShooterFeeder;
 
 
 public class SimpleFlywheel extends SubsystemBase {
@@ -123,6 +123,21 @@ public class SimpleFlywheel extends SubsystemBase {
 
     return 0;
   }
+  public boolean isErrorInRange() {
+    return (this.getErrorPercent() < 2 || this.getErrorPercent() > -2);
+}
+public Command waitUntilErrorInrange(){
+  return Commands.waitUntil(()-> this.isErrorInRange());
+}
+
+  public boolean isErrorOutOfRange() {
+    return (this.getErrorPercent() > 15);
+}
+
+public Command waitUntilErrorOutOfRange(){
+  return Commands.waitUntil(()-> this.isErrorOutOfRange());
+  
+}
 
   public void setOutputVoltage(double OutputVoltage) {
     m_controlMode = ControlMode.kOpenLoop;
@@ -137,7 +152,12 @@ public class SimpleFlywheel extends SubsystemBase {
   public void stop() {
     setOutputVoltage(0);
   }
-
+  public Command feederShooterCommand(SimpleShooterFeeder m_feeder) {
+    return Commands.repeatingSequence(
+        this.waitUntilErrorInrange(),
+        m_feeder.SimpleShooterFeeder_forwardsCommand().until(()->this.isErrorOutOfRange())
+    );
+  }
 
   /**
    * Example command factory method.

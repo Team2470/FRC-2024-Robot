@@ -42,11 +42,13 @@ public class PhotonVisionSubsystem extends SubsystemBase {
     private double EstimatedPoseNorm;
     private double FilteredEsimatedPoseNorm;
     private double FilteredDistanceToTargetOnField;
+    public List<PhotonTrackedTarget> targets;
+    private Pose3d tagPose;
 
 
 
     public  PhotonVisionSubsystem(Transform3d pose) {
-        camera_1 = new PhotonCamera("Global_Shutter_Camera");
+        camera_1 = new PhotonCamera("USB_Camera");
         camera1Data = getCamera1Data();
 
         odometry = new PhotonPoseEstimator(AprilTagFieldLayout1, PhotonPoseEstimator.PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, camera_1, pose);
@@ -106,6 +108,10 @@ public class PhotonVisionSubsystem extends SubsystemBase {
         return FilteredDistanceToTarget;
     }
 
+    public double FilteredEsimatedPoseNorm(){
+        return FilteredEsimatedPoseNorm;
+    }
+
     public boolean isDataValid() {
         return isDataValid;
     }
@@ -124,7 +130,24 @@ public class PhotonVisionSubsystem extends SubsystemBase {
       SmartDashboard.putBoolean("Does cam 1 have targets?", this.doesCameraHaveTargets(camera1Data));
      // PhotonTrackedTarget cameraBestTarget = getBestCamera1Target(camera1Data);
       if (currentPose.isPresent()) {
-                    
+        if (camera1Data.hasTargets()){
+            targets = currentPose.get().targetsUsed;
+        }
+         if (targets != null){
+            if (targets.size() > 1 ){
+            for (PhotonTrackedTarget target : targets){
+                if (target.getFiducialId() == 7) {
+                    tagPose = AprilTagFieldLayout1.getTagPose(7).get();
+                } else if (target.getFiducialId() == 4){
+                    tagPose = AprilTagFieldLayout1.getTagPose(4).get();
+                }
+            }
+            }
+                EstimatedPoseNorm = currentPose.get().estimatedPose.getTranslation().minus(tagPose.getTranslation()).getNorm();
+                EstimatedPoseNorm = Units.metersToInches(EstimatedPoseNorm);
+                FilteredEsimatedPoseNorm = m_distanceFilter.calculate(EstimatedPoseNorm);
+                isDataValid = true;
+         }           
 
         /* 
         if (cameraBestTarget.getFiducialId() == 7 || cameraBestTarget.getFiducialId() == 4) {
@@ -147,11 +170,15 @@ public class PhotonVisionSubsystem extends SubsystemBase {
                 isDataValid = true;
             }
             */
-                Pose3d Tag7Pose = AprilTagFieldLayout1.getTagPose(7).get();
-                EstimatedPoseNorm = currentPose.get().estimatedPose.getTranslation().minus(Tag7Pose.getTranslation()).getNorm();
-                EstimatedPoseNorm = Units.metersToInches(EstimatedPoseNorm);
-                FilteredEsimatedPoseNorm = m_distanceFilter.calculate(EstimatedPoseNorm);
-                isDataValid = true;
+            //     if (camera1Data.targets. == 7 || cameraBestTarget.getFiducialId() == 4)) {
+            //     isDataValid = true;
+            // }
+                
+
+
+
+                // Pose3d Tag7Pose = AprilTagFieldLayout1.getTagPose(7).get();
+
       }
             SmartDashboard.putNumber("Distance to target", getDistanceToTarget());
             SmartDashboard.putNumber("Filtered Distance", FilteredDistanceToTarget);
