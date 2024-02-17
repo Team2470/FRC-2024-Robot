@@ -229,14 +229,14 @@ public final class Constants {
   // }
 
 
-
+    // When calibrating the bevel gears should face to the left
 
      public static final ModuleConfig kFrontLeft =
         new ModuleConfig("Front Left")
             .setDrivingID(13)
             .setEncoderID(13)
             .setSteeringID(13)
-            .setOffset(-298.9159890250878)
+            .setOffset(-299.04+180)
             .setTab(0, 0);
 
     public static final ModuleConfig kFrontRight =
@@ -244,23 +244,23 @@ public final class Constants {
             .setDrivingID(14)
             .setEncoderID(14)
             .setSteeringID(14)
-            .setOffset(-186.328125)
+            .setOffset(-186.328+180)
             .setTab(0, 2);
 
     public static final ModuleConfig kBackRight =
         new ModuleConfig("Back Right")
-            .setDrivingID(12)
-            .setEncoderID(12)
-            .setSteeringID(12)
-            .setOffset(-104.23828125)
+            .setDrivingID(11)
+            .setEncoderID(11)
+            .setSteeringID(11)
+            .setOffset(-48.076+180)
             .setTab(0, 6);
 
     public static final ModuleConfig kBackLeft =
         new ModuleConfig("Back Left")
-            .setDrivingID(11)
-            .setEncoderID(11)
-            .setSteeringID(11)
-            .setOffset(-47.548828125)
+            .setDrivingID(12)
+            .setEncoderID(12)
+            .setSteeringID(12)
+            .setOffset(-105.029-0.088+180)
             .setTab(0, 4);
   }
   // public static final ModuleConfig kFrontLeft =
