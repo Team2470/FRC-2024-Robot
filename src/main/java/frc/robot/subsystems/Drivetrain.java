@@ -288,7 +288,7 @@ public class Drivetrain extends SubsystemBase {
 
   // : uses drivetrain member
   /** DOES NOT WORK CURRENTLY WITH NEW PATHPLANNER */
-  public Command createAutoPath(HashMap<String, Command> events, String pathFile, PathConstraints pathConstraints) {
+  public Command createAutoPath(String pathFile, PathConstraints pathConstraints) {
     AutoBuilder.configureHolonomic(
       this::getPose, this::resetOdometry, 
       () -> DriveConstants.kDriveKinematics.toChassisSpeeds(getModuleStates()),

@@ -135,7 +135,7 @@ public Command waitUntilErrorInrange(){
 }
 
 public Command waitUntilErrorOutOfRange(){
-  return Commands.waitUntil(()-> this.isErrorOutOfRange());
+  return Commands.waitUntil(() -> this.isErrorOutOfRange());
   
 }
 
@@ -185,6 +185,6 @@ public Command waitUntilErrorOutOfRange(){
   }
 
   public Command pidCommand(double rpm){
-    return pidCommand(()-> rpm);
+    return pidCommand(() -> rpm);
   }
 }
