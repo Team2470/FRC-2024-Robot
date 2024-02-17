@@ -12,13 +12,13 @@ import frc.robot.subsystems.SimpleShooterFeeder;
 
 public class TimeOfFlightSensorTest extends SubsystemBase {
     private final TimeOfFlight m_TimeOfFlight_1;
-    private final TimeOfFlight m_TimeOfFlight_2;
+    // private final TimeOfFlight m_TimeOfFlight_2;
 
     private double initialEncoderValue;
 
     public TimeOfFlightSensorTest(){
         m_TimeOfFlight_1 = new TimeOfFlight(1);
-        m_TimeOfFlight_2 = new TimeOfFlight(2);
+        // m_TimeOfFlight_2 = new TimeOfFlight(2);
     }
 
    
@@ -43,9 +43,9 @@ public class TimeOfFlightSensorTest extends SubsystemBase {
         return m_TimeOfFlight_1.getRangingMode();
     }
 
-    public double getRange_TOF2(){
-         return m_TimeOfFlight_2.getRange();
-     }
+    // public double getRange_TOF2(){
+    //      return m_TimeOfFlight_2.getRange();
+    //  }
 
     // public double getAmbientLightLevel_TOF2(){
     //     return m_TimeOfFlight_2.getAmbientLightLevel();
@@ -68,10 +68,10 @@ public class TimeOfFlightSensorTest extends SubsystemBase {
 
     }
 
-    public boolean isTOF2WithinRange() {
-        return (this.getRange_TOF2() < 200);
+    // public boolean isTOF2WithinRange() {
+    //     return (this.getRange_TOF2() < 200);
 
-    }
+    // }
 
     public double variableVoltage(){
         double range = this.getRange_TOF1();
@@ -92,9 +92,9 @@ public class TimeOfFlightSensorTest extends SubsystemBase {
         return Commands.waitUntil(()-> this.isTOF1WithinRange());
     }
 
-    public Command waitUntilTOF2InRange(){
-        return Commands.waitUntil(()-> this.isTOF2WithinRange());
-    }
+    // public Command waitUntilTOF2InRange(){
+    //     return Commands.waitUntil(()-> this.isTOF2WithinRange());
+    // }
 
     public Command waitUntilOutOfRange(){
         return Commands.waitUntil(()-> !this.isTOF1WithinRange());
@@ -138,8 +138,8 @@ public class TimeOfFlightSensorTest extends SubsystemBase {
         SmartDashboard.putNumber("Range Sigma_TOF1", getRange_TOF1());
         SmartDashboard.putNumber("Sample Time_TOF1", getRange_TOF1());
         SmartDashboard.putBoolean("Is TOF1 Within Range",isTOF1WithinRange());
-        SmartDashboard.putNumber("Range_TOF2", getRange_TOF2());
-        SmartDashboard.putBoolean("Is TOF2 Within Range",isTOF2WithinRange());
+        // SmartDashboard.putNumber("Range_TOF2", getRange_TOF2());
+        // SmartDashboard.putBoolean("Is TOF2 Within Range",isTOF2WithinRange());
         SmartDashboard.putNumber("Variable Voltage", variableVoltage());
     }
 

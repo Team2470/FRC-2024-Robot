@@ -58,6 +58,9 @@ public class KrakenDriveControllerFactoryBuilder {
             motorConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
 
             TalonFX motor = new TalonFX(driveConfiguration);
+            motor.getRotorPosition().setUpdateFrequency(50); // Default 4Hz
+            motor.getRotorVelocity().setUpdateFrequency(50); // Default 4Hz
+            motor.optimizeBusUtilization();
 
             motor.setNeutralMode(NeutralModeValue.Brake);
 
