@@ -78,10 +78,10 @@ public class RobotContainer {
   public RobotContainer() {
     // CameraServer.startAutomaticCapture();
 
-    // m_simpleFlywheelLeft.setDefaultCommand(m_simpleFlywheelLeft.pidCommand(500));
-    // m_simpleFlywheelRight.setDefaultCommand(m_simpleFlywheelRight.pidCommand(500));
-    // m_ShooterPivot.setDefaultCommand(m_ShooterPivot.goToAngleCommand(45));
-    // Auto Selector
+    m_simpleFlywheelLeft.setDefaultCommand(m_simpleFlywheelLeft.pidCommand(1000));
+    m_simpleFlywheelRight.setDefaultCommand(m_simpleFlywheelRight.pidCommand(1000));
+    m_ShooterPivot.setDefaultCommand(m_ShooterPivot.goToAngleCommand(45));
+
     m_revDigit = new RevDigit();
     m_revDigit.display("3081");
     m_autoSelector = new AutoSelector(m_revDigit, "DFLT", new SequentialCommandGroup(new PrintCommand("OOPS")));
@@ -125,8 +125,8 @@ public class RobotContainer {
     //m_controller.rightBumper().whileTrue(m_simpleFlywheel.spinCommand(-2));
     // m_controller.rightTrigger().whileTrue(m_simpleFlywheelLeft.openLoopCommand(()-> SmartDashboard.getNumber("Select Left Voltage", 0)));
     // m_controller.rightTrigger().whileTrue(m_simpleFlywheelRight.openLoopCommand(()-> SmartDashboard.getNumber("Select Right Voltage", 0)));
-    m_buttonPad.button(10).whileTrue(m_simpleFlywheelLeft.pidCommand(()-> SmartDashboard.getNumber("Select Left RPM", 0)));
-    m_buttonPad.button(11).whileTrue(m_simpleFlywheelRight.pidCommand(()-> SmartDashboard.getNumber("Select Right RPM", 0)));
+    // m_buttonPad.button(10).whileTrue(m_simpleFlywheelLeft.pidCommand(()-> SmartDashboard.getNumber("Select Left RPM", 0)));
+    // m_buttonPad.button(11).whileTrue(m_simpleFlywheelRight.pidCommand(()-> SmartDashboard.getNumber("Select Right RPM", 0)));
     m_buttonPad.button(8).whileTrue(m_ShooterPivot.openLoopCommand(2));
     m_buttonPad.button(12).whileTrue(m_ShooterPivot.openLoopCommand(-2));
     // m_controller.x().whileTrue(m_ShooterPivot.goToAngleCommand(37.08984375));
@@ -137,7 +137,8 @@ public class RobotContainer {
     // m_controller.rightBumper().whileTrue(m_ShooterPivot.goToAngleCommand(()-> ShooterPivotConstants.getAngle(m_camera1.getFilteredDistance())));
 
     // // m_controller.rightBumper().whileTrue(m_simpleFlywheel.spinCommand(-2));
-    m_buttonPad.button(9).whileTrue(m_SimpleShooterFeeder.SimpleShooterFeeder_forwardsCommand());
+    m_buttonPad.button(10).whileTrue(m_SimpleShooterFeeder.SimpleShooterFeeder_forwardsCommand());
+    m_buttonPad.button(11).whileTrue(m_SimpleShooterFeeder.SimpleShooterFeeder_reverseCommand());
     // m_controller.b().whileTrue(m_SimpleShooterFeeder.SimpleShooterFeeder_reverseCommand());
     // //m_controller.x().whileTrue(m_TOF1.sequenceTest(m_SimpleShooterFeeder));
     // m_controller.y().whileTrue(m_TOF1.variableVoltageTest(m_SimpleShooterFeeder));
@@ -155,7 +156,7 @@ public class RobotContainer {
     ));
 
     m_buttonPad.button(2).whileTrue(new ParallelCommandGroup(
-          m_ShooterPivot.goToAngleCommand(30),
+          m_ShooterPivot.goToAngleCommand(56.92836363),
           m_simpleFlywheelLeft.pidCommand(2326.626089),
           m_simpleFlywheelRight.pidCommand(2326.626089)
 

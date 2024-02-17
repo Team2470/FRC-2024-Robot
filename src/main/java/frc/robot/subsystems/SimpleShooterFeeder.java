@@ -71,7 +71,7 @@ public class SimpleShooterFeeder extends SubsystemBase {
         m_SimpleShooterFeeder.setVoltage(12);
     }
     public void reverseFeeder() {
-        m_SimpleShooterFeeder.setVoltage((-1));
+        m_SimpleShooterFeeder.setVoltage((-3));
     }
 
     public void stop() {
