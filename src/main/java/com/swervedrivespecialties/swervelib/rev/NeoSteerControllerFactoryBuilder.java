@@ -5,7 +5,6 @@ import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.RelativeEncoder;
 import com.swervedrivespecialties.swervelib.*;
 
-import edu.wpi.first.hal.CANAPITypes.CANDeviceType;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardContainer;
 
 import static com.swervedrivespecialties.swervelib.rev.RevUtils.checkNeoError;
@@ -70,9 +69,35 @@ public final class NeoSteerControllerFactoryBuilder {
             AbsoluteEncoder absoluteEncoder = encoderFactory.create(steerConfiguration.getEncoderConfiguration());
 
             CANSparkMax motor = new CANSparkMax(steerConfiguration.getMotorPort(), CANSparkMax.MotorType.kBrushless);
+
+            //
+            // The following frames are required.
+            //
+
+            // Default 10ms: Applied output, Faults, Sticky Faults, Is Follower
             checkNeoError(motor.setPeriodicFramePeriod(CANSparkMax.PeriodicFrame.kStatus0, 100), "Failed to set periodic status frame 0 rate");
+            // Default 20ms: Motor Velocity, Motor Temperature, Motor Voltage, Motor Current
             checkNeoError(motor.setPeriodicFramePeriod(CANSparkMax.PeriodicFrame.kStatus1, 20), "Failed to set periodic status frame 1 rate");
+            // Default 20ms: Motor Position
             checkNeoError(motor.setPeriodicFramePeriod(CANSparkMax.PeriodicFrame.kStatus2, 20), "Failed to set periodic status frame 2 rate");
+
+            //
+            // The following frames are not required
+            //
+
+            // Default 50ms: Analog Sensor Voltage, Analog Sensor Velocity, Analog Sensor Position
+            checkNeoError(motor.setPeriodicFramePeriod(CANSparkMax.PeriodicFrame.kStatus3, 500), "Failed to set periodic status frame 3 rate");
+            // Default 20ms: Alternate Encoder Velocity, Alternate Encoder Position
+            checkNeoError(motor.setPeriodicFramePeriod(CANSparkMax.PeriodicFrame.kStatus4, 500), "Failed to set periodic status frame 4 rate");
+            // Default 200ms: Duty Cycle Absolute Encoder Position, Duty Cycle Absolute Encoder Absolute Angle
+            checkNeoError(motor.setPeriodicFramePeriod(CANSparkMax.PeriodicFrame.kStatus5, 500), "Failed to set periodic status frame 5 rate");
+            // Default 200ms: Duty Cycle Absolute Encoder Velocity,  Duty Cycle Absolute Encoder Frequency
+            checkNeoError(motor.setPeriodicFramePeriod(CANSparkMax.PeriodicFrame.kStatus6, 500), "Failed to set periodic status frame 6 rate");
+            // TODO status 7
+            // m_SimpleShooterFeeder.setPeriodicFramePeriod(PeriodicFrame.kStatus7, 500);
+
+
+
             checkNeoError(motor.setIdleMode(CANSparkMax.IdleMode.kBrake), "Failed to set NEO idle mode");
             motor.setInverted(!mechConfiguration.isSteerInverted());
             if (hasVoltageCompensation()) {
