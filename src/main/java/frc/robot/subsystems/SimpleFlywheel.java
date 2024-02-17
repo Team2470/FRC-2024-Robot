@@ -49,7 +49,7 @@ public class SimpleFlywheel extends SubsystemBase {
     m_leader.restoreFactoryDefaults();
   
 
-    m_leader.setInverted(isLeft);
+    m_leader.setInverted(!isLeft);
     m_isLeft = isLeft;
 
     m_leader.setOpenLoopRampRate(0.2);
