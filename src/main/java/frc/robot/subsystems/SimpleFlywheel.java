@@ -18,7 +18,6 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import frc.robot.subsystems.SimpleShooterFeeder;
 
-
 public class SimpleFlywheel extends SubsystemBase {
   // private final int kOpenLoop = 0;
   // private final int kPID = 1;

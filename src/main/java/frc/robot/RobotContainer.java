@@ -5,11 +5,15 @@
 package frc.robot;
 
 import java.util.HashMap;
+import java.util.List;
 
 import com.kennedyrobotics.auto.AutoSelector;
 import com.kennedyrobotics.hardware.misc.RevDigit;
+import com.pathplanner.lib.auto.NamedCommands;
+import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.path.PathConstraints;
 
+import edu.wpi.first.math.Pair;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -62,7 +66,7 @@ public class RobotContainer {
   private final ShooterPivot m_ShooterPivot = new ShooterPivot();
   private final Constants m_Constants = new Constants();
   private final Drivetrain m_drivetrain = new Drivetrain();
-  private final SimpleShooterFeeder m_SimpleShooterFeeder = new SimpleShooterFeeder(1);
+  // private final SimpleShooterFeeder m_SimpleShooterFeeder = new SimpleShooterFeeder(18);
   private final TimeOfFlightSensorTest m_TOF1 = new TimeOfFlightSensorTest();
 
 
@@ -70,35 +74,42 @@ public class RobotContainer {
   private final RevDigit m_revDigit;
   private final AutoSelector m_autoSelector;
 
-
-
-
-  
-
   public RobotContainer() {
+    createEventMap();
+    
     // CameraServer.startAutomaticCapture();
+    initializeShooter();
 
-    m_simpleFlywheelLeft.setDefaultCommand(m_simpleFlywheelLeft.pidCommand(500));
-    m_simpleFlywheelRight.setDefaultCommand(m_simpleFlywheelRight.pidCommand(500));
-    m_ShooterPivot.setDefaultCommand(m_ShooterPivot.goToAngleCommand(45));
     // Auto Selector
     m_revDigit = new RevDigit();
     m_revDigit.display("3081");
     m_autoSelector = new AutoSelector(m_revDigit, "DFLT", new SequentialCommandGroup(new PrintCommand("OOPS")));
-
-    // Initialize other autos here
-    // TODO
-    m_autoSelector.registerCommand("Test", "TEST", m_drivetrain.createAutoPath(
-      null, "New Auto", AutoConstants.kPathConstraints));
+    registerAutos();
 
     m_autoSelector.initialize();
 
 
+
+    configureBindings();
+  }
+
+  private void registerAutos() {
+    m_autoSelector.registerCommand("Drive2Mid", "2MID", m_drivetrain.createAutoPath("3R Mid", AutoConstants.kPathConstraints));
+  }
+  private void createEventMap() {
+    HashMap<String, Command> events = new HashMap<String, Command>() {{
+      put("print", new PrintCommand("|||||||||||||| WORKS ||||||||||||||"));
+    }}; 
+    
+    NamedCommands.registerCommands(events);
+  }
+
+  private void initializeShooter() {
     m_simpleFlywheelLeft.setDefaultCommand(m_simpleFlywheelLeft.pidCommand(500));
     m_simpleFlywheelRight.setDefaultCommand(m_simpleFlywheelRight.pidCommand(500));
     m_ShooterPivot.setDefaultCommand(m_ShooterPivot.goToAngleCommand(45));
-    
-      
+  }
+  private void addValuesToDashboard() {
     SmartDashboard.putNumber("Select Left Voltage", 0);
     SmartDashboard.putNumber("Select Right Voltage", 0);
     SmartDashboard.putNumber("Select Left RPM", 100);
@@ -109,11 +120,7 @@ public class RobotContainer {
     SmartDashboard.putNumber("kF", FlyWheelConstants.kF);
     SmartDashboard.putNumber("Select Shooter Pivot Angle", 0);
     SmartDashboard.putNumber("Select Distance", 0);
-
-  
-    configureBindings();
   }
-
   /**
    * Use this method to define your trigger->command mappings. Triggers can be created via the
    * {@link Trigger#Trigger(java.util.function.BooleanSupplier)} constructor with an arbitrary
@@ -154,8 +161,8 @@ public class RobotContainer {
     m_buttonPad.button(1).whileTrue(new ParallelCommandGroup(
       m_ShooterPivot.goToAngleCommand(()-> ShooterPivotConstants.getAngle((m_camera1.FilteredEsimatedPoseNorm()))),
       m_simpleFlywheelLeft.pidCommand(()-> FlyWheelConstants.getRPM(m_camera1.FilteredEsimatedPoseNorm())),
-      m_simpleFlywheelRight.pidCommand(()-> FlyWheelConstants.getRPM(m_camera1.FilteredEsimatedPoseNorm())),
-      m_simpleFlywheelLeft.feederShooterCommand(m_SimpleShooterFeeder)
+      m_simpleFlywheelRight.pidCommand(()-> FlyWheelConstants.getRPM(m_camera1.FilteredEsimatedPoseNorm()))
+      // m_simpleFlywheelLeft.feederShooterCommand(m_SimpleShooterFeeder)
     ));
 
     m_buttonPad.button(2).whileTrue(new ParallelCommandGroup(
@@ -168,8 +175,8 @@ public class RobotContainer {
     m_buttonPad.button(3).whileTrue(new ParallelCommandGroup(
           m_ShooterPivot.goToAngleCommand(48.779296875),
           m_simpleFlywheelLeft.pidCommand(-1500),
-          m_simpleFlywheelRight.pidCommand(-1500),
-          m_TOF1.feederIntakeCommand(m_SimpleShooterFeeder)
+          m_simpleFlywheelRight.pidCommand(-1500)
+          // m_TOF1.feederIntakeCommand(m_SimpleShooterFeeder)
 
     ));
     m_buttonPad.button(4).whileTrue(new ParallelCommandGroup(
@@ -256,9 +263,10 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-
     // An ExampleCommand will run in autonomous
-    return m_autoSelector.selected();
+    // return m_autoSelector.selected();
+
+    return m_drivetrain.createAutoPath("Test Auto", AutoConstants.kPathConstraints);
   }
 
   public void autonomousInit() {
@@ -279,13 +287,4 @@ public class RobotContainer {
   public void disabledPeriodic() {
     m_drivetrain.resetSteerEncoders();
   }
-
-  private Command createTestAuto() {
-    return m_drivetrain.createAutoPath(null, "New Path", AutoConstants.kPathConstraints);
-  }
-
-
 }
-
-
-

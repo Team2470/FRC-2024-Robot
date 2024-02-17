@@ -265,9 +265,9 @@ public final class Constants {
     public static final double kAutoVoltageCompensation = 10;
 
     public static final PIDConstants kPIDTranslation =
-        new PIDConstants(5.0, 0, 0); // : PID constants for translation error
+        new PIDConstants(0.0, 0, 0); // : PID constants for translation error
     public static final PIDConstants kPIDRotation =
-        new PIDConstants(2.0, 0, 0); // : Theta rotation,
+        new PIDConstants(0, 0, 0); // : Theta rotation,
 
     public static final PathConstraints kPathConstraints = 
       new PathConstraints(3, 2, Constants.DriveConstants.kMaxAngularVelocityRadiansPerSecond, 

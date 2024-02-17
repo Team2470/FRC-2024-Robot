@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 import com.ctre.phoenix.sensors.CANCoder;
 import com.ctre.phoenix.sensors.Pigeon2;
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
@@ -29,6 +30,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.RobotContainer;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.DriveConstants.ModuleConfig;
 import java.util.HashMap;
@@ -106,8 +108,7 @@ public class Drivetrain extends SubsystemBase {
     tab.add("Field", m_field).withSize(5, 4).withPosition(8, 2);
   }
 
-  private SwerveModule createModule(
-      ModuleConfig config, Mk4ModuleConfiguration moduleConfig, ShuffleboardTab tab) {
+  private SwerveModule createModule(ModuleConfig config, Mk4ModuleConfiguration moduleConfig, ShuffleboardTab tab) {
     return Mk4iSwerveModuleHelper.createKrakenNeo(
         tab.getLayout(config.name, BuiltInLayouts.kList)
             .withSize(2, 6)
@@ -120,7 +121,6 @@ public class Drivetrain extends SubsystemBase {
         config.offset.getRadians() // : encoder ID and offset (rotation)
         );
   }
-
   public void setModuleStates(SwerveModuleState[] states) {
     for (int i = 0; i < states.length; i++) {
       states[i] =
@@ -146,7 +146,6 @@ public class Drivetrain extends SubsystemBase {
     //   (() swerveModule.getDriveMotor()).enableVoltageCompensation(voltage);
     // }
   }
-
   public SwerveModuleState[] getModuleStates() {
     // Note the order of modules needs to match the order provided to
     // DriveConstants.kDriveKinematics
@@ -165,7 +164,6 @@ public class Drivetrain extends SubsystemBase {
           new Rotation2d(m_swerve_modules[3].getSteerAngle()))
     };
   }
-
   public SwerveModulePosition[] getModulePositions() {
     // Note the order of modules needs to match the order provided to
     // DriveConstants.kDriveKinematics
@@ -206,8 +204,7 @@ public class Drivetrain extends SubsystemBase {
     drive(0, 0, 0, false);
   }
 
-  @Override
-  public void periodic() {
+  @Override public void periodic() {
 
     // Update robot pose
     m_odometry.update(getIMUHeading(), getModulePositions());
@@ -232,44 +229,25 @@ public class Drivetrain extends SubsystemBase {
   public Rotation2d getIMUHeading() {
     return Rotation2d.fromDegrees(this.m_imu.getYaw());
   }
-
   public Rotation2d getOdomHeading() {
     return getPose().getRotation();
   }
-
   public boolean isLevel() {
     return Math.abs(m_imu.getRoll()) < 5;
   }
-
   public double getRoll() {
     return m_imu.getRoll();
   }
-
   public void resetHeading() {
     // this.m_imu.setYaw(0);
     resetOdometry(new Pose2d());
   }
-
-  /**
-   * Return the currently-estimated pose of the robot
-   *
-   * @return the pose.
-   */
   public Pose2d getPose() {
     return m_odometry.getEstimatedPosition();
   }
-  /**
-   * Resets the odometry to the specified pose
-   *
-   * @param pose the pose to switch to set the odometry to
-   */
   public void resetOdometry(Pose2d pose) {
     m_odometry.resetPosition(getIMUHeading(), getModulePositions(), pose);
   }
-
-  //
-  // Command Helpers
-  //
 
   public Command xStop() {
     return new RunCommand(
@@ -286,9 +264,7 @@ public class Drivetrain extends SubsystemBase {
         this);
   }
 
-  // : uses drivetrain member
-  /** DOES NOT WORK CURRENTLY WITH NEW PATHPLANNER */
-  public Command createAutoPath(HashMap<String, Command> events, String pathFile, PathConstraints pathConstraints) {
+  public Command createAutoPath(String autoFile, PathConstraints pathConstraints) {
     AutoBuilder.configureHolonomic(
       this::getPose, this::resetOdometry, 
       () -> DriveConstants.kDriveKinematics.toChassisSpeeds(getModuleStates()),
@@ -297,7 +273,7 @@ public class Drivetrain extends SubsystemBase {
         new PIDConstants(5d,0d,0d),
         new PIDConstants(2d,0d,0d),
         3.5, //: max speed (m/s)
-        0.4, //: distance between modules and center of robot
+        0.4, //: distance between modules and center of robot (m)
         new ReplanningConfig()
       ), () -> {
         var alliances = DriverStation.getAlliance();
@@ -306,24 +282,6 @@ public class Drivetrain extends SubsystemBase {
         } return false;
       }, this);
 
-      return AutoBuilder.buildAuto(pathFile);
+      return AutoBuilder.buildAuto(autoFile);
   }
-  // public Command createAutoPath(
-  //     HashMap<String, Command> eventMap, String pathName, PathConstraints pathConstraints) {
-  //   List<PathPlannerTrajectory> pathGroup = PathPlannerPath.fromChoreoTrajectory(pathName, pathConstraints);
-
-  //   SwerveAutoBuilder autoBuilder =
-  //       new SwerveAutoBuilder(
-  //           this::getPose,
-  //           this::resetOdometry,
-  //           Constants.DriveConstants.kDriveKinematics,
-  //           AutoConstants.kPIDTranslation,
-  //           AutoConstants.kPIDRotation,
-  //           this::setModuleStates,
-  //           eventMap,
-  //           true,
-  //           this);
-
-  //   return autoBuilder.fullAuto(pathGroup);
-  // }
 }
