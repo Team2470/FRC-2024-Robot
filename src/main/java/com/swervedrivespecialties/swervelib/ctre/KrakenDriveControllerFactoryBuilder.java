@@ -59,6 +59,10 @@ public class KrakenDriveControllerFactoryBuilder {
 
             TalonFX motor = new TalonFX(driveConfiguration);
 
+            motor.getRotorPosition().setUpdateFrequency(50);
+            motor.getRotorVelocity().setUpdateFrequency(50);
+            motor.optimizeBusUtilization();
+
             motor.setNeutralMode(NeutralModeValue.Brake);
 
             CtreUtils.checkCtreError(motor.getConfigurator().apply(motorConfig), "Failed to configure TalonFX");
