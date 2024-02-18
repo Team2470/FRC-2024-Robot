@@ -106,6 +106,7 @@ public class SimpleFlywheel extends SubsystemBase {
     SmartDashboard.putNumber("Flywheel "+ (m_isLeft ? "Left" : "Right") + " RPM Error", getErrorRPM());
     SmartDashboard.putNumber("Flywheel " + (m_isLeft ? "Left" : "Right") + " RPM Percent Error", getErrorPercent());
     SmartDashboard.putString("Flywheel "+ (m_isLeft ? "Left" : "Right")+ " Control Mode", m_controlMode.toString());
+    SmartDashboard.putBoolean("Flywheel InRange"+ (m_isLeft ? "Left" : "Right"), isErrorInRange());
 
   }
 
@@ -118,13 +119,13 @@ public class SimpleFlywheel extends SubsystemBase {
 
   public double getErrorPercent(){
     if (m_controlMode == ControlMode.kPID){
-      return (m_demand - m_encoder.getVelocity()) / m_demand * 100;
+      return (m_demand - m_encoder.getVelocity()) / m_demand * 10;
     }
 
     return 0;
   }
   public boolean isErrorInRange() {
-    return (this.getErrorPercent() < 2 || this.getErrorPercent() > -2);
+    return (-5 < this.getErrorPercent() && this.getErrorPercent() < 5);
 }
 public Command waitUntilErrorInrange(){
   return Commands.waitUntil(()-> this.isErrorInRange());
@@ -158,7 +159,6 @@ public Command waitUntilErrorOutOfRange(){
         m_feeder.SimpleShooterFeeder_forwardsCommand().until(()->this.isErrorOutOfRange())
     );
   }
-
   /**
    * Example command factory method.
    *

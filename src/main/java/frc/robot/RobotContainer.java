@@ -13,6 +13,9 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
+import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -121,12 +124,14 @@ public class RobotContainer {
     // m_buttonPad.button(1).whileTrue(m_simpleFlywheelRight.pidCommand(()-> FlyWheelConstants.getRPM(m_camera1.FilteredEsimatedPoseNorm())));
     // m_buttonPad.button(1).whileTrue(m_ShooterPivot.goToAngleCommand(()-> ShooterPivotConstants.getAngle(m_camera1.FilteredEsimatedPoseNorm())));
 
-    m_buttonPad.button(1).whileTrue(new ParallelCommandGroup(
-      m_ShooterPivot.goToAngleCommand(()-> ShooterPivotConstants.getAngle((m_camera1.FilteredEsimatedPoseNorm()))),
-      m_simpleFlywheelLeft.pidCommand(()-> FlyWheelConstants.getRPM(m_camera1.FilteredEsimatedPoseNorm())),
-      m_simpleFlywheelRight.pidCommand(()-> FlyWheelConstants.getRPM(m_camera1.FilteredEsimatedPoseNorm())),
-      m_simpleFlywheelLeft.feederShooterCommand(m_SimpleShooterFeeder)
-    ));
+    // m_buttonPad.button(1).whileTrue(new ParallelCommandGroup(
+    //   m_ShooterPivot.goToAngleCommand(()-> ShooterPivotConstants.getAngle((m_camera1.FilteredEsimatedPoseNorm()))),
+    //   m_simpleFlywheelLeft.pidCommand(()-> FlyWheelConstants.getRPM(m_camera1.FilteredEsimatedPoseNorm())),
+    //   m_simpleFlywheelRight.pidCommand(()-> FlyWheelConstants.getRPM(m_camera1.FilteredEsimatedPoseNorm())),
+    //   m_simpleFlywheelLeft.feederShooterCommand(m_SimpleShooterFeeder)
+    // ));
+    m_buttonPad.button(1).whileTrue(visionShootCommand());
+
         m_buttonPad.button(6).whileTrue(new ParallelCommandGroup(
       m_ShooterPivot.goToAngleCommand(()-> ShooterPivotConstants.getAngle((m_camera1.FilteredEsimatedPoseNorm()))),
       m_simpleFlywheelLeft.pidCommand(()-> FlyWheelConstants.getRPM(m_camera1.FilteredEsimatedPoseNorm())),
@@ -140,7 +145,7 @@ public class RobotContainer {
     ));
 
     m_buttonPad.button(2).whileTrue(new ParallelCommandGroup(
-          m_ShooterPivot.goToAngleCommand(56.92836363),
+          m_ShooterPivot.goToAngleCommand(59.92836363),
           m_simpleFlywheelLeft.pidCommand(2326.626089),
           m_simpleFlywheelRight.pidCommand(2326.626089)
 
@@ -266,8 +271,8 @@ public class RobotContainer {
     SmartDashboard.putNumber("Select Distance", 0);
   }
   private void setupShooter() {
-    m_simpleFlywheelLeft.setDefaultCommand(m_simpleFlywheelLeft.pidCommand(1500));
-    m_simpleFlywheelRight.setDefaultCommand(m_simpleFlywheelRight.pidCommand(1500));
+    m_simpleFlywheelLeft.setDefaultCommand(m_simpleFlywheelLeft.pidCommand(500));
+    m_simpleFlywheelRight.setDefaultCommand(m_simpleFlywheelRight.pidCommand(500));
     m_ShooterPivot.setDefaultCommand(m_ShooterPivot.goToAngleCommand(45));
   }
   private void registerAutos(HashMap<String, String> autos) {
@@ -277,5 +282,24 @@ public class RobotContainer {
         AutoConstants.kPathConstraints
       ));
     }
+  }
+
+  //
+  // Commmand Groups
+  //
+
+  public Command visionShootCommand(){
+    return new ParallelCommandGroup(
+      m_ShooterPivot.goToAngleCommand(()-> ShooterPivotConstants.getAngle((m_camera1.FilteredEsimatedPoseNorm()))),
+      m_simpleFlywheelLeft.pidCommand(()-> FlyWheelConstants.getRPM(m_camera1.FilteredEsimatedPoseNorm())),
+      m_simpleFlywheelRight.pidCommand(()-> FlyWheelConstants.getRPM(m_camera1.FilteredEsimatedPoseNorm())),
+      // m_simpleFlywheelLeft.feederShooterCommand(m_SimpleShooterFeeder)
+      new SequentialCommandGroup(
+        new WaitCommand(0.25),
+        new WaitUntilCommand(()-> m_simpleFlywheelLeft.isErrorInRange() && m_simpleFlywheelRight.isErrorInRange() && m_ShooterPivot.isAngleErrorInRange()),
+        m_SimpleShooterFeeder.SimpleShooterFeeder_forwardsCommand()
+      )
+    );
+
   }
 }

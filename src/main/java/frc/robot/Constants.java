@@ -94,7 +94,7 @@ public final class Constants {
 
 
     public static double getAngle(double distance) {
-      return (1166*(Math.pow(distance,-0.736)))-2.75;
+      return (1166*(Math.pow(distance,-0.736)))+2.4;
     } 
 
 
