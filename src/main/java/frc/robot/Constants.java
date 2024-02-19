@@ -7,6 +7,7 @@ package frc.robot;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 
@@ -36,9 +37,10 @@ public final class Constants {
       this.bus_name = value;
     }
   }
+
   public static class FlyWheelConstants {
-    public static final int kRightID = 1;
-    public static final int kLeftID = 2;
+    public static int kRightID = 1;
+    public static int kLeftID = 2;
     public static final double kP = 0.001;
     public static final double kI = 0;
     public static final double kD = 0;
@@ -51,25 +53,25 @@ public final class Constants {
       {121, 4000},
       {95, 2500},
       {71, 2500},
-      {51.5, 2500},
-  };
+      {51.5, 2500},      
+    };
+    public static double[][] kAngleValues = {
+        {219, 22.06},
+        {169, 27.3},
+        {145, 30.23},
+        {121, 33.57},
+        {95, 45.35},
+        {71, 50.18},
+        {51.5, 60,38},
+    };
 
-  public static double[][] kAngleValues = {
-      {219, 22.06},
-      {169, 27.3},
-      {145, 30.23},
-      {121, 33.57},
-      {95, 45.35},
-      {71, 50.18},
-      {51.5, 60,38},
-  };
-
-    public static double getRPM(double distance){
+    public static double getRPM(double distance) {
       return (227*(Math.pow(distance, 0.578)));
     }
-
- 
   }
+
+  public FlyWheelConstants flyWheelConstants = new FlyWheelConstants();
+
   public static class ShooterPivotConstants {
     public static final int MotorID = 21;
     public static final int EncoderID = 21;
@@ -79,10 +81,6 @@ public final class Constants {
     public static final int forwardSoftLimit = 1024;
     public static final boolean encoderDirection = false;
     public static final double encoderOffset = 143.349609375+20+4.39453125+90-3;
-;
-
-
-
 
     public static final double kP = 17.5;
     public static final double kI = 11;
@@ -109,9 +107,6 @@ public final class Constants {
     public static final int forwardSoftLimit = 0;
     public static final boolean encoderDirection = true;
     public static final int encoderOffset = 0;
-
-
-
 
     public static final double kP = 0;
     public static final double kI = 0;
@@ -269,8 +264,15 @@ public final class Constants {
   public static class VisionConstants{ 
     public static final Transform3d kFrontRightCamera = new Transform3d(
       new Translation3d(Units.inchesToMeters(-5.1), Units.inchesToMeters(14.391), Units.inchesToMeters(6.626)),
-      new Rotation3d(0, Units.degreesToRadians(25.0), 0
-      )
+      new Rotation3d(0, Units.degreesToRadians(25.0), 0)
   );
 }
+
+  public static final Constants kConstants = new Constants();
+    static {
+      if(RobotController.getSerialNumber() == "foobar") {
+        // Practice Bot
+        kConstants.flyWheelConstants.kLeftID = 45;
+      } 
+   }
 }

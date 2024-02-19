@@ -8,6 +8,8 @@ import java.util.HashMap;
 
 import com.kennedyrobotics.auto.AutoSelector;
 import com.kennedyrobotics.hardware.misc.RevDigit;
+import com.pathplanner.lib.auto.NamedCommands;
+
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -56,7 +58,6 @@ public class RobotContainer {
   private final RevDigit m_revDigit;
   private final AutoSelector m_autoSelector;
 
-
   public RobotContainer() {
     // CameraServer.startAutomaticCapture();
 
@@ -68,14 +69,19 @@ public class RobotContainer {
       m_revDigit, "DFLT", new PrintCommand("!!! Invalid Auto Selected !!!")
     );
 
+    NamedCommands.registerCommands(new HashMap<String, Command>() {{
+      put("shoot", shootFlywheel());
+    }});
+
     registerAutos(new HashMap<String, String>() {{
       put("TEST", "New Auto");
-      put("TOP1", "A[TOP-D1]");
-      put("MID2", "A[MID-D2]");
+      put("LFT1", "A[S1-D1]");
+      put("MID2", "A[S2-D2]");
+      put("LOW3", "A[S3-D3]");
     }});
 
     m_autoSelector.initialize();
-    
+  
     setupShooter();
     addValuesToDashboard();
     configureBindings();
@@ -221,6 +227,14 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     return m_autoSelector.selected();
+  }
+  public Command shootFlywheel() {
+    return new ParallelCommandGroup(
+      m_ShooterPivot.goToAngleCommand(() -> ShooterPivotConstants.getAngle((m_camera1.FilteredEsimatedPoseNorm()))),
+      m_simpleFlywheelLeft.pidCommand(() -> FlyWheelConstants.getRPM(m_camera1.FilteredEsimatedPoseNorm())),
+      m_simpleFlywheelRight.pidCommand(() -> FlyWheelConstants.getRPM(m_camera1.FilteredEsimatedPoseNorm())),
+      m_SimpleShooterFeeder.forward()
+    );
   }
 
   public void autonomousInit() {

@@ -16,21 +16,18 @@ import java.util.function.DoubleSupplier;
 import com.revrobotics.CANSparkFlex;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkLowLevel.MotorType;
-import frc.robot.subsystems.SimpleShooterFeeder;
 
 
 public class SimpleFlywheel extends SubsystemBase {
   // private final int kOpenLoop = 0;
   // private final int kPID = 1;
   // private final int kStateSpace = 2;
-  private enum ControlMode {
-    kOpenLoop, 
-    kPID,
-    kStateSpace
+  private enum ControlMode { 
+    kOpenLoop, kPID, kStateSpace
   }
 
   private final CANSparkFlex m_leader;
-  //private final CANSparkFlex m_follower;
+  // private final CANSparkFlex m_follower;
 
   private final RelativeEncoder m_encoder;
   private final boolean m_isLeft;
@@ -38,10 +35,7 @@ public class SimpleFlywheel extends SubsystemBase {
   private ControlMode m_controlMode = ControlMode.kOpenLoop;
   private double m_demand;
 
-  //
-  // PID
-  //
-
+  //: PID
   private final PIDController m_pidController = new PIDController(FlyWheelConstants.kP, FlyWheelConstants.kI, FlyWheelConstants.kD);
 
   public SimpleFlywheel(int canID, boolean isLeft) {
@@ -155,7 +149,7 @@ public Command waitUntilErrorOutOfRange(){
   public Command feederShooterCommand(SimpleShooterFeeder m_feeder) {
     return Commands.repeatingSequence(
         this.waitUntilErrorInrange(),
-        m_feeder.SimpleShooterFeeder_forwardsCommand().until(()->this.isErrorOutOfRange())
+        m_feeder.forward().until(()->this.isErrorOutOfRange())
     );
   }
 

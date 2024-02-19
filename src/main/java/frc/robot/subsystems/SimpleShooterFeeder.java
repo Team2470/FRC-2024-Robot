@@ -3,11 +3,8 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.wpilibj.CAN;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-import java.util.ResourceBundle.Control;
 import java.util.function.DoubleSupplier;
 
 import com.revrobotics.CANSparkMax;
@@ -20,16 +17,12 @@ public class SimpleShooterFeeder extends SubsystemBase {
     public final RelativeEncoder m_encoder;
 
     public SimpleShooterFeeder(int canID) {
-
         m_SimpleShooterFeeder = new CANSparkMax(canID, MotorType.kBrushed);
         m_SimpleShooterFeeder.restoreFactoryDefaults();
         m_SimpleShooterFeeder.setInverted(false);
         m_SimpleShooterFeeder.setSmartCurrentLimit(40);
         m_encoder = m_SimpleShooterFeeder.getEncoder();
         m_SimpleShooterFeeder.burnFlash();
-
-
-
     }
 
     public double getVelocity() {
@@ -43,12 +36,10 @@ public class SimpleShooterFeeder extends SubsystemBase {
         return m_encoder.getCountsPerRevolution();
     }
 
-    public boolean isEncoderPast5Rotations( ) {
+    public boolean isEncoderPast5Rotations() {
         return (getEncoderPosition() > 5 || getEncoderPosition() < -5);
     }
-
-
-    public void zeroEncoderValue(){
+    public void zeroEncoderValue() {
         m_encoder.setPosition(0);
     }
 
@@ -71,62 +62,53 @@ public class SimpleShooterFeeder extends SubsystemBase {
         m_SimpleShooterFeeder.setVoltage((-1));
     }
 
-    public void stop() {
+    public void stopFeeder() {
         m_SimpleShooterFeeder.stopMotor();
 
     }
 
-    public void forwardsVariableVoltage(double volts) {
+    public void feederForwards(double volts) {
         m_SimpleShooterFeeder.setVoltage(volts);
     }
-    public void reverseVariableVoltage(double volts) {
+    public void feederReverse(double volts) {
         m_SimpleShooterFeeder.setVoltage(volts);
     }
 
 
-    public Command SimpleShooterFeeder_forwardsCommand() {
+    public Command forward() {
         return Commands.runEnd(
-            ()-> this.feedShooter(),
-            this::stop,
+            () -> this.feedShooter(),
+            this::stopFeeder,
             this);
     }
 
 
-    public Command SimpleShooterFeeder_reverseCommand() {
+    public Command reverse() {
         return Commands.runEnd(
             ()-> this.reverseFeeder(),
-            this::stop,
+            this::stopFeeder,
             this);
     }
 
-    public Command SimpleShooterFeeder_stopCommand() {
-        return Commands.runEnd(
-            ()-> this.stop(),
-            this::stop,
-            this);
+    public Command stop() {
+        return Commands.runEnd(() -> this.stopFeeder(), this::stopFeeder, this);
     }
 
-    public Command zeroEncoderCommand() {
+    public Command resetEncoder() {
         return Commands.runOnce(() -> this.zeroEncoderValue(), this);
     }
 
-    public Command simpleShooterFeeder_forwardsVaribleCommand(DoubleSupplier volts) {
+    public Command forward(DoubleSupplier volts) {
         return Commands.runEnd(
-            ()-> this.forwardsVariableVoltage(volts.getAsDouble()),
-            this::stop,
+            ()-> this.feederForwards(volts.getAsDouble()),
+            this::stopFeeder,
             this);
     }
 
-    public Command simpleShooterFeeder_reverseVariableCommand(DoubleSupplier volts) {
+    public Command reverse(DoubleSupplier volts) {
         return Commands.runEnd(
-            ()-> this.reverseVariableVoltage(volts.getAsDouble()),
-            this::stop,
+            ()-> this.feederReverse(volts.getAsDouble()),
+            this::stopFeeder,
             this);
     }
-
-
-
-
-
-
 }
