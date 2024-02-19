@@ -43,7 +43,7 @@ public class SimpleShooterFeeder extends SubsystemBase {
         return (getEncoderPosition() > 5 || getEncoderPosition() < -5);
     }
     public void zeroEncoderValue() {
-        m_encoder.setPosition(0);
+        // m_encoder.setPosition(0);
     }
 
 
