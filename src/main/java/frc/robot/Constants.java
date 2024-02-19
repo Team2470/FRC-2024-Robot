@@ -7,7 +7,6 @@ package frc.robot;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 
@@ -39,8 +38,8 @@ public final class Constants {
   }
 
   public static class FlyWheelConstants {
-    public static int kRightID = 1;
-    public static int kLeftID = 2;
+    public static final int kRightID = 1;
+    public static final int kLeftID = 2;
     public static final double kP = 0.001;
     public static final double kI = 0;
     public static final double kD = 0;
@@ -69,8 +68,6 @@ public final class Constants {
       return (227*(Math.pow(distance, 0.578)));
     }
   }
-
-  public FlyWheelConstants flyWheelConstants = new FlyWheelConstants();
 
   public static class ShooterPivotConstants {
     public static final int MotorID = 21;
@@ -301,14 +298,6 @@ public final class Constants {
     public static final Transform3d kFrontRightCamera = new Transform3d(
       new Translation3d(Units.inchesToMeters(-5.1), Units.inchesToMeters(14.391), Units.inchesToMeters(6.626)),
       new Rotation3d(0, Units.degreesToRadians(25.0), 0)
-  );
-}
-
-  public static final Constants kConstants = new Constants();
-    static {
-      if(RobotController.getSerialNumber() == "foobar") {
-        // Practice Bot
-        kConstants.flyWheelConstants.kLeftID = 45;
-      } 
-   }
+    );
+  }
 }

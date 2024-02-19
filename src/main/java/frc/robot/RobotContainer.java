@@ -10,7 +10,6 @@ import com.kennedyrobotics.auto.AutoSelector;
 import com.kennedyrobotics.hardware.misc.RevDigit;
 import com.pathplanner.lib.auto.NamedCommands;
 
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -34,10 +33,7 @@ import frc.robot.commands.DriveWithController;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.SimpleShooterFeeder;
 import frc.robot.subsystems.TimeOfFlightSensorTest;
-
-
-
-
+  
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
  * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
