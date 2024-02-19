@@ -202,7 +202,7 @@ public class RevDigit {
     Thread.sleep(10);
   }
 
-  public void display(String message) {
+  public RevDigit display(String message) {
     char[] messageToDisplay = new char[] {' ', ' ', ' ', ' '};
     // if (message.length() >= 1) {
     // 	messageToDisplay[0] = message.charAt(0);
@@ -242,6 +242,8 @@ public class RevDigit {
     } catch (InterruptedException e) {
       System.out.println("Unable to sleep");
     }
+
+    return this;
   }
 
   /**

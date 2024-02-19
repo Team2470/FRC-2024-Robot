@@ -8,18 +8,15 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.wpilibj.CAN;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.FlyWheelConstants;
 
-import java.util.ResourceBundle.Control;
 import java.util.function.DoubleSupplier;
 
 import com.revrobotics.CANSparkFlex;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkLowLevel.MotorType;
-import com.revrobotics.CANSparkLowLevel.PeriodicFrame;
-
+import frc.robot.subsystems.SimpleShooterFeeder;
 
 
 public class SimpleFlywheel extends SubsystemBase {
@@ -50,20 +47,14 @@ public class SimpleFlywheel extends SubsystemBase {
   public SimpleFlywheel(int canID, boolean isLeft) {
     m_leader = new CANSparkFlex(canID, MotorType.kBrushless);
     m_leader.restoreFactoryDefaults();
-    //m_follower = new CANSparkFlex(FlyWheelConstants.kFollowerID, MotorType.kBrushless);
-    //m_follower.restoreFactoryDefaults();
+  
 
-    //m_follower.follow(m_leader, true);
-
-    m_leader.setInverted(isLeft);
+    m_leader.setInverted(!isLeft);
     m_isLeft = isLeft;
 
+    m_leader.setOpenLoopRampRate(0.2);
     m_leader.setSmartCurrentLimit(40);
-    //m_follower.setSmartCurrentLimit(40);
 
-    // m_follower.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 100);
-    // m_follower.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 500);
-    // m_follower.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 500);
 
     m_encoder = m_leader.getEncoder();
     m_leader.burnFlash();
@@ -115,6 +106,7 @@ public class SimpleFlywheel extends SubsystemBase {
     SmartDashboard.putNumber("Flywheel "+ (m_isLeft ? "Left" : "Right") + " RPM Error", getErrorRPM());
     SmartDashboard.putNumber("Flywheel " + (m_isLeft ? "Left" : "Right") + " RPM Percent Error", getErrorPercent());
     SmartDashboard.putString("Flywheel "+ (m_isLeft ? "Left" : "Right")+ " Control Mode", m_controlMode.toString());
+    SmartDashboard.putBoolean("Flywheel InRange"+ (m_isLeft ? "Left" : "Right"), isErrorInRange());
 
   }
 
@@ -127,11 +119,26 @@ public class SimpleFlywheel extends SubsystemBase {
 
   public double getErrorPercent(){
     if (m_controlMode == ControlMode.kPID){
-      return (m_demand - m_encoder.getVelocity()) / m_demand * 100;
+      return (m_demand - m_encoder.getVelocity()) / m_demand * 10;
     }
 
     return 0;
   }
+  public boolean isErrorInRange() {
+    return (-5 < this.getErrorPercent() && this.getErrorPercent() < 5);
+}
+public Command waitUntilErrorInrange(){
+  return Commands.waitUntil(()-> this.isErrorInRange());
+}
+
+  public boolean isErrorOutOfRange() {
+    return (this.getErrorPercent() > 15);
+}
+
+public Command waitUntilErrorOutOfRange(){
+  return Commands.waitUntil(() -> this.isErrorOutOfRange());
+  
+}
 
   public void setOutputVoltage(double OutputVoltage) {
     m_controlMode = ControlMode.kOpenLoop;
@@ -146,8 +153,12 @@ public class SimpleFlywheel extends SubsystemBase {
   public void stop() {
     setOutputVoltage(0);
   }
-
-
+  public Command feederShooterCommand(SimpleShooterFeeder m_feeder) {
+    return Commands.repeatingSequence(
+        this.waitUntilErrorInrange(),
+        m_feeder.SimpleShooterFeeder_forwardsCommand().until(()->this.isErrorOutOfRange())
+    );
+  }
   /**
    * Example command factory method.
    *
@@ -174,6 +185,6 @@ public class SimpleFlywheel extends SubsystemBase {
   }
 
   public Command pidCommand(double rpm){
-    return pidCommand(()-> rpm);
+    return pidCommand(() -> rpm);
   }
 }

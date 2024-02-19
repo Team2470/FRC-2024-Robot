@@ -4,20 +4,18 @@
 
 package frc.robot;
 
-import edu.wpi.first.math.interpolation.InterpolatingTreeMap;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.math.util.Units;
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform3d;
 
 import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.util.PIDConstants;
 import com.swervedrivespecialties.swervelib.SdsModuleConfigurations;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Rotation3d;
-import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
-import edu.wpi.first.math.system.plant.DCMotor;
-import edu.wpi.first.math.util.Units;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -77,16 +75,16 @@ public final class Constants {
     public static final int EncoderID = 21;
     public static final String MotorCANBus = "rio"; 
     public static final String EncoderCANBus = "rio";
-    public static final int reverseSoftLimit = 0;
+    public static final int reverseSoftLimit = 250;
     public static final int forwardSoftLimit = 1024;
-    public static final boolean encoderDirection = false;
-    public static final double encoderOffset = 143.349609375+20+4.39453125+90-3;
+    public static final boolean encoderDirection = true;
+    public static final double encoderOffset = 140.889-21;
 ;
 
 
 
 
-    public static final double kP = 35;
+    public static final double kP = 17.5;
     public static final double kI = 11;
     public static final double kD = 0.2;
     public static final double kF = 0;
@@ -96,7 +94,7 @@ public final class Constants {
 
 
     public static double getAngle(double distance) {
-      return (1166*(Math.pow(distance,-0.736)));
+      return (1166*(Math.pow(distance,-0.736)))+2.4;
     } 
 
 
@@ -189,38 +187,106 @@ public final class Constants {
       }
     }
     // : specific module config
-    public static final ModuleConfig kFrontLeft =
+  //   public static final ModuleConfig kFrontLeft =
+  //       new ModuleConfig("Front Left")
+  //           .setDrivingID(11)
+  //           .setEncoderID(11)
+  //           .setSteeringID(11)
+  //           .setOffset(-46.93359375)
+  //           .setTab(0, 0);
+
+  //   public static final ModuleConfig kFrontRight =
+  //       new ModuleConfig("Front Right")
+  //           .setDrivingID(12)
+  //           .setEncoderID(12)
+  //           .setSteeringID(12)
+  //           .setOffset(0)
+  //           .setTab(0, 2);
+
+  //   public static final ModuleConfig kBackRight =
+  //       new ModuleConfig("Back Left")
+  //           .setDrivingID(14)
+  //           .setEncoderID(14)
+  //           .setSteeringID(14)
+  //           .setOffset(-186.1523437)
+  //           .setTab(0, 6);
+
+  //   public static final ModuleConfig kBackLeft =
+  //       new ModuleConfig("Back Right")
+  //           .setDrivingID(13)
+  //           .setEncoderID(13)
+  //           .setSteeringID(13)
+  //           .setOffset(-119.091796875 + 180)
+  //           .setTab(0, 4);
+  // }
+
+
+    // When calibrating the bevel gears should face to the left
+
+     public static final ModuleConfig kFrontLeft =
         new ModuleConfig("Front Left")
-            .setDrivingID(11)
-            .setEncoderID(11)
-            .setSteeringID(11)
-            .setOffset(-46.93359375)
+            .setDrivingID(13)
+            .setEncoderID(13)
+            .setSteeringID(13)
+            .setOffset(-299.04+180)
             .setTab(0, 0);
 
     public static final ModuleConfig kFrontRight =
         new ModuleConfig("Front Right")
-            .setDrivingID(12)
-            .setEncoderID(12)
-            .setSteeringID(12)
-            .setOffset(-205.117187 + 180)
-            .setTab(0, 2);
-
-    public static final ModuleConfig kBackRight =
-        new ModuleConfig("Back Left")
             .setDrivingID(14)
             .setEncoderID(14)
             .setSteeringID(14)
-            .setOffset(-186.1523437)
+            .setOffset(-186.328+180)
+            .setTab(0, 2);
+
+    public static final ModuleConfig kBackRight =
+        new ModuleConfig("Back Right")
+            .setDrivingID(11)
+            .setEncoderID(11)
+            .setSteeringID(11)
+            .setOffset(-48.076+180)
             .setTab(0, 6);
 
     public static final ModuleConfig kBackLeft =
-        new ModuleConfig("Back Right")
-            .setDrivingID(13)
-            .setEncoderID(13)
-            .setSteeringID(13)
-            .setOffset(-119.091796875 + 180)
+        new ModuleConfig("Back Left")
+            .setDrivingID(12)
+            .setEncoderID(12)
+            .setSteeringID(12)
+            .setOffset(-105.029-0.088+180)
             .setTab(0, 4);
   }
+  // public static final ModuleConfig kFrontLeft =
+  //       new ModuleConfig("Front Left")
+  //           .setDrivingID(16)
+  //           .setEncoderID(16)
+  //           .setSteeringID(16)
+  //           .setOffset(-141.85548853232115+180)
+  //           .setTab(0, 0);
+
+  //   public static final ModuleConfig kFrontRight =
+  //       new ModuleConfig("Front Right")
+  //           .setDrivingID(14)
+  //           .setEncoderID(14)
+  //           .setSteeringID(14)
+  //           .setOffset(-126.12304687500001+180)
+  //           .setTab(0, 2);
+
+  //   public static final ModuleConfig kBackLeft =
+  //       new ModuleConfig("Back Left")
+  //           .setDrivingID(12)
+  //           .setEncoderID(12)
+  //           .setSteeringID(12)
+  //           .setOffset(-321.50391638394024+180)
+  //           .setTab(0, 4);
+
+  //   public static final ModuleConfig kBackRight =
+  //       new ModuleConfig("Back Right")
+  //           .setDrivingID(10)
+  //           .setEncoderID(10)
+  //           .setSteeringID(10)
+  //           .setOffset(-210.234375+180)
+  //           .setTab(0, 6);
+  // }
 
   public static class AutoConstants {
     public static final double kAutoVoltageCompensation = 10;
@@ -234,15 +300,12 @@ public final class Constants {
       new PathConstraints(3, 2, Constants.DriveConstants.kMaxAngularVelocityRadiansPerSecond, 
                                 Constants.DriveConstants.kMaxAngularVelocityRadiansPerSecond);
   }
-
-  public static class VisionConstants {
-    public static final Transform3d kBackLeftCamera = new Transform3d(
-      new Translation3d(Units.inchesToMeters(-5.89), Units.inchesToMeters(6.30), Units.inchesToMeters(9.66)),
-      new Rotation3d(0,Units.degreesToRadians(-15.0),Units.degreesToRadians(150))
-    );
-    public static final Transform3d kBackRightCamera = new Transform3d(
-      new Translation3d(Units.inchesToMeters(-5.89), -Units.inchesToMeters(6.30), Units.inchesToMeters(9.66)),
-      new Rotation3d(0,Units.degreesToRadians(-15.0),Units.degreesToRadians(-150))
-    );
-  }
+  
+  public static class VisionConstants{ 
+    public static final Transform3d kFrontRightCamera = new Transform3d(
+      new Translation3d(Units.inchesToMeters(-5.1), Units.inchesToMeters(14.391), Units.inchesToMeters(6.626)),
+      new Rotation3d(0, Units.degreesToRadians(25.0), 0
+      )
+  );
+}
 }
