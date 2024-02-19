@@ -14,26 +14,29 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 
 public class SimpleShooterFeeder extends SubsystemBase {
     private final CANSparkMax m_SimpleShooterFeeder;
-    public final RelativeEncoder m_encoder;
+    // public final RelativeEncoder m_encoder;
 
     public SimpleShooterFeeder(int canID) {
         m_SimpleShooterFeeder = new CANSparkMax(canID, MotorType.kBrushed);
         m_SimpleShooterFeeder.restoreFactoryDefaults();
         m_SimpleShooterFeeder.setInverted(false);
         m_SimpleShooterFeeder.setSmartCurrentLimit(40);
-        m_encoder = m_SimpleShooterFeeder.getEncoder();
+        // m_encoder = m_SimpleShooterFeeder.getEncoder();
         m_SimpleShooterFeeder.burnFlash();
     }
 
     public double getVelocity() {
-        return m_encoder.getVelocity();
+        // return m_encoder.getVelocity();
+        return 0;
     }
     public double getEncoderPosition() {
-        return m_encoder.getPosition();
+        // return m_encoder.getPosition();
+        return 0;
     }
 
     public double getEncoderCPR() {
-        return m_encoder.getCountsPerRevolution();
+        // return m_encoder.getCountsPerRevolution();
+        return 0;
     }
 
     public boolean isEncoderPast5Rotations() {
@@ -56,10 +59,10 @@ public class SimpleShooterFeeder extends SubsystemBase {
 
 
     public void feedShooter() {
-        m_SimpleShooterFeeder.setVoltage(1);
+        m_SimpleShooterFeeder.setVoltage(12);
     }
     public void reverseFeeder() {
-        m_SimpleShooterFeeder.setVoltage((-1));
+        m_SimpleShooterFeeder.setVoltage((-12));
     }
 
     public void stopFeeder() {

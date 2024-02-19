@@ -10,11 +10,15 @@ import com.kennedyrobotics.auto.AutoSelector;
 import com.kennedyrobotics.hardware.misc.RevDigit;
 import com.pathplanner.lib.auto.NamedCommands;
 
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
+import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -51,7 +55,7 @@ public class RobotContainer {
   private final SimpleFlywheel m_simpleFlywheelRight = new SimpleFlywheel(FlyWheelConstants.kRightID, false);
   private final ShooterPivot m_ShooterPivot = new ShooterPivot();
   private final Drivetrain m_drivetrain = new Drivetrain();
-  private final SimpleShooterFeeder m_SimpleShooterFeeder = new SimpleShooterFeeder(1);
+  private final SimpleShooterFeeder m_SimpleShooterFeeder = new SimpleShooterFeeder(20);
   private final TimeOfFlightSensorTest m_TOF1 = new TimeOfFlightSensorTest();
 
   // Auto
@@ -102,10 +106,12 @@ public class RobotContainer {
     //m_controller.rightBumper().whileTrue(m_simpleFlywheel.spinCommand(-2));
     // m_controller.rightTrigger().whileTrue(m_simpleFlywheelLeft.openLoopCommand(()-> SmartDashboard.getNumber("Select Left Voltage", 0)));
     // m_controller.rightTrigger().whileTrue(m_simpleFlywheelRight.openLoopCommand(()-> SmartDashboard.getNumber("Select Right Voltage", 0)));
-    // m_controller.leftTrigger().whileTrue(m_simpleFlywheelLeft.pidCommand(()-> SmartDashboard.getNumber("Select Left RPM", 0)));
-    // m_controller.leftTrigger().whileTrue(m_simpleFlywheelRight.pidCommand(()-> SmartDashboard.getNumber("Select Right RPM", 0)));
+    // m_buttonPad.button(10).whileTrue(m_simpleFlywheelLeft.pidCommand(()-> SmartDashboard.getNumber("Select Left RPM", 0)));
+    // m_buttonPad.button(11).whileTrue(m_simpleFlywheelRight.pidCommand(()-> SmartDashboard.getNumber("Select Right RPM", 0)));
     m_buttonPad.button(8).whileTrue(m_ShooterPivot.openLoopCommand(2));
     m_buttonPad.button(12).whileTrue(m_ShooterPivot.openLoopCommand(-2));
+    m_buttonPad.button(9).whileTrue(m_simpleFlywheelLeft.pidCommand(500));
+    m_buttonPad.button(9).whileTrue(m_simpleFlywheelRight.pidCommand(500));
     // m_controller.x().whileTrue(m_ShooterPivot.goToAngleCommand(37.08984375));
     // m_controller.x().whileTrue(m_ShooterPivot.goToAngleCommand(()-> SmartDashboard.getNumber("Select Shooter Pivot Angle", 0)));
     // m_controller.y().whileTrue(m_ShooterPivot.goToAngleCommand(()-> ShooterPivotConstants.getAngle(m_camera1.getFilteredDistance())));
@@ -114,34 +120,48 @@ public class RobotContainer {
     // m_controller.rightBumper().whileTrue(m_ShooterPivot.goToAngleCommand(()-> ShooterPivotConstants.getAngle(m_camera1.getFilteredDistance())));
 
     // // m_controller.rightBumper().whileTrue(m_simpleFlywheel.spinCommand(-2));
-    // m_controller.a().whileTrue(m_SimpleShooterFeeder.SimpleShooterFeeder_forwardsCommand());
+    m_buttonPad.button(10).whileTrue(m_SimpleShooterFeeder.SimpleShooterFeeder_forwardsCommand());
+    m_buttonPad.button(11).whileTrue(m_SimpleShooterFeeder.SimpleShooterFeeder_reverseCommand());
     // m_controller.b().whileTrue(m_SimpleShooterFeeder.SimpleShooterFeeder_reverseCommand());
     // //m_controller.x().whileTrue(m_TOF1.sequenceTest(m_SimpleShooterFeeder));
     // m_controller.y().whileTrue(m_TOF1.variableVoltageTest(m_SimpleShooterFeeder));
 
     // m_buttonPad.button(1).whileTrue(m_ShooterPivot.goToAngleCommand(()-> ShooterPivotConstants.getAngle(m_camera1.getFilteredDistance())));
-    m_buttonPad.button(1).whileTrue(m_simpleFlywheelLeft.pidCommand(()-> FlyWheelConstants.getRPM(m_camera1.FilteredEsimatedPoseNorm())));
-    m_buttonPad.button(1).whileTrue(m_simpleFlywheelRight.pidCommand(()-> FlyWheelConstants.getRPM(m_camera1.FilteredEsimatedPoseNorm())));
-    m_buttonPad.button(1).whileTrue(m_ShooterPivot.goToAngleCommand(()-> ShooterPivotConstants.getAngle(m_camera1.FilteredEsimatedPoseNorm())));
+    // m_buttonPad.button(1).whileTrue(m_simpleFlywheelLeft.pidCommand(()-> FlyWheelConstants.getRPM(m_camera1.FilteredEsimatedPoseNorm())));
+    // m_buttonPad.button(1).whileTrue(m_simpleFlywheelRight.pidCommand(()-> FlyWheelConstants.getRPM(m_camera1.FilteredEsimatedPoseNorm())));
+    // m_buttonPad.button(1).whileTrue(m_ShooterPivot.goToAngleCommand(()-> ShooterPivotConstants.getAngle(m_camera1.FilteredEsimatedPoseNorm())));
 
-    m_buttonPad.button(1).whileTrue(new ParallelCommandGroup(
+    // m_buttonPad.button(1).whileTrue(new ParallelCommandGroup(
+    //   m_ShooterPivot.goToAngleCommand(()-> ShooterPivotConstants.getAngle((m_camera1.FilteredEsimatedPoseNorm()))),
+    //   m_simpleFlywheelLeft.pidCommand(()-> FlyWheelConstants.getRPM(m_camera1.FilteredEsimatedPoseNorm())),
+    //   m_simpleFlywheelRight.pidCommand(()-> FlyWheelConstants.getRPM(m_camera1.FilteredEsimatedPoseNorm())),
+    //   m_simpleFlywheelLeft.feederShooterCommand(m_SimpleShooterFeeder)
+    // ));
+    m_buttonPad.button(1).whileTrue(visionShootCommand());
+
+        m_buttonPad.button(6).whileTrue(new ParallelCommandGroup(
       m_ShooterPivot.goToAngleCommand(()-> ShooterPivotConstants.getAngle((m_camera1.FilteredEsimatedPoseNorm()))),
       m_simpleFlywheelLeft.pidCommand(()-> FlyWheelConstants.getRPM(m_camera1.FilteredEsimatedPoseNorm())),
-      m_simpleFlywheelRight.pidCommand(()-> FlyWheelConstants.getRPM(m_camera1.FilteredEsimatedPoseNorm())),
-      m_simpleFlywheelLeft.feederShooterCommand(m_SimpleShooterFeeder)
+      m_simpleFlywheelRight.pidCommand(()-> FlyWheelConstants.getRPM(m_camera1.FilteredEsimatedPoseNorm()))
+    ));
+
+        m_buttonPad.button(7).whileTrue(new ParallelCommandGroup(
+          m_ShooterPivot.goToAngleCommand(()-> ShooterPivotConstants.getAngle(SmartDashboard.getNumber("Select Distance", 0))),
+          m_simpleFlywheelLeft.pidCommand(()-> FlyWheelConstants.getRPM(SmartDashboard.getNumber("Select Distance", 0))),
+          m_simpleFlywheelRight.pidCommand(()-> FlyWheelConstants.getRPM(SmartDashboard.getNumber("Select Distance", 0)))
     ));
 
     m_buttonPad.button(2).whileTrue(new ParallelCommandGroup(
-          m_ShooterPivot.goToAngleCommand(56.92836363),
+          m_ShooterPivot.goToAngleCommand(59.92836363),
           m_simpleFlywheelLeft.pidCommand(2326.626089),
           m_simpleFlywheelRight.pidCommand(2326.626089)
 
     ));
-
+//56.92836363
     m_buttonPad.button(3).whileTrue(new ParallelCommandGroup(
           m_ShooterPivot.goToAngleCommand(48.779296875),
-          m_simpleFlywheelLeft.pidCommand(-1500),
-          m_simpleFlywheelRight.pidCommand(-1500),
+          m_simpleFlywheelLeft.pidCommand(-2500),
+          m_simpleFlywheelRight.pidCommand(-2500),
           m_TOF1.feederIntakeCommand(m_SimpleShooterFeeder)
 
     ));
@@ -266,8 +286,8 @@ public class RobotContainer {
     SmartDashboard.putNumber("Select Distance", 0);
   }
   private void setupShooter() {
-    m_simpleFlywheelLeft.setDefaultCommand(m_simpleFlywheelLeft.pidCommand(500));
-    m_simpleFlywheelRight.setDefaultCommand(m_simpleFlywheelRight.pidCommand(500));
+    m_simpleFlywheelLeft.setDefaultCommand(m_simpleFlywheelLeft.pidCommand(2000));
+    m_simpleFlywheelRight.setDefaultCommand(m_simpleFlywheelRight.pidCommand(2000));
     m_ShooterPivot.setDefaultCommand(m_ShooterPivot.goToAngleCommand(45));
   }
   private void registerAutos(HashMap<String, String> autos) {
@@ -277,5 +297,24 @@ public class RobotContainer {
         AutoConstants.kPathConstraints
       ));
     }
+  }
+
+  //
+  // Commmand Groups
+  //
+
+  public Command visionShootCommand(){
+    return new ParallelCommandGroup(
+      m_ShooterPivot.goToAngleCommand(()-> ShooterPivotConstants.getAngle((m_camera1.FilteredEsimatedPoseNorm()))),
+      m_simpleFlywheelLeft.pidCommand(()-> FlyWheelConstants.getRPM(m_camera1.FilteredEsimatedPoseNorm())),
+      m_simpleFlywheelRight.pidCommand(()-> FlyWheelConstants.getRPM(m_camera1.FilteredEsimatedPoseNorm())),
+      // m_simpleFlywheelLeft.feederShooterCommand(m_SimpleShooterFeeder)
+      new SequentialCommandGroup(
+        new WaitCommand(0.25),
+        new WaitUntilCommand(()-> m_simpleFlywheelLeft.isErrorInRange() && m_simpleFlywheelRight.isErrorInRange() && m_ShooterPivot.isAngleErrorInRange()),
+        m_SimpleShooterFeeder.SimpleShooterFeeder_forwardsCommand()
+      )
+    );
+
   }
 }

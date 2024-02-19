@@ -77,10 +77,11 @@ public final class Constants {
     public static final int EncoderID = 21;
     public static final String MotorCANBus = "rio"; 
     public static final String EncoderCANBus = "rio";
-    public static final int reverseSoftLimit = 50;
+    public static final int reverseSoftLimit = 250;
     public static final int forwardSoftLimit = 1024;
-    public static final boolean encoderDirection = false;
-    public static final double encoderOffset = 143.349609375+20+4.39453125+90-3;
+    public static final boolean encoderDirection = true;
+    public static final double encoderOffset = 140.889-21;
+;
 
     public static final double kP = 17.5;
     public static final double kI = 11;
@@ -92,7 +93,7 @@ public final class Constants {
 
 
     public static double getAngle(double distance) {
-      return (1166*(Math.pow(distance,-0.736)))-2.75;
+      return (1166*(Math.pow(distance,-0.736)))+2.4;
     } 
 
 
@@ -195,7 +196,7 @@ public final class Constants {
   //           .setDrivingID(12)
   //           .setEncoderID(12)
   //           .setSteeringID(12)
-  //           .setOffset(-205.117187 + 180)
+  //           .setOffset(0)
   //           .setTab(0, 2);
 
   //   public static final ModuleConfig kBackRight =
@@ -215,12 +216,15 @@ public final class Constants {
   //           .setTab(0, 4);
   // }
 
-  public static final ModuleConfig kFrontLeft =
+
+    // When calibrating the bevel gears should face to the left
+
+     public static final ModuleConfig kFrontLeft =
         new ModuleConfig("Front Left")
-            .setDrivingID(16)
-            .setEncoderID(16)
-            .setSteeringID(16)
-            .setOffset(-141.85548853232115+180)
+            .setDrivingID(13)
+            .setEncoderID(13)
+            .setSteeringID(13)
+            .setOffset(-299.04+180)
             .setTab(0, 0);
 
     public static final ModuleConfig kFrontRight =
@@ -228,25 +232,57 @@ public final class Constants {
             .setDrivingID(14)
             .setEncoderID(14)
             .setSteeringID(14)
-            .setOffset(-126.12304687500001+180)
+            .setOffset(-186.328+180)
             .setTab(0, 2);
+
+    public static final ModuleConfig kBackRight =
+        new ModuleConfig("Back Right")
+            .setDrivingID(11)
+            .setEncoderID(11)
+            .setSteeringID(11)
+            .setOffset(-48.076+180)
+            .setTab(0, 6);
 
     public static final ModuleConfig kBackLeft =
         new ModuleConfig("Back Left")
             .setDrivingID(12)
             .setEncoderID(12)
             .setSteeringID(12)
-            .setOffset(-321.50391638394024+180)
+            .setOffset(-105.029-0.088+180)
             .setTab(0, 4);
-
-    public static final ModuleConfig kBackRight =
-        new ModuleConfig("Back Right")
-            .setDrivingID(10)
-            .setEncoderID(10)
-            .setSteeringID(10)
-            .setOffset(-210.234375+180)
-            .setTab(0, 6);
   }
+  // public static final ModuleConfig kFrontLeft =
+  //       new ModuleConfig("Front Left")
+  //           .setDrivingID(16)
+  //           .setEncoderID(16)
+  //           .setSteeringID(16)
+  //           .setOffset(-141.85548853232115+180)
+  //           .setTab(0, 0);
+
+  //   public static final ModuleConfig kFrontRight =
+  //       new ModuleConfig("Front Right")
+  //           .setDrivingID(14)
+  //           .setEncoderID(14)
+  //           .setSteeringID(14)
+  //           .setOffset(-126.12304687500001+180)
+  //           .setTab(0, 2);
+
+  //   public static final ModuleConfig kBackLeft =
+  //       new ModuleConfig("Back Left")
+  //           .setDrivingID(12)
+  //           .setEncoderID(12)
+  //           .setSteeringID(12)
+  //           .setOffset(-321.50391638394024+180)
+  //           .setTab(0, 4);
+
+  //   public static final ModuleConfig kBackRight =
+  //       new ModuleConfig("Back Right")
+  //           .setDrivingID(10)
+  //           .setEncoderID(10)
+  //           .setSteeringID(10)
+  //           .setOffset(-210.234375+180)
+  //           .setTab(0, 6);
+  // }
 
   public static class AutoConstants {
     public static final double kAutoVoltageCompensation = 10;

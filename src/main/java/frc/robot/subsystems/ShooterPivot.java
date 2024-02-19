@@ -146,6 +146,7 @@ public class ShooterPivot extends SubsystemBase {
     SmartDashboard.putNumber("Shooter Pivot" + " get measurement", getAngle());
     SmartDashboard.putNumber("shooter Pivot" + " Motor Output Voltage", outputVoltage);
     SmartDashboard.putNumber("shooter Pivot" + " Motor Setpoint Position", m_demand);
+    SmartDashboard.putBoolean("Shooter Pivot" + "In range", isAngleErrorInRange());
   }
 
   public double getErrorAngle(){
@@ -153,6 +154,13 @@ public class ShooterPivot extends SubsystemBase {
       return Math.toDegrees(m_pidController.getPositionError());
     }
     return 0;
+  }
+
+  public boolean isAngleErrorInRange(){
+    if (m_controlMode == ControlMode.kPID){
+      return (1 > getErrorAngle() && getErrorAngle() > -1);
+    }
+    return false;
   }
 
   public void setOutputVoltage(double OutputVoltage) {
