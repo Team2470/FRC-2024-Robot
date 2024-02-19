@@ -75,7 +75,7 @@ public final class Constants {
     public static final int EncoderID = 21;
     public static final String MotorCANBus = "rio"; 
     public static final String EncoderCANBus = "rio";
-    public static final int reverseSoftLimit = 250;
+    public static final int reverseSoftLimit = 175;
     public static final int forwardSoftLimit = 1024;
     public static final boolean encoderDirection = true;
     public static final double encoderOffset = 140.889-21;
@@ -84,9 +84,9 @@ public final class Constants {
 
 
 
-    public static final double kP = 17.5;
+    public static final double kP = 35;
     public static final double kI = 11;
-    public static final double kD = 0.2;
+    public static final double kD = 1;
     public static final double kF = 0;
     public static final double kG = 0.45;
     public static final double kV = 3.9;
@@ -94,8 +94,9 @@ public final class Constants {
 
 
     public static double getAngle(double distance) {
-      return (1166*(Math.pow(distance,-0.736)))+2.4;
-    } 
+      // return (1166*(Math.pow(distance,-0.736)));
+      return (1848*(Math.pow(distance, -0.827)));
+    }
 
 
   }

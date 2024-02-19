@@ -168,7 +168,7 @@ public class ShooterPivot extends SubsystemBase {
 
   public boolean isAngleErrorInRange(){
     if (m_controlMode == ControlMode.kPID){
-      return (1 > getErrorAngle() && getErrorAngle() > -1);
+      return (0.25 > getErrorAngle() && getErrorAngle() > -0.25);
     }
     return false;
   }
