@@ -5,7 +5,6 @@ import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.geometry.proto.Translation2dProto;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.State;
@@ -50,10 +49,10 @@ public class DriveWithController extends Command {
   private static final int kAngleHistoryMilliseconds = 100;
   private static final int kAngleHistoryLength = kAngleHistoryMilliseconds / 20;
   private CircularBuffer[] lastModuleAngles = {
-    new CircularBuffer(kAngleHistoryLength),
-    new CircularBuffer(kAngleHistoryLength),
-    new CircularBuffer(kAngleHistoryLength),
-    new CircularBuffer(kAngleHistoryLength)
+    new CircularBuffer<>(kAngleHistoryLength),
+    new CircularBuffer<>(kAngleHistoryLength),
+    new CircularBuffer<>(kAngleHistoryLength),
+    new CircularBuffer<>(kAngleHistoryLength)
   };
 
   public DriveWithController(
@@ -162,7 +161,6 @@ public class DriveWithController extends Command {
       rotate *= Constants.DriveConstants.kMaxAngularVelocityRadiansPerSecond;
 
       // Heading controller
-      // TODO should be moved before moving cuttoff
       if (headingOverride != null) {
         if (!lastHeadingControllerEnabled) {
           // Reset heading controller if we are entering it for the first time

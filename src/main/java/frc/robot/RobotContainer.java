@@ -9,6 +9,8 @@ import java.util.HashMap;
 import com.kennedyrobotics.auto.AutoSelector;
 import com.kennedyrobotics.hardware.misc.RevDigit;
 import com.pathplanner.lib.auto.NamedCommands;
+import com.pathplanner.lib.commands.PathPlannerAuto;
+import com.pathplanner.lib.path.PathPlannerPath;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -242,7 +244,8 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    return m_autoSelector.selected();
+    return m_drivetrain.createAutoPath("New Auto", AutoConstants.kPathConstraints);
+    // return m_autoSelector.selected();
   }
   public Command shootFlywheel() {
     return new ParallelCommandGroup(
