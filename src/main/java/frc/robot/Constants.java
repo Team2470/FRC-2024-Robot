@@ -101,15 +101,18 @@ public final class Constants {
 
   }
 
+  public static class IntakeConstants{
+    public static final int MotorID = 0;
+  }
   public static class IntakePivotConstants{
-    public static final int MotorID = 3;
-    public static final int EncoderID = 3;
+    public static final int MotorID = 25;
+    public static final int EncoderID = 22;
     public static final String MotorCANBus = "rio"; 
     public static final String EncoderCANBus = "rio";
     public static final int reverseSoftLimit = 0;
     public static final int forwardSoftLimit = 0;
-    public static final boolean encoderDirection = true;
-    public static final int encoderOffset = 0;
+    public static final boolean encoderDirection = false;
+    public static final double encoderOffset = -133.5;
 
 
 
