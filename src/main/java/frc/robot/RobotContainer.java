@@ -65,9 +65,7 @@ public class RobotContainer {
   public RobotContainer() {
     SmartDashboard.putString("roboRio Serial Number", RobotController.getSerialNumber());
     // CameraServer.startAutomaticCapture();
-
-    setupShooter();
-    
+  
     // Auto Selector
     m_revDigit = new RevDigit().display("2470");
     
@@ -87,8 +85,9 @@ public class RobotContainer {
     }});
 
     m_autoSelector.initialize();
-  
-    setupShooter();
+
+    // TODO Uncomment after test on robot that angles make sense
+    // setupShooter();
     addValuesToDashboard();
     configureBindings();
   }
