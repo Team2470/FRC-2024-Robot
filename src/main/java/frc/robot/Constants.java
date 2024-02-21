@@ -7,6 +7,8 @@ package frc.robot;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.RobotController;
+import frc.robot.Constants.DriveConstants.ModuleConfig;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 
@@ -26,6 +28,13 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
+  public enum Robot {
+    kCompetition,
+    kRyan,
+    kRyan2,
+    kTestBed,
+  }
+
   public enum CanBus {
     kRoboRIO("rio"),
     kCanivore("Canivore0");
@@ -36,6 +45,9 @@ public final class Constants {
       this.bus_name = value;
     }
   }
+
+  public static Robot kRobot = Robot.kCompetition;
+
   public static class FlyWheelConstants {
     public static final int kRightID = 1;
     public static final int kLeftID = 2;
@@ -187,43 +199,9 @@ public final class Constants {
       }
     }
     // : specific module config
-  //   public static final ModuleConfig kFrontLeft =
-  //       new ModuleConfig("Front Left")
-  //           .setDrivingID(11)
-  //           .setEncoderID(11)
-  //           .setSteeringID(11)
-  //           .setOffset(-46.93359375)
-  //           .setTab(0, 0);
-
-  //   public static final ModuleConfig kFrontRight =
-  //       new ModuleConfig("Front Right")
-  //           .setDrivingID(12)
-  //           .setEncoderID(12)
-  //           .setSteeringID(12)
-  //           .setOffset(0)
-  //           .setTab(0, 2);
-
-  //   public static final ModuleConfig kBackRight =
-  //       new ModuleConfig("Back Left")
-  //           .setDrivingID(14)
-  //           .setEncoderID(14)
-  //           .setSteeringID(14)
-  //           .setOffset(-186.1523437)
-  //           .setTab(0, 6);
-
-  //   public static final ModuleConfig kBackLeft =
-  //       new ModuleConfig("Back Right")
-  //           .setDrivingID(13)
-  //           .setEncoderID(13)
-  //           .setSteeringID(13)
-  //           .setOffset(-119.091796875 + 180)
-  //           .setTab(0, 4);
-  // }
-
-
     // When calibrating the bevel gears should face to the left
 
-     public static final ModuleConfig kFrontLeft =
+     public static ModuleConfig kFrontLeft =
         new ModuleConfig("Front Left")
             .setDrivingID(13)
             .setEncoderID(13)
@@ -231,7 +209,7 @@ public final class Constants {
             .setOffset(-299.04+180)
             .setTab(0, 0);
 
-    public static final ModuleConfig kFrontRight =
+    public static ModuleConfig kFrontRight =
         new ModuleConfig("Front Right")
             .setDrivingID(14)
             .setEncoderID(14)
@@ -239,7 +217,7 @@ public final class Constants {
             .setOffset(-186.328+180)
             .setTab(0, 2);
 
-    public static final ModuleConfig kBackRight =
+    public static ModuleConfig kBackRight =
         new ModuleConfig("Back Right")
             .setDrivingID(11)
             .setEncoderID(11)
@@ -247,7 +225,7 @@ public final class Constants {
             .setOffset(-48.076+180)
             .setTab(0, 6);
 
-    public static final ModuleConfig kBackLeft =
+    public static ModuleConfig kBackLeft =
         new ModuleConfig("Back Left")
             .setDrivingID(12)
             .setEncoderID(12)
@@ -255,38 +233,6 @@ public final class Constants {
             .setOffset(-105.029-0.088+180)
             .setTab(0, 4);
   }
-  // public static final ModuleConfig kFrontLeft =
-  //       new ModuleConfig("Front Left")
-  //           .setDrivingID(16)
-  //           .setEncoderID(16)
-  //           .setSteeringID(16)
-  //           .setOffset(-141.85548853232115+180)
-  //           .setTab(0, 0);
-
-  //   public static final ModuleConfig kFrontRight =
-  //       new ModuleConfig("Front Right")
-  //           .setDrivingID(14)
-  //           .setEncoderID(14)
-  //           .setSteeringID(14)
-  //           .setOffset(-126.12304687500001+180)
-  //           .setTab(0, 2);
-
-  //   public static final ModuleConfig kBackLeft =
-  //       new ModuleConfig("Back Left")
-  //           .setDrivingID(12)
-  //           .setEncoderID(12)
-  //           .setSteeringID(12)
-  //           .setOffset(-321.50391638394024+180)
-  //           .setTab(0, 4);
-
-  //   public static final ModuleConfig kBackRight =
-  //       new ModuleConfig("Back Right")
-  //           .setDrivingID(10)
-  //           .setEncoderID(10)
-  //           .setSteeringID(10)
-  //           .setOffset(-210.234375+180)
-  //           .setTab(0, 6);
-  // }
 
   public static class AutoConstants {
     public static final double kAutoVoltageCompensation = 10;
@@ -304,8 +250,51 @@ public final class Constants {
   public static class VisionConstants{ 
     public static final Transform3d kFrontRightCamera = new Transform3d(
       new Translation3d(Units.inchesToMeters(-5.1), Units.inchesToMeters(14.391), Units.inchesToMeters(6.626)),
-      new Rotation3d(0, Units.degreesToRadians(25.0), 0
-      )
-  );
-}
+      new Rotation3d(0, Units.degreesToRadians(25.0), 0)
+      );
+  }
+
+  public static void override() {
+    String serialNumber = RobotController.getSerialNumber();
+    System.out.println("roboRIO Serial: "+serialNumber);
+
+    switch (serialNumber) {
+    case "03060ff5":
+      kRobot = Robot.kRyan;
+      DriveConstants.kFrontLeft = new ModuleConfig("Front Left")
+            .setDrivingID(16)
+            .setEncoderID(16)
+            .setSteeringID(16)
+            .setOffset(-141.85548853232115+180)
+            .setTab(0, 0);
+
+      DriveConstants.kFrontRight = new ModuleConfig("Front Right")
+              .setDrivingID(14)
+              .setEncoderID(14)
+              .setSteeringID(14)
+              .setOffset(-126.12304687500001+180)
+              .setTab(0, 2);
+
+      DriveConstants.kBackLeft = new ModuleConfig("Back Left")
+              .setDrivingID(12)
+              .setEncoderID(12)
+              .setSteeringID(12)
+              .setOffset(-321.50391638394024+180)
+              .setTab(0, 4);
+
+      DriveConstants.kBackRight = new ModuleConfig("Back Right")
+              .setDrivingID(10)
+              .setEncoderID(10)
+              .setSteeringID(10)
+              .setOffset(-210.234375+180)
+              .setTab(0, 6);
+      throw new RuntimeException("Why");
+      // break;
+    case "0324152A":
+      kRobot = Robot.kRyan2;
+      break;
+    default:
+      // Do nothing
+    }
+  }
 }

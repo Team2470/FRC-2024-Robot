@@ -108,6 +108,7 @@ public class Drivetrain extends SubsystemBase {
 
   private SwerveModule createModule(
       ModuleConfig config, Mk4ModuleConfiguration moduleConfig, ShuffleboardTab tab) {
+    System.out.println("Swerve Module: Drive("+config.drivingID +") Steering("+config.steeringID + ")");
     return Mk4iSwerveModuleHelper.createKrakenNeo(
         tab.getLayout(config.name, BuiltInLayouts.kList)
             .withSize(2, 6)

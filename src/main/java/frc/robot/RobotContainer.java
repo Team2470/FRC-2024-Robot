@@ -9,6 +9,7 @@ import java.util.HashMap;
 import com.kennedyrobotics.auto.AutoSelector;
 import com.kennedyrobotics.hardware.misc.RevDigit;
 
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -63,9 +64,11 @@ public class RobotContainer {
 
 
   public RobotContainer() {
+    SmartDashboard.putString("roboRio Serial Number", RobotController.getSerialNumber());
     // CameraServer.startAutomaticCapture();
 
     setupShooter();
+    
     // Auto Selector
     m_revDigit = new RevDigit().display("2470");
     
