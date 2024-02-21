@@ -16,6 +16,12 @@
           "data": {
             "name": "shoot"
           }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "S2-D2"
+          }
         }
       ]
     }

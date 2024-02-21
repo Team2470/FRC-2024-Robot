@@ -24,8 +24,6 @@ import com.ctre.phoenix.sensors.AbsoluteSensorRange;
 import com.ctre.phoenix.sensors.CANCoder;
 import com.ctre.phoenix.sensors.SensorInitializationStrategy;
 
-
-
 public class ShooterPivot extends SubsystemBase {
   // private final int kOpenLoop = 0;
   // private final int kPID = 1;
