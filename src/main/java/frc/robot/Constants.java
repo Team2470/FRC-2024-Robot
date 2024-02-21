@@ -91,15 +91,15 @@ public final class Constants {
     public static final int EncoderID = 21;
     public static final String MotorCANBus = "rio"; 
     public static final String EncoderCANBus = "rio";
-    public static int reverseSoftLimit = 250;
+    public static int reverseSoftLimit = 175;
     public static int forwardSoftLimit = 1024;
     public static boolean encoderDirection = true;
     public static double encoderOffset = 140.889-21;
-;
 
-    public static double kP = 17.5;
+
+    public static double kP = 35;
     public static double kI = 11;
-    public static double kD = 0.2;
+    public static double kD = 1;
     public static double kF = 0;
     public static double kG = 0.45;
     public static double kV = 3.9;
@@ -113,19 +113,22 @@ public final class Constants {
       }
 
       // Comp robot
-      return (1166*(Math.pow(distance,-0.736)))+2.4;
-    } 
+      return (1848*(Math.pow(distance, -0.827)));
+    }
   }
 
+  public static class IntakeConstants{
+    public static final int MotorID = 0;
+  }
   public static class IntakePivotConstants{
-    public static final int MotorID = 3;
-    public static final int EncoderID = 3;
+    public static final int MotorID = 25;
+    public static final int EncoderID = 22;
     public static final String MotorCANBus = "rio"; 
     public static final String EncoderCANBus = "rio";
     public static final int reverseSoftLimit = 0;
     public static final int forwardSoftLimit = 0;
-    public static final boolean encoderDirection = true;
-    public static final int encoderOffset = 0;
+    public static final boolean encoderDirection = false;
+    public static final double encoderOffset = -133.5;
 
     public static final double kP = 0;
     public static final double kI = 0;

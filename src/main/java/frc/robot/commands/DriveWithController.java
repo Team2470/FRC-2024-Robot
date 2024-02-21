@@ -124,7 +124,7 @@ public class DriveWithController extends Command {
     rotate = MathUtil.applyDeadband(rotate, kDeadband);
 
     // Determine if the robot should be moving,
-    boolean moving = xMove != 0 || yMove != 0 || rotate != 0;
+    boolean moving = xMove != 0 || yMove != 0 || rotate != 0 || headingOverride != null;
 
     // Capture module angles
     SwerveModuleState[] currentModuleState = drive.getModuleStates();
