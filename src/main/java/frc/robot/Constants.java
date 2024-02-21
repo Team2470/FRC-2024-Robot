@@ -30,9 +30,9 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 public final class Constants {
   public enum Robot {
     kCompetition,
-    kRyan,
-    kRyan2,
+    kSecond,
     kTestBed,
+    kRyan2,
   }
 
   public enum CanBus {
@@ -76,6 +76,12 @@ public final class Constants {
     };
 
     public static double getRPM(double distance) {
+      if (kRobot == Robot.kSecond) {
+        // Second robot
+        return (227*(Math.pow(distance, 0.578)));
+      }
+
+      // Comp robot
       return (227*(Math.pow(distance, 0.578)));
     }
   }
@@ -85,26 +91,30 @@ public final class Constants {
     public static final int EncoderID = 21;
     public static final String MotorCANBus = "rio"; 
     public static final String EncoderCANBus = "rio";
-    public static final int reverseSoftLimit = 250;
-    public static final int forwardSoftLimit = 1024;
-    public static final boolean encoderDirection = true;
-    public static final double encoderOffset = 140.889-21;
+    public static int reverseSoftLimit = 250;
+    public static int forwardSoftLimit = 1024;
+    public static boolean encoderDirection = true;
+    public static double encoderOffset = 140.889-21;
 ;
 
-    public static final double kP = 17.5;
-    public static final double kI = 11;
-    public static final double kD = 0.2;
-    public static final double kF = 0;
-    public static final double kG = 0.45;
-    public static final double kV = 3.9;
-    public static final double kA = 0.002;
+    public static double kP = 17.5;
+    public static double kI = 11;
+    public static double kD = 0.2;
+    public static double kF = 0;
+    public static double kG = 0.45;
+    public static double kV = 3.9;
+    public static double kA = 0.002;
 
 
     public static double getAngle(double distance) {
+      if (kRobot == Robot.kSecond) {
+        // Second robot
+        return (1166*(Math.pow(distance,-0.736)))-2;
+      }
+
+      // Comp robot
       return (1166*(Math.pow(distance,-0.736)))+2.4;
     } 
-
-
   }
 
   public static class IntakePivotConstants{
@@ -240,7 +250,7 @@ public final class Constants {
   }
   
   public static class VisionConstants{ 
-    public static final Transform3d kFrontRightCamera = new Transform3d(
+    public static Transform3d kFrontRightCamera = new Transform3d(
       new Translation3d(Units.inchesToMeters(-5.1), Units.inchesToMeters(14.391), Units.inchesToMeters(6.626)),
       new Rotation3d(0, Units.degreesToRadians(25.0), 0)
       );
@@ -252,7 +262,8 @@ public final class Constants {
 
     switch (serialNumber) {
     case "03060ff5":
-      kRobot = Robot.kRyan;
+      kRobot = Robot.kSecond;
+
       DriveConstants.kFrontLeft = new ModuleConfig("Front Left")
             .setDrivingID(16)
             .setEncoderID(16)
@@ -280,8 +291,26 @@ public final class Constants {
               .setSteeringID(10)
               .setOffset(-210.234375+180)
               .setTab(0, 6);
-      throw new RuntimeException("Why");
-      // break;
+      
+      ShooterPivotConstants.kP = 17.5;
+      ShooterPivotConstants.kI = 11;
+      ShooterPivotConstants.kD = 0.2;
+      ShooterPivotConstants.kF = 0;
+      ShooterPivotConstants.kG = 0.45;
+      ShooterPivotConstants.kV = 3.9;
+      ShooterPivotConstants.kA = 0.002;
+
+      ShooterPivotConstants.encoderOffset = 143.349609375+20+4.39453125+90-3;
+      ShooterPivotConstants.encoderDirection = false;
+      ShooterPivotConstants.reverseSoftLimit = 50;
+      ShooterPivotConstants.forwardSoftLimit = 1024;
+
+      VisionConstants.kFrontRightCamera = new Transform3d(
+        new Translation3d(Units.inchesToMeters(-5.1), Units.inchesToMeters(14.391), Units.inchesToMeters(6.626)),
+        new Rotation3d(0, Units.degreesToRadians(25.0), 0)
+      );
+
+      break;
     case "0324152A":
       kRobot = Robot.kRyan2;
       break;
