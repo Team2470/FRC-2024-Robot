@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.sensors.CANCoder;
 import com.ctre.phoenix.sensors.Pigeon2;
+import com.ctre.phoenix.sensors.PigeonIMU_StatusFrame;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
@@ -62,6 +63,16 @@ public class Drivetrain extends SubsystemBase {
         new Pigeon2(
             Constants.DriveConstants.kPigeonID, Constants.DriveConstants.kPigeonCANBus.bus_name);
     m_imu.configEnableCompass(false);
+    m_imu.setStatusFramePeriod(PigeonIMU_StatusFrame.CondStatus_1_General, 255);
+    m_imu.setStatusFramePeriod(PigeonIMU_StatusFrame.CondStatus_9_SixDeg_YPR, 10);
+    m_imu.setStatusFramePeriod(PigeonIMU_StatusFrame.CondStatus_6_SensorFusion, 255);
+    m_imu.setStatusFramePeriod(PigeonIMU_StatusFrame.CondStatus_11_GyroAccum, 255);
+    m_imu.setStatusFramePeriod(PigeonIMU_StatusFrame.CondStatus_3_GeneralAccel, 255);
+    m_imu.setStatusFramePeriod(PigeonIMU_StatusFrame.CondStatus_10_SixDeg_Quat, 255);
+    m_imu.setStatusFramePeriod(PigeonIMU_StatusFrame.RawStatus_4_Mag, 255);
+    m_imu.setStatusFramePeriod(PigeonIMU_StatusFrame.BiasedStatus_2_Gyro, 255);
+    m_imu.setStatusFramePeriod(PigeonIMU_StatusFrame.BiasedStatus_4_Mag, 255);
+    m_imu.setStatusFramePeriod(PigeonIMU_StatusFrame.BiasedStatus_6_Accel, 255);
 
     ShuffleboardTab tab = Shuffleboard.getTab("Drivetrain");
     var imuShuffleboard =
