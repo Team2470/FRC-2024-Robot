@@ -63,25 +63,23 @@ public final class Constants {
       {121, 4000},
       {95, 2500},
       {71, 2500},
-      {51.5, 2500},
-  };
+      {51.5, 2500},      
+    };
+    public static double[][] kAngleValues = {
+        {219, 22.06},
+        {169, 27.3},
+        {145, 30.23},
+        {121, 33.57},
+        {95, 45.35},
+        {71, 50.18},
+        {51.5, 60,38},
+    };
 
-  public static double[][] kAngleValues = {
-      {219, 22.06},
-      {169, 27.3},
-      {145, 30.23},
-      {121, 33.57},
-      {95, 45.35},
-      {71, 50.18},
-      {51.5, 60,38},
-  };
-
-    public static double getRPM(double distance){
+    public static double getRPM(double distance) {
       return (227*(Math.pow(distance, 0.578)));
     }
-
- 
   }
+
   public static class ShooterPivotConstants {
     public static final int MotorID = 21;
     public static final int EncoderID = 21;
@@ -92,9 +90,6 @@ public final class Constants {
     public static final boolean encoderDirection = true;
     public static final double encoderOffset = 140.889-21;
 ;
-
-
-
 
     public static final double kP = 17.5;
     public static final double kI = 11;
@@ -121,9 +116,6 @@ public final class Constants {
     public static final int forwardSoftLimit = 0;
     public static final boolean encoderDirection = true;
     public static final int encoderOffset = 0;
-
-
-
 
     public static final double kP = 0;
     public static final double kI = 0;

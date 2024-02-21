@@ -8,9 +8,9 @@ import java.util.HashMap;
 
 import com.kennedyrobotics.auto.AutoSelector;
 import com.kennedyrobotics.hardware.misc.RevDigit;
+import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.wpilibj.RobotController;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -34,10 +34,7 @@ import frc.robot.commands.DriveWithController;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.SimpleShooterFeeder;
 import frc.robot.subsystems.TimeOfFlightSensorTest;
-
-
-
-
+  
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
  * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
@@ -62,7 +59,6 @@ public class RobotContainer {
   private final RevDigit m_revDigit;
   private final AutoSelector m_autoSelector;
 
-
   public RobotContainer() {
     SmartDashboard.putString("roboRio Serial Number", RobotController.getSerialNumber());
     // CameraServer.startAutomaticCapture();
@@ -76,14 +72,19 @@ public class RobotContainer {
       m_revDigit, "DFLT", new PrintCommand("!!! Invalid Auto Selected !!!")
     );
 
+    NamedCommands.registerCommands(new HashMap<String, Command>() {{
+      put("shoot", shootFlywheel());
+    }});
+
     registerAutos(new HashMap<String, String>() {{
       put("TEST", "New Auto");
-      put("TOP1", "A[TOP-D1]");
-      put("MID2", "A[MID-D2]");
+      put("LFT1", "A[S1-D1]");
+      put("MID2", "A[S2-D2]");
+      put("LOW3", "A[S3-D3]");
     }});
 
     m_autoSelector.initialize();
-    
+  
     setupShooter();
     addValuesToDashboard();
     configureBindings();
@@ -118,8 +119,8 @@ public class RobotContainer {
     // m_controller.rightBumper().whileTrue(m_ShooterPivot.goToAngleCommand(()-> ShooterPivotConstants.getAngle(m_camera1.getFilteredDistance())));
 
     // // m_controller.rightBumper().whileTrue(m_simpleFlywheel.spinCommand(-2));
-    m_buttonPad.button(10).whileTrue(m_SimpleShooterFeeder.SimpleShooterFeeder_forwardsCommand());
-    m_buttonPad.button(11).whileTrue(m_SimpleShooterFeeder.SimpleShooterFeeder_reverseCommand());
+    m_buttonPad.button(10).whileTrue(m_SimpleShooterFeeder.forward());
+    m_buttonPad.button(11).whileTrue(m_SimpleShooterFeeder.reverse());
     // m_controller.b().whileTrue(m_SimpleShooterFeeder.SimpleShooterFeeder_reverseCommand());
     // //m_controller.x().whileTrue(m_TOF1.sequenceTest(m_SimpleShooterFeeder));
     // m_controller.y().whileTrue(m_TOF1.variableVoltageTest(m_SimpleShooterFeeder));
@@ -246,6 +247,14 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     return m_autoSelector.selected();
   }
+  public Command shootFlywheel() {
+    return new ParallelCommandGroup(
+      m_ShooterPivot.goToAngleCommand(() -> ShooterPivotConstants.getAngle((m_camera1.FilteredEsimatedPoseNorm()))),
+      m_simpleFlywheelLeft.pidCommand(() -> FlyWheelConstants.getRPM(m_camera1.FilteredEsimatedPoseNorm())),
+      m_simpleFlywheelRight.pidCommand(() -> FlyWheelConstants.getRPM(m_camera1.FilteredEsimatedPoseNorm())),
+      m_SimpleShooterFeeder.forward()
+    );
+  }
 
   public void autonomousInit() {
     m_drivetrain.resetHeading();
@@ -302,7 +311,7 @@ public class RobotContainer {
       new SequentialCommandGroup(
         new WaitCommand(0.25),
         new WaitUntilCommand(()-> m_simpleFlywheelLeft.isErrorInRange() && m_simpleFlywheelRight.isErrorInRange() && m_ShooterPivot.isAngleErrorInRange()),
-        m_SimpleShooterFeeder.SimpleShooterFeeder_forwardsCommand()
+        m_SimpleShooterFeeder.forward()
       )
     );
 

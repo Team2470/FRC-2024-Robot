@@ -1,27 +1,22 @@
 package frc.robot.subsystems;
 
-import com.fasterxml.jackson.core.StreamWriteCapability;
 import com.playingwithfusion.TimeOfFlight;
-import com.revrobotics.RelativeEncoder;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.SimpleShooterFeeder;
 
 public class TimeOfFlightSensorTest extends SubsystemBase {
     private final TimeOfFlight m_TimeOfFlight_1;
     // private final TimeOfFlight m_TimeOfFlight_2;
 
-    private double initialEncoderValue;
+    // private double initialEncoderValue;
 
     public TimeOfFlightSensorTest(){
         m_TimeOfFlight_1 = new TimeOfFlight(1);
         // m_TimeOfFlight_2 = new TimeOfFlight(2);
     }
-
-   
 
     public double getRange_TOF1(){
         return m_TimeOfFlight_1.getRange();
@@ -111,14 +106,14 @@ public class TimeOfFlightSensorTest extends SubsystemBase {
     public Command variableVoltageTest(SimpleShooterFeeder m_feeder) {
         return Commands.repeatingSequence(
             this.waitUntilOutOfRange(),
-            m_feeder.simpleShooterFeeder_forwardsVaribleCommand(() ->variableVoltage()).until(()-> !this.isTOF1WithinRange())
+            m_feeder.forward(() ->variableVoltage()).until(()-> !this.isTOF1WithinRange())
         );
     }
 
     public Command feedBack5Rotations(SimpleShooterFeeder m_feeder) {
          return Commands.repeatingSequence(
-            m_feeder.zeroEncoderCommand(),
-            m_feeder.SimpleShooterFeeder_reverseCommand().until(()-> m_feeder.isEncoderPast5Rotations()),
+            m_feeder.resetEncoder(),
+            m_feeder.reverse().until(()-> m_feeder.isEncoderPast5Rotations()),
             this.wait1SecondsCommand()
          );
      }
@@ -126,7 +121,7 @@ public class TimeOfFlightSensorTest extends SubsystemBase {
 
      public Command feederIntakeCommand(SimpleShooterFeeder m_feeder) {
         return Commands.repeatingSequence(
-            m_feeder.SimpleShooterFeeder_reverseCommand().until(()->this.isTOF1WithinRange()),
+            m_feeder.reverse().until(()->this.isTOF1WithinRange()),
             this.wait10SecondsCommand()
         );
       }
