@@ -65,7 +65,7 @@ public final class Constants {
   };
 
     public static double getRPM(double distance){
-      return (227*(Math.pow(distance, 0.578)));
+      return (178*(Math.pow(distance, 0.633)));
     }
 
  
