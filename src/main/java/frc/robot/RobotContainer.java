@@ -14,6 +14,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
+import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
@@ -140,6 +142,12 @@ public class RobotContainer {
     // ));
     m_buttonPad.button(1).whileTrue(visionShootCommand());
     m_buttonPad.button(9).whileTrue(intakeCommand());
+
+    m_controller.back().whileTrue(new ParallelCommandGroup(
+      m_simpleFlywheelBottom.pidCommand(10000),
+      m_simpleFlywheelTop.pidCommand(10000)
+      // m_SimpleShooterFeeder.SimpleShooterFeeder_forwardsCommand()
+    ));
 
     //     m_buttonPad.button(6).whileTrue(new ParallelCommandGroup(
     //   m_ShooterPivot.goToAngleCommand(()-> ShooterPivotConstants.getAngle((m_camera1.FilteredEsimatedPoseNorm()))),
@@ -286,8 +294,8 @@ public class RobotContainer {
     SmartDashboard.putNumber("GetYAW", m_camera1.getRobotYaw());
   }
   private void setupShooter() {
-    // m_simpleFlywheelLeft.setDefaultCommand(m_simpleFlywheelLeft.pidCommand(2000));
-    // m_simpleFlywheelRight.setDefaultCommand(m_simpleFlywheelRight.pidCommand(2000));
+    m_simpleFlywheelBottom.setDefaultCommand(m_simpleFlywheelBottom.pidCommand(2000));
+    m_simpleFlywheelTop.setDefaultCommand(m_simpleFlywheelTop.pidCommand(2000));
     // m_ShooterPivot.setDefaultCommand(m_ShooterPivot.goToAngleCommand(45));
     m_IntakePivot.setDefaultCommand(m_IntakePivot.openLoopCommand(2));
   }
@@ -320,7 +328,11 @@ public class RobotContainer {
   }
 
   public Command intakeCommand(){
-    return new ParallelCommandGroup(
+    return new ParallelDeadlineGroup(
+      new SequentialCommandGroup(
+        new WaitCommand(0.1),
+        new WaitUntilCommand((()->m_TOF1.isTOF1WithinRange()))
+      ),
       new SequentialCommandGroup(
        m_Intake.test_forwardsCommand().until(()-> m_Intake.isRingIntaked()),
         new WaitCommand(1.2),
@@ -332,7 +344,7 @@ public class RobotContainer {
         m_IntakePivot.openLoopCommand(6)
       ),
         m_SimpleShooterFeeder.SimpleShooterFeeder_forwardsCommand()
-    ).until(()->m_TOF1.isTOF1WithinRange());
+    );
   }
 }
 
