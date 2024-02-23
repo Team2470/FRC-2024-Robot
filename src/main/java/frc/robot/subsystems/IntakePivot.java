@@ -112,7 +112,7 @@ public class IntakePivot extends SubsystemBase {
         break;
     }
 
-    if (Angle <= 1 && outputVoltage < 0 || Angle >= 47.2 && outputVoltage > 0 ){
+    if (Angle <= 1 && outputVoltage < 0 || Angle >= 50 && outputVoltage > 0 ){
       outputVoltage = 0;
     }
 
