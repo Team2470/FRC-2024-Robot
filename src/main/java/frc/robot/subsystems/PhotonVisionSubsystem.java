@@ -8,6 +8,9 @@ import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.filter.MedianFilter;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Pose3d;
 
@@ -43,6 +46,9 @@ public class PhotonVisionSubsystem extends SubsystemBase {
     private double FilteredDistanceToTargetOnField;
     public List<PhotonTrackedTarget> targets;
     private Pose3d tagPose;
+
+    private NetworkTable m_photonVision = NetworkTableInstance.getDefault().getTable("photonvision").getSubTable("USB_Camera");
+    private final NetworkTableEntry m_yaw = m_photonVision.getEntry("targetYaw");
 
     public PhotonVisionSubsystem(Transform3d pose) {
         camera_1 = new PhotonCamera("USB_Camera");
@@ -120,11 +126,12 @@ public class PhotonVisionSubsystem extends SubsystemBase {
     }
 
     public double getRobotYaw(){
-        return robotYaw;
+        return m_yaw.getDouble(-180);
     }
 
     @Override
     public void periodic() {
+
 
         camera1Data = getCamera1Data();
         isDataValid = false;
