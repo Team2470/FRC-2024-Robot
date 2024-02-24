@@ -91,7 +91,7 @@ public class RobotContainer {
     m_autoSelector.initialize();
 
     // TODO Uncomment after test on robot that angles make sense
-    // setupShooter();
+    setupShooter();
     addValuesToDashboard();
     configureBindings();
   }
@@ -310,7 +310,7 @@ public class RobotContainer {
   private void setupShooter() {
     m_simpleFlywheelBottom.setDefaultCommand(m_simpleFlywheelBottom.pidCommand(2000));
     m_simpleFlywheelTop.setDefaultCommand(m_simpleFlywheelTop.pidCommand(2000));
-    // m_ShooterPivot.setDefaultCommand(m_ShooterPivot.goToAngleCommand(45));
+    m_ShooterPivot.setDefaultCommand(m_ShooterPivot.goToAngleCommand(45));
     m_IntakePivot.setDefaultCommand(m_IntakePivot.openLoopCommand(2));
   }
   private void registerAutos(HashMap<String, String> autos) {
