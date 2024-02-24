@@ -8,32 +8,21 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.math.controller.ArmFeedforward;
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
-import edu.wpi.first.wpilibj.CAN;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
-import frc.robot.Constants.FlyWheelConstants;
 import frc.robot.Constants.ShooterPivotConstants;
 
-import java.util.ResourceBundle.Control;
 import java.util.function.DoubleSupplier;
-
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.RemoteFeedbackDevice;
-import com.ctre.phoenix.motorcontrol.can.TalonFX;
+import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.sensors.AbsoluteSensorRange;
 import com.ctre.phoenix.sensors.CANCoder;
 import com.ctre.phoenix.sensors.SensorInitializationStrategy;
-import com.revrobotics.CANSparkFlex;
-import com.revrobotics.RelativeEncoder;
-import com.revrobotics.CANSparkLowLevel.MotorType;
-import com.revrobotics.CANSparkLowLevel.PeriodicFrame;
-
-
 
 public class ShooterPivot extends SubsystemBase {
   // private final int kOpenLoop = 0;
@@ -92,6 +81,44 @@ public class ShooterPivot extends SubsystemBase {
     m_motor.configSelectedFeedbackSensor(RemoteFeedbackDevice.RemoteSensor0);
     m_motor.setSensorPhase(true);
 
+
+    //
+    // CAN Status Frames
+    //
+    // See https://v5.docs.ctr-electronics.com/en/stable/ch18_CommonAPI.html?highlight=status%20frame#setting-status-frame-periods
+    //
+
+    // Default 10ms
+    m_motor.setStatusFramePeriod(StatusFrameEnhanced.Status_1_General, 10);
+    // Default 20ms
+    // TODO Change this to 10ms for better control?
+    m_motor.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, 20);
+    // Default 100ms
+    m_motor.setStatusFramePeriod(StatusFrameEnhanced.Status_3_Quadrature, 255);
+    // Default 100ms
+    m_motor.setStatusFramePeriod(StatusFrameEnhanced.Status_4_AinTempVbat, 255);
+    // Default ?ms
+    m_motor.setStatusFramePeriod(StatusFrameEnhanced.Status_6_Misc, 255);
+    // Default ?ms
+    m_motor.setStatusFramePeriod(StatusFrameEnhanced.Status_7_CommStatus, 255);
+    // Default 100ms
+    m_motor.setStatusFramePeriod(StatusFrameEnhanced.Status_8_PulseWidth, 255);
+    // Default ?ms
+    m_motor.setStatusFramePeriod(StatusFrameEnhanced.Status_9_MotProfBuffer, 255);
+    // Default 100ms
+    m_motor.setStatusFramePeriod(StatusFrameEnhanced.Status_10_MotionMagic, 255);
+    // Default ?ms
+    m_motor.setStatusFramePeriod(StatusFrameEnhanced.Status_11_UartGadgeteer, 255);
+    // Default 100ms
+    m_motor.setStatusFramePeriod(StatusFrameEnhanced.Status_12_Feedback1, 255);
+    // Default 100ms
+    m_motor.setStatusFramePeriod(StatusFrameEnhanced.Status_13_Base_PIDF0, 255);
+    // Default 100ms
+    m_motor.setStatusFramePeriod(StatusFrameEnhanced.Status_14_Turn_PIDF1, 255);
+    // Default 100ms
+    m_motor.setStatusFramePeriod(StatusFrameEnhanced.Status_21_FeedbackIntegrated, 255);
+    // Default 50ms
+    m_motor.setStatusFramePeriod(StatusFrameEnhanced.Status_Brushless_Current, 255);
 
     SmartDashboard.putNumber("SP kP", ShooterPivotConstants.kP);
     SmartDashboard.putNumber("SP kI", ShooterPivotConstants.kI);
@@ -168,7 +195,7 @@ public class ShooterPivot extends SubsystemBase {
 
   public boolean isAngleErrorInRange(){
     if (m_controlMode == ControlMode.kPID){
-      return (1 > getErrorAngle() && getErrorAngle() > -1);
+      return (0.25 > getErrorAngle() && getErrorAngle() > -0.25);
     }
     return false;
   }

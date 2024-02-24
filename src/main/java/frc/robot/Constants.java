@@ -7,6 +7,8 @@ package frc.robot;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.RobotController;
+import frc.robot.Constants.DriveConstants.ModuleConfig;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 
@@ -26,6 +28,13 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
+  public enum Robot {
+    kCompetition,
+    kSecond,
+    kTestBed,
+    kRyan2,
+  }
+
   public enum CanBus {
     kRoboRIO("rio"),
     kCanivore("Canivore0");
@@ -36,6 +45,9 @@ public final class Constants {
       this.bus_name = value;
     }
   }
+
+  public static Robot kRobot = Robot.kCompetition;
+
   public static class FlyWheelConstants {
     public static final int kRightID = 1;
     public static final int kLeftID = 2;
@@ -51,67 +63,72 @@ public final class Constants {
       {121, 4000},
       {95, 2500},
       {71, 2500},
-      {51.5, 2500},
-  };
+      {51.5, 2500},      
+    };
+    public static double[][] kAngleValues = {
+        {219, 22.06},
+        {169, 27.3},
+        {145, 30.23},
+        {121, 33.57},
+        {95, 45.35},
+        {71, 50.18},
+        {51.5, 60,38},
+    };
 
-  public static double[][] kAngleValues = {
-      {219, 22.06},
-      {169, 27.3},
-      {145, 30.23},
-      {121, 33.57},
-      {95, 45.35},
-      {71, 50.18},
-      {51.5, 60,38},
-  };
+    public static double getRPM(double distance) {
+      if (kRobot == Robot.kSecond) {
+        // Second robot
+        return (227*(Math.pow(distance, 0.578)));
+      }
 
-    public static double getRPM(double distance){
-      return (227*(Math.pow(distance, 0.578)));
+      // Comp robot
+      return (178*(Math.pow(distance, 0.633)));
     }
-
- 
   }
+
   public static class ShooterPivotConstants {
     public static final int MotorID = 21;
     public static final int EncoderID = 21;
     public static final String MotorCANBus = "rio"; 
     public static final String EncoderCANBus = "rio";
-    public static final int reverseSoftLimit = 250;
-    public static final int forwardSoftLimit = 1024;
-    public static final boolean encoderDirection = true;
-    public static final double encoderOffset = 140.889-21;
-;
+    public static int reverseSoftLimit = 175;
+    public static int forwardSoftLimit = 1024;
+    public static boolean encoderDirection = true;
+    public static double encoderOffset = 140.889-21;
 
 
-
-
-    public static final double kP = 17.5;
-    public static final double kI = 11;
-    public static final double kD = 0.2;
-    public static final double kF = 0;
-    public static final double kG = 0.45;
-    public static final double kV = 3.9;
-    public static final double kA = 0.002;
+    public static double kP = 35;
+    public static double kI = 11;
+    public static double kD = 1;
+    public static double kF = 0;
+    public static double kG = 0.45;
+    public static double kV = 3.9;
+    public static double kA = 0.002;
 
 
     public static double getAngle(double distance) {
-      return (1166*(Math.pow(distance,-0.736)))+2.4;
-    } 
+      if (kRobot == Robot.kSecond) {
+        // Second robot
+        return (1166*(Math.pow(distance,-0.736)))-2;
+      }
 
-
+      // Comp robot
+      return (1848*(Math.pow(distance, -0.827)));
+    }
   }
 
+  public static class IntakeConstants{
+    public static final int MotorID = 0;
+  }
   public static class IntakePivotConstants{
-    public static final int MotorID = 3;
-    public static final int EncoderID = 3;
+    public static final int MotorID = 25;
+    public static final int EncoderID = 22;
     public static final String MotorCANBus = "rio"; 
     public static final String EncoderCANBus = "rio";
     public static final int reverseSoftLimit = 0;
     public static final int forwardSoftLimit = 0;
-    public static final boolean encoderDirection = true;
-    public static final int encoderOffset = 0;
-
-
-
+    public static final boolean encoderDirection = false;
+    public static final double encoderOffset = -133.5;
 
     public static final double kP = 0;
     public static final double kI = 0;
@@ -187,43 +204,9 @@ public final class Constants {
       }
     }
     // : specific module config
-  //   public static final ModuleConfig kFrontLeft =
-  //       new ModuleConfig("Front Left")
-  //           .setDrivingID(11)
-  //           .setEncoderID(11)
-  //           .setSteeringID(11)
-  //           .setOffset(-46.93359375)
-  //           .setTab(0, 0);
-
-  //   public static final ModuleConfig kFrontRight =
-  //       new ModuleConfig("Front Right")
-  //           .setDrivingID(12)
-  //           .setEncoderID(12)
-  //           .setSteeringID(12)
-  //           .setOffset(0)
-  //           .setTab(0, 2);
-
-  //   public static final ModuleConfig kBackRight =
-  //       new ModuleConfig("Back Left")
-  //           .setDrivingID(14)
-  //           .setEncoderID(14)
-  //           .setSteeringID(14)
-  //           .setOffset(-186.1523437)
-  //           .setTab(0, 6);
-
-  //   public static final ModuleConfig kBackLeft =
-  //       new ModuleConfig("Back Right")
-  //           .setDrivingID(13)
-  //           .setEncoderID(13)
-  //           .setSteeringID(13)
-  //           .setOffset(-119.091796875 + 180)
-  //           .setTab(0, 4);
-  // }
-
-
     // When calibrating the bevel gears should face to the left
 
-     public static final ModuleConfig kFrontLeft =
+     public static ModuleConfig kFrontLeft =
         new ModuleConfig("Front Left")
             .setDrivingID(13)
             .setEncoderID(13)
@@ -231,7 +214,7 @@ public final class Constants {
             .setOffset(-299.04+180)
             .setTab(0, 0);
 
-    public static final ModuleConfig kFrontRight =
+    public static ModuleConfig kFrontRight =
         new ModuleConfig("Front Right")
             .setDrivingID(14)
             .setEncoderID(14)
@@ -239,7 +222,7 @@ public final class Constants {
             .setOffset(-186.328+180)
             .setTab(0, 2);
 
-    public static final ModuleConfig kBackRight =
+    public static ModuleConfig kBackRight =
         new ModuleConfig("Back Right")
             .setDrivingID(11)
             .setEncoderID(11)
@@ -247,7 +230,7 @@ public final class Constants {
             .setOffset(-48.076+180)
             .setTab(0, 6);
 
-    public static final ModuleConfig kBackLeft =
+    public static ModuleConfig kBackLeft =
         new ModuleConfig("Back Left")
             .setDrivingID(12)
             .setEncoderID(12)
@@ -255,38 +238,6 @@ public final class Constants {
             .setOffset(-105.029-0.088+180)
             .setTab(0, 4);
   }
-  // public static final ModuleConfig kFrontLeft =
-  //       new ModuleConfig("Front Left")
-  //           .setDrivingID(16)
-  //           .setEncoderID(16)
-  //           .setSteeringID(16)
-  //           .setOffset(-141.85548853232115+180)
-  //           .setTab(0, 0);
-
-  //   public static final ModuleConfig kFrontRight =
-  //       new ModuleConfig("Front Right")
-  //           .setDrivingID(14)
-  //           .setEncoderID(14)
-  //           .setSteeringID(14)
-  //           .setOffset(-126.12304687500001+180)
-  //           .setTab(0, 2);
-
-  //   public static final ModuleConfig kBackLeft =
-  //       new ModuleConfig("Back Left")
-  //           .setDrivingID(12)
-  //           .setEncoderID(12)
-  //           .setSteeringID(12)
-  //           .setOffset(-321.50391638394024+180)
-  //           .setTab(0, 4);
-
-  //   public static final ModuleConfig kBackRight =
-  //       new ModuleConfig("Back Right")
-  //           .setDrivingID(10)
-  //           .setEncoderID(10)
-  //           .setSteeringID(10)
-  //           .setOffset(-210.234375+180)
-  //           .setTab(0, 6);
-  // }
 
   public static class AutoConstants {
     public static final double kAutoVoltageCompensation = 10;
@@ -302,10 +253,72 @@ public final class Constants {
   }
   
   public static class VisionConstants{ 
-    public static final Transform3d kFrontRightCamera = new Transform3d(
+    public static Transform3d kFrontRightCamera = new Transform3d(
       new Translation3d(Units.inchesToMeters(-5.1), Units.inchesToMeters(14.391), Units.inchesToMeters(6.626)),
-      new Rotation3d(0, Units.degreesToRadians(25.0), 0
-      )
-  );
-}
+      new Rotation3d(0, Units.degreesToRadians(25.0), 0)
+      );
+  }
+
+  public static void override() {
+    String serialNumber = RobotController.getSerialNumber();
+    System.out.println("roboRIO Serial: "+serialNumber);
+
+    switch (serialNumber) {
+    case "03060ff5":
+      kRobot = Robot.kSecond;
+
+      DriveConstants.kFrontLeft = new ModuleConfig("Front Left")
+            .setDrivingID(16)
+            .setEncoderID(16)
+            .setSteeringID(16)
+            .setOffset(-141.85548853232115+180)
+            .setTab(0, 0);
+
+      DriveConstants.kFrontRight = new ModuleConfig("Front Right")
+              .setDrivingID(14)
+              .setEncoderID(14)
+              .setSteeringID(14)
+              .setOffset(-126.12304687500001+180)
+              .setTab(0, 2);
+
+      DriveConstants.kBackLeft = new ModuleConfig("Back Left")
+              .setDrivingID(12)
+              .setEncoderID(12)
+              .setSteeringID(12)
+              .setOffset(-321.50391638394024+180)
+              .setTab(0, 4);
+
+      DriveConstants.kBackRight = new ModuleConfig("Back Right")
+              .setDrivingID(10)
+              .setEncoderID(10)
+              .setSteeringID(10)
+              .setOffset(-210.234375+180)
+              .setTab(0, 6);
+      
+      ShooterPivotConstants.kP = 17.5;
+      ShooterPivotConstants.kI = 11;
+      ShooterPivotConstants.kD = 0.2;
+      ShooterPivotConstants.kF = 0;
+      ShooterPivotConstants.kG = 0.45;
+      ShooterPivotConstants.kV = 3.9;
+      ShooterPivotConstants.kA = 0.002;
+
+      ShooterPivotConstants.encoderOffset = 143.349609375+20+4.39453125+90-3;
+      ShooterPivotConstants.encoderDirection = false;
+      ShooterPivotConstants.reverseSoftLimit = 50;
+      ShooterPivotConstants.forwardSoftLimit = 1024;
+
+      VisionConstants.kFrontRightCamera = new Transform3d(
+        new Translation3d(Units.inchesToMeters(-5.1), Units.inchesToMeters(14.391), Units.inchesToMeters(6.626)),
+        new Rotation3d(0, Units.degreesToRadians(25.0), 0)
+      );
+
+      break;
+    case "0324152A":
+      kRobot = Robot.kRyan2;
+      break;
+    default:
+      // Do nothing
+    }
+  }
 }

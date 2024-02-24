@@ -16,21 +16,19 @@ import java.util.function.DoubleSupplier;
 import com.revrobotics.CANSparkFlex;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkLowLevel.MotorType;
-import frc.robot.subsystems.SimpleShooterFeeder;
+import com.revrobotics.CANSparkLowLevel.PeriodicFrame;
 
 
 public class SimpleFlywheel extends SubsystemBase {
   // private final int kOpenLoop = 0;
   // private final int kPID = 1;
   // private final int kStateSpace = 2;
-  private enum ControlMode {
-    kOpenLoop, 
-    kPID,
-    kStateSpace
+  private enum ControlMode { 
+    kOpenLoop, kPID, kStateSpace
   }
 
   private final CANSparkFlex m_leader;
-  //private final CANSparkFlex m_follower;
+  // private final CANSparkFlex m_follower;
 
   private final RelativeEncoder m_encoder;
   private final boolean m_isLeft;
@@ -38,10 +36,7 @@ public class SimpleFlywheel extends SubsystemBase {
   private ControlMode m_controlMode = ControlMode.kOpenLoop;
   private double m_demand;
 
-  //
-  // PID
-  //
-
+  //: PID
   private final PIDController m_pidController = new PIDController(FlyWheelConstants.kP, FlyWheelConstants.kI, FlyWheelConstants.kD);
 
   public SimpleFlywheel(int canID, boolean isLeft) {
@@ -57,6 +52,30 @@ public class SimpleFlywheel extends SubsystemBase {
 
 
     m_encoder = m_leader.getEncoder();
+
+    // Reduce CAN Bus usage, we only care about kStatus0? and kStatus1.
+    // TODO Think about chaning kStatus1 to 10ms, may make PID better? As
+    // It would reduce measurement delay.
+    //
+    // See ths page for what each frame contains: https://docs.revrobotics.com/sparkmax/operating-modes/control-interfaces#can-packet-structure
+    //
+    // Default 10ms: Applied output, Faults, Sticky Faults, Is Follower
+    m_leader.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 10); 
+    // Default 20ms: Motor Velocity, Motor Temperature, Motor Voltage, Motor Current
+    m_leader.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 20);
+    // Default 20ms: Motor Position
+    m_leader.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 500);
+    // Default 50ms: Analog Sensor Voltage, Analog Sensor Velocity, Analog Sensor Position
+    m_leader.setPeriodicFramePeriod(PeriodicFrame.kStatus3, 500);
+    // Default 20ms: Alternate Encoder Velocity, Alternate Encoder Position
+    m_leader.setPeriodicFramePeriod(PeriodicFrame.kStatus4, 500);
+    // Default 200ms: Duty Cycle Absolute Encoder Position, Duty Cycle Absolute Encoder Absolute Angle
+    m_leader.setPeriodicFramePeriod(PeriodicFrame.kStatus5, 500);
+    // Default 200ms: Duty Cycle Absolute Encoder Velocity,  Duty Cycle Absolute Encoder Frequency
+    m_leader.setPeriodicFramePeriod(PeriodicFrame.kStatus6, 500);
+    // IDK what status 7 is, but I'm not going to touch it.
+    // m_SimpleShooterFeeder.setPeriodicFramePeriod(PeriodicFrame.kStatus7, 500);
+
     m_leader.burnFlash();
     //m_follower.burnFlash();
   }
@@ -156,7 +175,7 @@ public Command waitUntilErrorOutOfRange(){
   public Command feederShooterCommand(SimpleShooterFeeder m_feeder) {
     return Commands.repeatingSequence(
         this.waitUntilErrorInrange(),
-        m_feeder.SimpleShooterFeeder_forwardsCommand().until(()->this.isErrorOutOfRange())
+        m_feeder.forward().until(()->this.isErrorOutOfRange())
     );
   }
   /**
