@@ -272,13 +272,13 @@ public class RobotContainer {
   public Command shootFlywheel() {
     return new ParallelCommandGroup(
       m_ShooterPivot.goToAngleCommand(() -> ShooterPivotConstants.getAngle((m_camera1.FilteredEsimatedPoseNorm()))),
-      m_simpleFlywheelLeft.pidCommand(() -> FlyWheelConstants.getRPM(m_camera1.FilteredEsimatedPoseNorm())),
-      m_simpleFlywheelRight.pidCommand(() -> FlyWheelConstants.getRPM(m_camera1.FilteredEsimatedPoseNorm())),
+      m_simpleFlywheelBottom.pidCommand(() -> FlyWheelConstants.getRPM(m_camera1.FilteredEsimatedPoseNorm())),
+      m_simpleFlywheelTop.pidCommand(() -> FlyWheelConstants.getRPM(m_camera1.FilteredEsimatedPoseNorm())),
       m_SimpleShooterFeeder.forward()
     );
   }
 
-  public void autonomousInit() {
+  public void autonomousInit() {  
     m_drivetrain.resetHeading();
     m_drivetrain.setNominalVoltages(AutoConstants.kAutoVoltageCompensation);
   }
