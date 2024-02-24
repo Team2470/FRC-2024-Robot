@@ -40,6 +40,7 @@ import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.IntakePivot;
 import frc.robot.subsystems.SimpleShooterFeeder;
 import frc.robot.subsystems.TimeOfFlightSensorTest;
+import frc.robot.subsystems.LEDSubsystem;
   
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -62,6 +63,7 @@ public class RobotContainer {
   private final TimeOfFlightSensorTest m_TOF1 = new TimeOfFlightSensorTest();
   private final IntakePivot m_IntakePivot = new IntakePivot();
   private final Intake m_Intake = new Intake();
+  private final LEDSubsystem m_LEDs = new LEDSubsystem();
   // Auto
   private final RevDigit m_revDigit;
   private final AutoSelector m_autoSelector;

@@ -48,6 +48,20 @@ public final class Constants {
 
   public static Robot kRobot = Robot.kCompetition;
 
+  public static class CANdleConstants{
+    public static final int CANdleID = 1;
+     public static final int Intake_Index = 8;
+     public static final int Intake_LEDnum = 2;
+     public static final int TOF1_Index = 10;
+     public static final int TOF1_LEDnum = 2;
+     public static final int SpinningUp_Index = 12;
+     public static final int SpinningUp_LEDnum = 2;
+     public static final int FullSpeed_Index = 14;
+     public static final int FullSpeed_LEDnum = 2;
+     public static final int Shooting_Index = 16;
+     public static final int Shooting_LEDnum = 2;
+  }
+
   public static class FlyWheelConstants {
     public static final int kRightID = 1;
     public static final int kLeftID = 2;
