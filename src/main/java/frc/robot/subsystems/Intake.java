@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.IntakeConstants;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.motorcontrol.PWMSparkMax;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard; 
  
@@ -14,15 +15,26 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
  
 public class Intake extends SubsystemBase { 
     private final PWMSparkMax m_intake;  
+
+    private DigitalInput m_rightSight;
+    
     public Intake() { 
         m_intake = new PWMSparkMax(IntakeConstants.MotorID); 
   
-        m_intake.setInverted(false);       
+        m_intake.setInverted(false);  
+        
+        m_rightSight = new DigitalInput(0);
  
+        
     } 
+
+   public boolean isRingIntaked(){
+    return !m_rightSight.get();
+    }
+
   @Override 
   public void periodic() { 
- 
+    SmartDashboard.putBoolean("Intake Right Sight", isRingIntaked());
   } 
   public void intake() { 
     m_intake.setVoltage(12); 

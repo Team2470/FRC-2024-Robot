@@ -153,11 +153,12 @@ public class PhotonVisionSubsystem extends SubsystemBase {
                         }
                     }
                 }
-                EstimatedPoseNorm = currentPose.get().estimatedPose.getTranslation().minus(tagPose.getTranslation())
-                        .getNorm();
-                EstimatedPoseNorm = Units.metersToInches(EstimatedPoseNorm);
-                FilteredEsimatedPoseNorm = m_distanceFilter.calculate(EstimatedPoseNorm);
-                isDataValid = true;
+                if (tagPose != null){
+                    EstimatedPoseNorm = currentPose.get().estimatedPose.getTranslation().minus(tagPose.getTranslation()).getNorm();
+                    EstimatedPoseNorm = Units.metersToInches(EstimatedPoseNorm);
+                    FilteredEsimatedPoseNorm = m_distanceFilter.calculate(EstimatedPoseNorm);
+                    isDataValid = true;
+                }
             }
 
             /*

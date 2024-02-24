@@ -8,6 +8,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.CAN;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
 import frc.robot.Constants.IntakePivotConstants;
@@ -39,9 +41,12 @@ public class IntakePivot extends SubsystemBase {
 
   private final CANCoder m_encoder;
 
+
+
   private ControlMode m_controlMode = ControlMode.kOpenLoop;
   private double m_demand;
   private double Angle;
+  
 
   //
   // PID
@@ -72,6 +77,8 @@ public class IntakePivot extends SubsystemBase {
     //Tells to use the non-motor encoder
   }
 
+
+
   public double getAngle() {
     return m_encoder.getAbsolutePosition();
   }
@@ -100,7 +107,7 @@ public class IntakePivot extends SubsystemBase {
         break;
     }
 
-    if (Angle <= 1 && outputVoltage < 0 || Angle >= 90 && outputVoltage > 0 ){
+    if (Angle <= 1 && outputVoltage < 0 || Angle >= 50 && outputVoltage > 0 ){
       outputVoltage = 0;
     }
 
@@ -116,6 +123,14 @@ public class IntakePivot extends SubsystemBase {
     SmartDashboard.putNumber("Intake Pivot Get Measurement", getAngle());
     SmartDashboard.putNumber("Intake Pivot Motor Output Voltage", outputVoltage);
     SmartDashboard.putNumber("Intake Pivot Motor Setpoint Position", m_demand);
+  }
+
+  public boolean isAtRetractedLimit(){
+    return (getAngle() >= 90);
+  }
+
+  public boolean isAtExtentedLimit(){
+    return(getAngle() <= 1);
   }
 
   public double getErrorAngle(){

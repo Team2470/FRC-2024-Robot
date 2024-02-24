@@ -17,6 +17,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
+import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
@@ -52,8 +54,8 @@ public class RobotContainer {
 	private final CommandJoystick m_buttonPad = new CommandJoystick(1);
   // The robot's subsystems and commands are defined here...
   private final PhotonVisionSubsystem m_camera1 = new PhotonVisionSubsystem(VisionConstants.kFrontRightCamera);
-  private final SimpleFlywheel m_simpleFlywheelLeft = new SimpleFlywheel(FlyWheelConstants.kLeftID, true);
-  private final SimpleFlywheel m_simpleFlywheelRight = new SimpleFlywheel(FlyWheelConstants.kRightID, false);
+  private final SimpleFlywheel m_simpleFlywheelBottom = new SimpleFlywheel(FlyWheelConstants.kLeftID, true);
+  private final SimpleFlywheel m_simpleFlywheelTop = new SimpleFlywheel(FlyWheelConstants.kRightID, false);
   private final ShooterPivot m_ShooterPivot = new ShooterPivot();
   private final Drivetrain m_drivetrain = new Drivetrain();
   private final SimpleShooterFeeder m_SimpleShooterFeeder = new SimpleShooterFeeder(20);
@@ -109,12 +111,12 @@ public class RobotContainer {
     //m_controller.rightBumper().whileTrue(m_simpleFlywheel.spinCommand(-2));
     // m_controller.rightTrigger().whileTrue(m_simpleFlywheelLeft.openLoopCommand(()-> SmartDashboard.getNumber("Select Left Voltage", 0)));
     // m_controller.rightTrigger().whileTrue(m_simpleFlywheelRight.openLoopCommand(()-> SmartDashboard.getNumber("Select Right Voltage", 0)));
-    m_buttonPad.button(10).whileTrue(m_simpleFlywheelLeft.pidCommand(()-> SmartDashboard.getNumber("Select Left RPM", 0)));
-    m_buttonPad.button(10).whileTrue(m_simpleFlywheelRight.pidCommand(()-> SmartDashboard.getNumber("Select Left RPM", 0)));
+    m_buttonPad.button(10).whileTrue(m_simpleFlywheelBottom.pidCommand(()-> SmartDashboard.getNumber("Select Left RPM", 0)));
+    m_buttonPad.button(10).whileTrue(m_simpleFlywheelTop.pidCommand(()-> SmartDashboard.getNumber("Select Left RPM", 0)));
     m_buttonPad.button(8).whileTrue(m_ShooterPivot.openLoopCommand(2));
     m_buttonPad.button(12).whileTrue(m_ShooterPivot.openLoopCommand(-2));
-    m_buttonPad.button(9).whileTrue(m_simpleFlywheelLeft.pidCommand(500));
-    m_buttonPad.button(9).whileTrue(m_simpleFlywheelRight.pidCommand(500));
+    // m_buttonPad.button(9).whileTrue(m_simpleFlywheelLeft.pidCommand(500));
+    // m_buttonPad.button(9).whileTrue(m_simpleFlywheelRight.pidCommand(500));
     m_buttonPad.button(6).whileTrue(m_IntakePivot.openLoopCommand(-2));
     m_buttonPad.button(7).whileTrue(m_IntakePivot.openLoopCommand(2));
     m_buttonPad.button(11).whileTrue(m_Intake.test_forwardsCommand());
@@ -144,6 +146,13 @@ public class RobotContainer {
     //   m_simpleFlywheelLeft.feederShooterCommand(m_SimpleShooterFeeder)
     // ));
     m_buttonPad.button(1).whileTrue(visionShootCommand());
+    m_buttonPad.button(9).whileTrue(intakeCommand());
+
+    m_controller.back().whileTrue(new ParallelCommandGroup(
+      m_simpleFlywheelBottom.pidCommand(10000),
+      m_simpleFlywheelTop.pidCommand(10000)
+      // m_SimpleShooterFeeder.SimpleShooterFeeder_forwardsCommand()
+    ));
 
     //     m_buttonPad.button(6).whileTrue(new ParallelCommandGroup(
     //   m_ShooterPivot.goToAngleCommand(()-> ShooterPivotConstants.getAngle((m_camera1.FilteredEsimatedPoseNorm()))),
@@ -159,29 +168,29 @@ public class RobotContainer {
 
     m_buttonPad.button(2).whileTrue(new ParallelCommandGroup(
           m_ShooterPivot.goToAngleCommand(59.92836363),
-          m_simpleFlywheelLeft.pidCommand(2326.626089),
-          m_simpleFlywheelRight.pidCommand(2326.626089)
+          m_simpleFlywheelBottom.pidCommand(2326.626089),
+          m_simpleFlywheelTop.pidCommand(2326.626089)
 
     ));
 //56.92836363
     m_buttonPad.button(3).whileTrue(new ParallelCommandGroup(
           m_ShooterPivot.goToAngleCommand(48.779296875),
-          m_simpleFlywheelLeft.pidCommand(-2500),
-          m_simpleFlywheelRight.pidCommand(-2500),
+          m_simpleFlywheelBottom.pidCommand(-2500),
+          m_simpleFlywheelTop.pidCommand(-2500),
           m_TOF1.feederIntakeCommand(m_SimpleShooterFeeder)
 
     ));
     m_buttonPad.button(4).whileTrue(new ParallelCommandGroup(
-        m_ShooterPivot.goToAngleCommand(44),
-        m_simpleFlywheelLeft.pidCommand(1300),
-        m_simpleFlywheelRight.pidCommand(1300)
+        m_ShooterPivot.goToAngleCommand(50),
+        m_simpleFlywheelBottom.pidCommand(1250),
+        m_simpleFlywheelTop.pidCommand(700)
 
     ));
 
     m_buttonPad.button(5).whileTrue(new ParallelCommandGroup(
         m_ShooterPivot.goToAngleCommand(57.91),
-        m_simpleFlywheelLeft.pidCommand(2300),
-        m_simpleFlywheelRight.pidCommand(2300)
+        m_simpleFlywheelBottom.pidCommand(2300),
+        m_simpleFlywheelTop.pidCommand(2300)
 
     ));
 
@@ -226,7 +235,7 @@ public class RobotContainer {
 
             // Heading Override
             () -> {
-              if (m_buttonPad.getHID().getRawButton(1)){
+              if (m_buttonPad.getHID().getRawButton(13)){
                 return m_camera1.getRobotYaw();
 
               }
@@ -299,9 +308,10 @@ public class RobotContainer {
     SmartDashboard.putNumber("GetYAW", m_camera1.getRobotYaw());
   }
   private void setupShooter() {
-    // m_simpleFlywheelLeft.setDefaultCommand(m_simpleFlywheelLeft.pidCommand(2000));
-    // m_simpleFlywheelRight.setDefaultCommand(m_simpleFlywheelRight.pidCommand(2000));
-    // m_ShooterPivot.setDefaultComma nd(m_ShooterPivot.goToAngleCommand(45));
+    m_simpleFlywheelBottom.setDefaultCommand(m_simpleFlywheelBottom.pidCommand(2000));
+    m_simpleFlywheelTop.setDefaultCommand(m_simpleFlywheelTop.pidCommand(2000));
+    // m_ShooterPivot.setDefaultCommand(m_ShooterPivot.goToAngleCommand(45));
+    m_IntakePivot.setDefaultCommand(m_IntakePivot.openLoopCommand(2));
   }
   private void registerAutos(HashMap<String, String> autos) {
     for (String name: autos.keySet()) {
@@ -319,15 +329,36 @@ public class RobotContainer {
   public Command visionShootCommand(){
     return new ParallelCommandGroup(
       m_ShooterPivot.goToAngleCommand(()-> ShooterPivotConstants.getAngle((m_camera1.FilteredEsimatedPoseNorm()))),
-      m_simpleFlywheelLeft.pidCommand(()-> FlyWheelConstants.getRPM(m_camera1.FilteredEsimatedPoseNorm())),
-      m_simpleFlywheelRight.pidCommand(()-> FlyWheelConstants.getRPM(m_camera1.FilteredEsimatedPoseNorm())),
+      m_simpleFlywheelBottom.pidCommand(()-> FlyWheelConstants.getRPM(m_camera1.FilteredEsimatedPoseNorm())),
+      m_simpleFlywheelTop.pidCommand(()-> FlyWheelConstants.getRPM(m_camera1.FilteredEsimatedPoseNorm())),
       // m_simpleFlywheelLeft.feederShooterCommand(m_SimpleShooterFeeder)
       new SequentialCommandGroup(
         new WaitCommand(0.25),
-        new WaitUntilCommand(()-> m_simpleFlywheelLeft.isErrorInRange() && m_simpleFlywheelRight.isErrorInRange() && m_ShooterPivot.isAngleErrorInRange()),
+        new WaitUntilCommand(()-> m_simpleFlywheelBottom.isErrorInRange() && m_simpleFlywheelTop.isErrorInRange() && m_ShooterPivot.isAngleErrorInRange()),
         m_SimpleShooterFeeder.forward()
       )
     );
 
   }
+
+  public Command intakeCommand(){
+    return new ParallelDeadlineGroup(
+      new SequentialCommandGroup(
+        new WaitCommand(0.1),
+        new WaitUntilCommand((()->m_TOF1.isTOF1WithinRange()))
+      ),
+      new SequentialCommandGroup(
+       m_Intake.test_forwardsCommand().until(()-> m_Intake.isRingIntaked()),
+        new WaitCommand(1.2),
+         m_Intake.test_forwardsCommand()
+      ),
+      m_ShooterPivot.goToAngleCommand(27),
+      new SequentialCommandGroup(
+        m_IntakePivot.openLoopCommand(-6).until(()-> m_Intake.isRingIntaked()),
+        m_IntakePivot.openLoopCommand(6)
+      ),
+        m_SimpleShooterFeeder.forward()
+    );
+  }
 }
+
