@@ -6,6 +6,8 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.CAN;
@@ -46,6 +48,8 @@ public class IntakePivot extends SubsystemBase {
   private ControlMode m_controlMode = ControlMode.kOpenLoop;
   private double m_demand;
   private double Angle;
+  private double uplimit = 50;
+  
   
 
   //
@@ -107,7 +111,7 @@ public class IntakePivot extends SubsystemBase {
         break;
     }
 
-    if (Angle <= 1 && outputVoltage < 0 || Angle >= 50 && outputVoltage > 0 ){
+    if (Angle <= 1 && outputVoltage < 0 || Angle >= uplimit && outputVoltage > 0 ){
       outputVoltage = 0;
     }
 
@@ -160,7 +164,7 @@ public class IntakePivot extends SubsystemBase {
    *
    * @return a command
    */
-  public Command openLoopCommand(DoubleSupplier OutputVoltageSupplier) {
+  private Command openLoopCommand(DoubleSupplier OutputVoltageSupplier) {
 
 
     // Inline construction of command goes here.
@@ -170,16 +174,26 @@ public class IntakePivot extends SubsystemBase {
         
   }
 
-  public Command openLoopCommand(double OutputVoltage) {
+  private Command openLoopCommand(double OutputVoltage) {
     return openLoopCommand(()-> OutputVoltage);
   }
 
-  public Command upWardCommand(double OutputVoltage) {
-    return openLoopCommand(()-> 2);
+  public Command stowCommand() {
+    return new SequentialCommandGroup(
+      new InstantCommand(()-> uplimit = 75),
+      openLoopCommand(()-> 6)
+    );
   }
 
-  public Command downWarCommand(double OutputVoltage) {
-    return openLoopCommand(()-> -2);
+  public Command intakeLocation() {
+    return new SequentialCommandGroup(
+      new InstantCommand(()-> uplimit = 50),
+      openLoopCommand(()-> 6)
+    );
+  }
+
+  public Command downWarCommand() {
+    return openLoopCommand(()-> -6);
   }
   
                                                                     
