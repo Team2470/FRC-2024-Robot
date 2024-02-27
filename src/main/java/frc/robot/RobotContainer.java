@@ -63,7 +63,7 @@ public class RobotContainer {
   private final TimeOfFlightSensorTest m_TOF1 = new TimeOfFlightSensorTest();
   private final IntakePivot m_IntakePivot = new IntakePivot();
   private final Intake m_Intake = new Intake();
-  private final LEDSubsystem m_LEDs = new LEDSubsystem();
+  private final LEDSubsystem m_LEDs = new LEDSubsystem(m_controller);
   // Auto
   private final RevDigit m_revDigit;
   private final AutoSelector m_autoSelector;

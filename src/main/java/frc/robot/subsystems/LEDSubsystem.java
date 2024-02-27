@@ -26,26 +26,28 @@ public class LEDSubsystem extends SubsystemBase {
 
         private Animation m_toAnimate = null;
         private final CANdle m_candle = new CANdle(CANdleConstants.CANdleID, "rio");
-        private final int LedCount = 18;
+        private final int LedCount = 38;
+        // private final int LedCount = 8;
         private final int numSegments = 5;
         private CommandXboxController joystick;
 
         private int[] m_LEDs = new int[numSegments];
         private int activeSegment = 0;
 
-        public void LEDSubsytem(CommandXboxController joy) {   
+        public LEDSubsystem(CommandXboxController joy) {   
             this.joystick = joy;
             CANdleConfiguration config_candle = new CANdleConfiguration();
             config_candle.statusLedOffWhenActive = true;
             config_candle.disableWhenLOS = false;
-            config_candle.brightnessScalar = 0.3;
+            config_candle.brightnessScalar = 0.5;
             config_candle.stripType = LEDStripType.RGB;
-            config_candle.vBatOutputMode = VBatOutputMode.On;
+            config_candle.vBatOutputMode = VBatOutputMode.Modulated;
             m_candle.configAllSettings(config_candle,100);
 
             initDisabledLEDs();
 
             m_candle.setLEDs(0, 0, 0,0, 0, LedCount);
+            // m_candle.setLEDs(254, 1, 154, 0, 0, 8);
 
             for(LEDStripSegments segment : LEDStripSegments.values()) {
                 m_LEDs[segment.value] = LEDStripStatus.SegmentRed.value;
