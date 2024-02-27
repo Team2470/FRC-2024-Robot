@@ -259,6 +259,12 @@ public final class Constants {
       );
   }
 
+  public static class ClimberConstants{
+    public static final int kLeftMotorID = 25;
+    public static final int kLeftServoChannel = 1;
+    public static final int kRightMotorID = 26;
+    public static final int kRightServoChannel = 2;
+  }
   public static void override() {
     String serialNumber = RobotController.getSerialNumber();
     System.out.println("roboRIO Serial: "+serialNumber);
