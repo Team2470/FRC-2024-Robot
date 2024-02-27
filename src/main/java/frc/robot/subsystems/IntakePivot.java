@@ -180,7 +180,7 @@ public class IntakePivot extends SubsystemBase {
 
   public Command stowCommand() {
     return new SequentialCommandGroup(
-      new InstantCommand(()-> uplimit = 75),
+      new InstantCommand(()-> uplimit = 100),
       openLoopCommand(()-> 6)
     );
   }

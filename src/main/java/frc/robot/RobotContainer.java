@@ -309,10 +309,10 @@ public class RobotContainer {
     SmartDashboard.putNumber("GetYAW", m_camera1.getRobotYaw());
   }
   private void setupShooter() {
-    m_simpleFlywheelBottom.setDefaultCommand(m_simpleFlywheelBottom.pidCommand(2000));
-    m_simpleFlywheelTop.setDefaultCommand(m_simpleFlywheelTop.pidCommand(2000));
+    m_simpleFlywheelBottom.setDefaultCommand(m_simpleFlywheelBottom.pidCommand(4000));
+    m_simpleFlywheelTop.setDefaultCommand(m_simpleFlywheelTop.pidCommand(4000));
     m_ShooterPivot.setDefaultCommand(m_ShooterPivot.goToAngleCommand(45));
-    // m_IntakePivot.setDefaultCommand(m_IntakePivot.stowCommand());
+    m_IntakePivot.setDefaultCommand(m_IntakePivot.stowCommand());
   }
   private void registerAutos(HashMap<String, String> autos) {
     for (String name: autos.keySet()) {
@@ -350,7 +350,8 @@ public class RobotContainer {
   public Command intakeCommand(){
     return new ParallelDeadlineGroup(
       new SequentialCommandGroup(
-        new WaitUntilCommand((()->m_TOF1.isTOF1WithinRange()))
+        new WaitUntilCommand((()->m_TOF1.isTOF1WithinRange())),
+        new WaitCommand(0)
       ),
       new SequentialCommandGroup(
        m_Intake.test_forwardsCommand().until(()-> m_Intake.isRingIntaked()),

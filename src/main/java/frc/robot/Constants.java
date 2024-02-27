@@ -128,7 +128,7 @@ public final class Constants {
     public static final int reverseSoftLimit = 0;
     public static final int forwardSoftLimit = 0;
     public static final boolean encoderDirection = false;
-    public static final double encoderOffset = -133.5;
+    public static final double encoderOffset = -133.5-119.44;
 
     public static final double kP = 0;
     public static final double kI = 0;
