@@ -241,11 +241,12 @@ public class RobotContainer {
 
               }
 
-              switch (m_controller.getHID().getPOV()) {
-                case 0: return 0.0;
-                case 180: return 180.0;
-                default: return null;
-              }
+              // switch (m_controller.getHID().getPOV()) {
+              //   case 0: return 0.0;
+              //   case 180: return 180.0;
+              //   default: return null;
+              // }
+              return null;
             }));
 
     m_controller
@@ -306,11 +307,10 @@ public class RobotContainer {
     SmartDashboard.putNumber("kF", FlyWheelConstants.kF);
     SmartDashboard.putNumber("Select Shooter Pivot Angle", 0);
     SmartDashboard.putNumber("Select Distance", 0);
-    SmartDashboard.putNumber("GetYAW", m_camera1.getRobotYaw());
   }
   private void setupShooter() {
-    m_simpleFlywheelBottom.setDefaultCommand(m_simpleFlywheelBottom.pidCommand(4000));
-    m_simpleFlywheelTop.setDefaultCommand(m_simpleFlywheelTop.pidCommand(4000));
+    m_simpleFlywheelBottom.setDefaultCommand(m_simpleFlywheelBottom.pidCommand(2000));
+    m_simpleFlywheelTop.setDefaultCommand(m_simpleFlywheelTop.pidCommand(2000));
     m_ShooterPivot.setDefaultCommand(m_ShooterPivot.goToAngleCommand(45));
     m_IntakePivot.setDefaultCommand(m_IntakePivot.stowCommand());
   }
