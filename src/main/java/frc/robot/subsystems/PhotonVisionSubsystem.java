@@ -126,7 +126,8 @@ public class PhotonVisionSubsystem extends SubsystemBase {
     }
 
     public double getRobotYaw(){
-        return -m_yaw.getDouble(-180)+180;
+        // return -m_yaw.getDouble(-180)+180;
+        return -robotYaw+180;
     }
 
     @Override
@@ -136,7 +137,7 @@ public class PhotonVisionSubsystem extends SubsystemBase {
         camera1Data = getCamera1Data();
         isDataValid = false;
         DistanceToTarget = -1;
-        robotYaw = -180;
+        robotYaw = 0;
         // if ( ) {
         Optional<EstimatedRobotPose> currentPose = checkValidResults(camera1Data.targets) ? odometry.update(camera1Data)
                 : Optional.empty();

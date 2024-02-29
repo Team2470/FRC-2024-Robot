@@ -164,12 +164,12 @@ public class DriveWithController extends Command {
       if (headingOverride != null) {
         if (!lastHeadingControllerEnabled) {
           // Reset heading controller if we are entering it for the first time
-          headingController.reset(new State(drive.getOdomHeading().getRadians(), 0)); // TODO need to account for angular velocity
+          headingController.reset(new State(Math.toRadians(headingOverride), 0)); // TODO need to account for angular velocity
         }
 
         // Calculate the rotate command in Rad/Sec so we can reuse the PID values used in auto
-        headingController.setGoal(Math.toRadians(headingOverride));
-        rotate = headingController.calculate(drive.getOdomHeading().getRadians());
+        headingController.setGoal(0);
+        rotate = headingController.calculate(Math.toRadians(headingOverride));
         rotate = MathUtil.clamp(rotate, -headingControllerConstraints.maxVelocity, headingControllerConstraints.maxVelocity);
 
         SmartDashboard.putNumber("DriveWithController - Heading goal", headingOverride);
