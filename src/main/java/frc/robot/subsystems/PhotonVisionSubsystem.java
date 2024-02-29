@@ -127,7 +127,7 @@ public class PhotonVisionSubsystem extends SubsystemBase {
 
     public double getRobotYaw(){
         // return -m_yaw.getDouble(-180)+180;
-        return -robotYaw+180;
+        return robotYaw;
     }
 
     @Override
@@ -207,6 +207,7 @@ public class PhotonVisionSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("Filtered Pose Dist", FilteredEsimatedPoseNorm);
         SmartDashboard.putNumber("Calculated distance", FilteredDistanceToTargetOnField);
         SmartDashboard.putBoolean("is data valid?", isDataValid());
+        SmartDashboard.putNumber("GetYAW", getRobotYaw());
 
     }
 

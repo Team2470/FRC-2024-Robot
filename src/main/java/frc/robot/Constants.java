@@ -92,7 +92,7 @@ public final class Constants {
     public static final String MotorCANBus = "rio"; 
     public static final String EncoderCANBus = "rio";
     public static int reverseSoftLimit = 175;
-    public static int forwardSoftLimit = 1024;
+    public static int forwardSoftLimit = 102;
     public static boolean encoderDirection = true;
     public static double encoderOffset = 140.889-21;
 

@@ -63,11 +63,14 @@ public class IntakePivot extends SubsystemBase {
     m_motor = new CANSparkMax(Constants.IntakePivotConstants.MotorID, MotorType.kBrushless);
     m_motor.restoreFactoryDefaults();
     m_motor.setInverted(true);
+    m_motor.setOpenLoopRampRate(0.5);
+    m_motor.setSmartCurrentLimit(10);
 
 
     // m_encoder = new CANCoder(Constants.IntakePivotConstants.EncoderID, Constants.IntakePivotConstants.EncoderCANBus);
     m_encoder = new CANCoder(Constants.IntakePivotConstants.EncoderID, Constants.IntakePivotConstants.EncoderCANBus);
     m_encoder.configFactoryDefault();
+    
 
 
 
@@ -180,8 +183,8 @@ public class IntakePivot extends SubsystemBase {
 
   public Command stowCommand() {
     return new SequentialCommandGroup(
-      new InstantCommand(()-> uplimit = 100),
-      openLoopCommand(()-> 6)
+      new InstantCommand(()-> uplimit = 90),
+      openLoopCommand(()-> 3)
     );
   }
 
