@@ -31,7 +31,8 @@ public class ShooterPivot extends SubsystemBase {
   // private final int kStateSpace = 2;
   private enum ControlMode {
     kOpenLoop, 
-    kPID
+    kPID,
+    kMusicMode
   }
 
   private final WPI_TalonFX m_motor;
@@ -127,7 +128,7 @@ public class ShooterPivot extends SubsystemBase {
     m_motor.setStatusFramePeriod(StatusFrameEnhanced.Status_Brushless_Current, 255);
 
 
-    m_Orchestra.loadMusic("song1.chrp");
+    m_Orchestra.loadMusic("song2.chrp");
 
 
     SmartDashboard.putNumber("SP kP", ShooterPivotConstants.kP);
@@ -177,14 +178,19 @@ public class ShooterPivot extends SubsystemBase {
         SmartDashboard.putNumber("SP Feed Fowrad output voltage", feedforwardVoltage);
         SmartDashboard.putNumber("SP PID Profile Position", Math.toDegrees(m_pidController.getSetpoint().position));
         break;
+      case kMusicMode:
+        m_Orchestra.play();
+        break;
       default:
         // What happened!?
         break;
     }
 
-
-    // Do something with the motor    
-    m_motor.setVoltage(outputVoltage);
+    if (m_controlMode != ControlMode.kMusicMode){
+      m_motor.setVoltage(outputVoltage);
+      // Do something with the motor   
+    }
+ 
 
     SmartDashboard.putNumber("Shooter Pivot" + " encoderAbosoluteAngle", m_encoder.getAbsolutePosition());
     SmartDashboard.putNumber("Shooter Pivot" + " encoderAngle", m_encoder.getPosition());
@@ -269,7 +275,7 @@ public class ShooterPivot extends SubsystemBase {
 
 
   public void playMusic(){
-    m_Orchestra.play();
+    m_controlMode = ControlMode.kMusicMode;
   }
 
   public Command playMusiCommand(){
