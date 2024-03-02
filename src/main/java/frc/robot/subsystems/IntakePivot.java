@@ -65,11 +65,7 @@ public class IntakePivot extends SubsystemBase {
     m_motor = new CANSparkMax(Constants.IntakePivotConstants.MotorID, MotorType.kBrushless);
     m_motor.restoreFactoryDefaults();
     m_motor.setInverted(true);
-<<<<<<< HEAD
     m_motor.setOpenLoopRampRate(0.3);
-=======
-    m_motor.setOpenLoopRampRate(0.5);
->>>>>>> orhcestra
     m_motor.setSmartCurrentLimit(10);
 
 
@@ -191,10 +187,7 @@ public class IntakePivot extends SubsystemBase {
   public Command stowCommand() {
     return new SequentialCommandGroup(
       new InstantCommand(()-> uplimit = 90),
-<<<<<<< HEAD
       openLoopCommand(()-> 6).until(()->getAngle() > 60),
-=======
->>>>>>> orhcestra
       openLoopCommand(()-> 3)
     );
   }
