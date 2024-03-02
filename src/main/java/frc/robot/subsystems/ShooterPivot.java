@@ -45,6 +45,21 @@ public class ShooterPivot extends SubsystemBase {
   private ControlMode m_controlMode = ControlMode.kOpenLoop;
   private double m_demand;
 
+    String[] m_songs = new String[] {
+      "song1.chrp",//Never Gonna Give You Up
+      "song2.chrp",//Star Sprangled Banner
+      "song3.chrp",//Viva la vida
+      "song4.chrp",//Star Sprangled Banner 2
+      "song5.chrp",//Runaway
+      "song6.chrp",//Interstellar
+      "song7.chrp",//Waitng for love
+      "song8.chrp",//never gonna give you up
+      "song9.chrp",
+      "song10.chrp",
+      "song11.chrp",
+    };  
+
+  private int currentSong = 0;
   //
   // PID
   //
@@ -128,8 +143,8 @@ public class ShooterPivot extends SubsystemBase {
     m_motor.setStatusFramePeriod(StatusFrameEnhanced.Status_Brushless_Current, 255);
 
 
-    m_Orchestra.loadMusic("song2.chrp");
 
+    m_Orchestra.loadMusic(m_songs[2]);
 
     SmartDashboard.putNumber("SP kP", ShooterPivotConstants.kP);
     SmartDashboard.putNumber("SP kI", ShooterPivotConstants.kI);
@@ -180,6 +195,7 @@ public class ShooterPivot extends SubsystemBase {
         break;
       case kMusicMode:
         m_Orchestra.play();
+        // SmartDashboard.putNumeber("current song", m_songs[currentSong]);
         break;
       default:
         // What happened!?
@@ -273,8 +289,28 @@ public class ShooterPivot extends SubsystemBase {
     return goToAngleCommand(()-> angleDegrees);
   }
 
+  public void nextSong(){
+    currentSong = currentSong + 1;
+  }
+
+  public void backSong(){
+    currentSong = currentSong - 1;
+  }
+
+  public void loadMusic(){
+    if (currentSong < 0){
+      m_Orchestra.loadMusic(m_songs[currentSong]);
+    } else if (currentSong > m_songs.length){
+      currentSong = 0;
+      m_Orchestra.loadMusic(m_songs[currentSong]);
+    } else {
+      currentSong = 0;
+      m_Orchestra.loadMusic(m_songs[currentSong]);
+    }
+  }
 
   public void playMusic(){
+    m_Orchestra.loadMusic(m_songs[currentSong]);
     m_controlMode = ControlMode.kMusicMode;
   }
 
