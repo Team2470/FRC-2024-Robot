@@ -144,7 +144,7 @@ public class ShooterPivot extends SubsystemBase {
 
 
 
-    m_Orchestra.loadMusic(m_songs[2]);
+    m_Orchestra.loadMusic("song4.chrp");
 
     SmartDashboard.putNumber("SP kP", ShooterPivotConstants.kP);
     SmartDashboard.putNumber("SP kI", ShooterPivotConstants.kI);
@@ -153,6 +153,7 @@ public class ShooterPivot extends SubsystemBase {
     SmartDashboard.putNumber("SP kG", ShooterPivotConstants.kG);    
     SmartDashboard.putNumber("SP kV", ShooterPivotConstants.kV);    
     SmartDashboard.putNumber("SP kA", ShooterPivotConstants.kA);    
+    SmartDashboard.putString("song#", "song1");
   }
 
   public double getAngle() {
@@ -288,7 +289,6 @@ public class ShooterPivot extends SubsystemBase {
   public Command goToAngleCommand(double angleDegrees){
     return goToAngleCommand(()-> angleDegrees);
   }
-
   public void nextSong(){
     currentSong = currentSong + 1;
   }
@@ -310,7 +310,7 @@ public class ShooterPivot extends SubsystemBase {
   }
 
   public void playMusic(){
-    m_Orchestra.loadMusic("song9.chrp");
+    // m_Orchestra.loadMusic(song + ".chrp");
     m_controlMode = ControlMode.kMusicMode;
   }
 
