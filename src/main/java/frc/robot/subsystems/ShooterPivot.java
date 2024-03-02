@@ -20,6 +20,7 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.RemoteFeedbackDevice;
 import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
+import com.ctre.phoenix.music.Orchestra;
 import com.ctre.phoenix.sensors.AbsoluteSensorRange;
 import com.ctre.phoenix.sensors.CANCoder;
 import com.ctre.phoenix.sensors.SensorInitializationStrategy;
@@ -37,6 +38,8 @@ public class ShooterPivot extends SubsystemBase {
   //private final CANSparkFlex m_follower;
 
   private final CANCoder m_encoder;
+
+  private final Orchestra m_Orchestra;
 
   private ControlMode m_controlMode = ControlMode.kOpenLoop;
   private double m_demand;
@@ -68,6 +71,9 @@ public class ShooterPivot extends SubsystemBase {
     // set voltage dosen't work with voltage compensation
     // m_motor.configVoltageCompSaturation(10);
     // m_motor.enableVoltageCompensation(true);
+    
+    m_Orchestra = new Orchestra();
+    m_Orchestra.addInstrument(m_motor);
     
 
 
@@ -119,6 +125,10 @@ public class ShooterPivot extends SubsystemBase {
     m_motor.setStatusFramePeriod(StatusFrameEnhanced.Status_21_FeedbackIntegrated, 255);
     // Default 50ms
     m_motor.setStatusFramePeriod(StatusFrameEnhanced.Status_Brushless_Current, 255);
+
+
+    m_Orchestra.loadMusic("song1.chrp");
+
 
     SmartDashboard.putNumber("SP kP", ShooterPivotConstants.kP);
     SmartDashboard.putNumber("SP kI", ShooterPivotConstants.kI);
@@ -256,4 +266,15 @@ public class ShooterPivot extends SubsystemBase {
   public Command goToAngleCommand(double angleDegrees){
     return goToAngleCommand(()-> angleDegrees);
   }
+
+
+  public void playMusic(){
+    m_Orchestra.play();
+  }
+
+  public Command playMusiCommand(){
+    return Commands.runEnd(
+      () -> this.playMusic(), this::stop, this);
+  }
+
 }

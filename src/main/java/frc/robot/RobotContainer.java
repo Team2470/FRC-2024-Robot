@@ -106,6 +106,7 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
+    m_controller.rightBumper().whileTrue(m_ShooterPivot.playMusiCommand());
   // m_controller.x().whileTrue(m_simpleFlywheel.spinCommand(6));
     // m_controller.y().whileTrue(m_simpleFlywheel.spinCommand(8));
     //m_controller.rightBumper().whileTrue(m_simpleFlywheel.spinCommand(-2));

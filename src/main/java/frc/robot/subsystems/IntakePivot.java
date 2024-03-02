@@ -25,6 +25,7 @@ import com.ctre.phoenix.sensors.AbsoluteSensorRange;
 import com.ctre.phoenix.sensors.CANCoder;
 import com.ctre.phoenix.sensors.SensorInitializationStrategy;
 import com.ctre.phoenix6.hardware.CANcoder;
+import com.ctre.phoenix6.hardware.TalonFX;
 import com.revrobotics.CANSparkFlex;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
@@ -38,6 +39,7 @@ public class IntakePivot extends SubsystemBase {
     kOpenLoop, 
     kPID
   }
+
 
   private final CANSparkMax m_motor;
 
@@ -63,11 +65,14 @@ public class IntakePivot extends SubsystemBase {
     m_motor = new CANSparkMax(Constants.IntakePivotConstants.MotorID, MotorType.kBrushless);
     m_motor.restoreFactoryDefaults();
     m_motor.setInverted(true);
+    m_motor.setOpenLoopRampRate(0.5);
+    m_motor.setSmartCurrentLimit(10);
 
 
     // m_encoder = new CANCoder(Constants.IntakePivotConstants.EncoderID, Constants.IntakePivotConstants.EncoderCANBus);
     m_encoder = new CANCoder(Constants.IntakePivotConstants.EncoderID, Constants.IntakePivotConstants.EncoderCANBus);
     m_encoder.configFactoryDefault();
+    
 
 
 
@@ -180,8 +185,8 @@ public class IntakePivot extends SubsystemBase {
 
   public Command stowCommand() {
     return new SequentialCommandGroup(
-      new InstantCommand(()-> uplimit = 75),
-      openLoopCommand(()-> 6)
+      new InstantCommand(()-> uplimit = 90),
+      openLoopCommand(()-> 3)
     );
   }
 
