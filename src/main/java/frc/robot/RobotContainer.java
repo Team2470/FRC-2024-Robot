@@ -10,7 +10,10 @@ import com.kennedyrobotics.auto.AutoSelector;
 import com.kennedyrobotics.hardware.misc.RevDigit;
 import com.pathplanner.lib.auto.NamedCommands;
 
+import edu.wpi.first.math.filter.Debouncer;
+import edu.wpi.first.math.filter.Debouncer.DebounceType;
 import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -18,6 +21,7 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
@@ -329,6 +333,12 @@ public class RobotContainer {
     return (m_camera1.getRobotYaw() < 1.5 && m_camera1.getRobotYaw() > -1.5);
   }
 
+  private final Debouncer m_debouncer = new Debouncer(.5, DebounceType.kBoth);
+
+  public boolean isYawInRangeDebounced(){
+    return m_debouncer.calculate(isYawInRange());
+  }
+
   public Command visionShootCommand(){
     return new ParallelCommandGroup(
       m_ShooterPivot.goToAngleCommand(()-> ShooterPivotConstants.getAngle((m_camera1.FilteredEsimatedPoseNorm()))),
@@ -337,7 +347,7 @@ public class RobotContainer {
       // m_simpleFlywheelLeft.feederShooterCommand(m_SimpleShooterFeeder)
       new SequentialCommandGroup(
         new WaitCommand(0.25), //wait for setpoint to change
-        new WaitUntilCommand(()-> isYawInRange()),
+        new WaitUntilCommand(()-> isYawInRangeDebounced()),
         m_drivetrain.xStop().asProxy().until(()-> m_simpleFlywheelBottom.isErrorInRange() && m_simpleFlywheelTop.isErrorInRange() && m_ShooterPivot.isAngleErrorInRange()),        
         
         new ParallelCommandGroup(
@@ -366,7 +376,15 @@ public class RobotContainer {
         m_IntakePivot.downWarCommand().until(()-> m_Intake.isRingIntaked()),
         m_IntakePivot.intakeLocation()
       ),
-        m_SimpleShooterFeeder.forward()
+        m_SimpleShooterFeeder.forward(),
+
+      new SequentialCommandGroup(
+        new WaitUntilCommand(()-> m_Intake.isRingIntaked()),
+        new StartEndCommand(
+          ()-> m_controller.getHID().setRumble(RumbleType.kBothRumble, .3),
+          ()-> m_controller.getHID().setRumble(RumbleType.kBothRumble, 0)
+          ).withTimeout(.2)
+      )
     );
   }
 }
