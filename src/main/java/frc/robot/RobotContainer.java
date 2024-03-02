@@ -328,9 +328,8 @@ public class RobotContainer {
   //
 
   public boolean isYawInRange(){
-    return (m_camera1.getRobotYaw() < 1.5 || m_camera1.getRobotYaw() > -1.5);
+    return (m_camera1.getRobotYaw() < 1.5 && m_camera1.getRobotYaw() > -1.5);
   }
-
 
   public Command visionShootCommand(){
     return new ParallelCommandGroup(

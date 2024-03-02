@@ -63,7 +63,7 @@ public class IntakePivot extends SubsystemBase {
     m_motor = new CANSparkMax(Constants.IntakePivotConstants.MotorID, MotorType.kBrushless);
     m_motor.restoreFactoryDefaults();
     m_motor.setInverted(true);
-    m_motor.setOpenLoopRampRate(0.5);
+    m_motor.setOpenLoopRampRate(0.3);
     m_motor.setSmartCurrentLimit(10);
 
 
@@ -114,7 +114,7 @@ public class IntakePivot extends SubsystemBase {
         break;
     }
 
-    if (Angle <= 1 && outputVoltage < 0 || Angle >= uplimit && outputVoltage > 0 ){
+    if (Angle <= 10 && outputVoltage < 0 || Angle >= uplimit && outputVoltage > 0 ){
       outputVoltage = 0;
     }
 
@@ -130,6 +130,7 @@ public class IntakePivot extends SubsystemBase {
     SmartDashboard.putNumber("Intake Pivot Get Measurement", getAngle());
     SmartDashboard.putNumber("Intake Pivot Motor Output Voltage", outputVoltage);
     SmartDashboard.putNumber("Intake Pivot Motor Setpoint Position", m_demand);
+    SmartDashboard.putNumber("Intake Pivot current", m_motor.getOutputCurrent());
   }
 
   public boolean isAtRetractedLimit(){
@@ -184,6 +185,7 @@ public class IntakePivot extends SubsystemBase {
   public Command stowCommand() {
     return new SequentialCommandGroup(
       new InstantCommand(()-> uplimit = 90),
+      openLoopCommand(()-> 6).until(()->getAngle() > 60),
       openLoopCommand(()-> 3)
     );
   }
@@ -196,7 +198,7 @@ public class IntakePivot extends SubsystemBase {
   }
 
   public Command downWarCommand() {
-    return openLoopCommand(()-> -6);
+    return openLoopCommand(()-> -8.5);
   }
   
                                                                     
