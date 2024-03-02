@@ -20,6 +20,7 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.RemoteFeedbackDevice;
 import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
+import com.ctre.phoenix.music.Orchestra;
 import com.ctre.phoenix.sensors.AbsoluteSensorRange;
 import com.ctre.phoenix.sensors.CANCoder;
 import com.ctre.phoenix.sensors.SensorInitializationStrategy;
@@ -30,7 +31,8 @@ public class ShooterPivot extends SubsystemBase {
   // private final int kStateSpace = 2;
   private enum ControlMode {
     kOpenLoop, 
-    kPID
+    kPID,
+    kMusicMode
   }
 
   private final WPI_TalonFX m_motor;
@@ -38,9 +40,26 @@ public class ShooterPivot extends SubsystemBase {
 
   private final CANCoder m_encoder;
 
+  private final Orchestra m_Orchestra;
+
   private ControlMode m_controlMode = ControlMode.kOpenLoop;
   private double m_demand;
 
+    String[] m_songs = new String[] {
+      "song1.chrp",//Never Gonna Give You Up
+      "song2.chrp",//Star Sprangled Banner
+      "song3.chrp",//Viva la vida
+      "song4.chrp",//Star Sprangled Banner 2
+      "song5.chrp",//Runaway
+      "song6.chrp",//Interstellar
+      "song7.chrp",//Waitng for love
+      "song8.chrp",//never gonna give you up
+      "song9.chrp",
+      "song10.chrp",
+      "song11.chrp",
+    };  
+
+  private int currentSong = 0;
   //
   // PID
   //
@@ -68,6 +87,9 @@ public class ShooterPivot extends SubsystemBase {
     // set voltage dosen't work with voltage compensation
     // m_motor.configVoltageCompSaturation(10);
     // m_motor.enableVoltageCompensation(true);
+    
+    m_Orchestra = new Orchestra();
+    m_Orchestra.addInstrument(m_motor);
     
 
 
@@ -120,6 +142,10 @@ public class ShooterPivot extends SubsystemBase {
     // Default 50ms
     m_motor.setStatusFramePeriod(StatusFrameEnhanced.Status_Brushless_Current, 255);
 
+
+
+    m_Orchestra.loadMusic(m_songs[2]);
+
     SmartDashboard.putNumber("SP kP", ShooterPivotConstants.kP);
     SmartDashboard.putNumber("SP kI", ShooterPivotConstants.kI);
     SmartDashboard.putNumber("SP kD", ShooterPivotConstants.kD);
@@ -167,14 +193,20 @@ public class ShooterPivot extends SubsystemBase {
         SmartDashboard.putNumber("SP Feed Fowrad output voltage", feedforwardVoltage);
         SmartDashboard.putNumber("SP PID Profile Position", Math.toDegrees(m_pidController.getSetpoint().position));
         break;
+      case kMusicMode:
+        m_Orchestra.play();
+        // SmartDashboard.putNumeber("current song", m_songs[currentSong]);
+        break;
       default:
         // What happened!?
         break;
     }
 
-
-    // Do something with the motor    
-    m_motor.setVoltage(outputVoltage);
+    if (m_controlMode != ControlMode.kMusicMode){
+      m_motor.setVoltage(outputVoltage);
+      // Do something with the motor   
+    }
+ 
 
     SmartDashboard.putNumber("Shooter Pivot" + " encoderAbosoluteAngle", m_encoder.getAbsolutePosition());
     SmartDashboard.putNumber("Shooter Pivot" + " encoderAngle", m_encoder.getPosition());
@@ -256,4 +288,35 @@ public class ShooterPivot extends SubsystemBase {
   public Command goToAngleCommand(double angleDegrees){
     return goToAngleCommand(()-> angleDegrees);
   }
+
+  public void nextSong(){
+    currentSong = currentSong + 1;
+  }
+
+  public void backSong(){
+    currentSong = currentSong - 1;
+  }
+
+  public void loadMusic(){
+    if (currentSong < 0){
+      m_Orchestra.loadMusic(m_songs[currentSong]);
+    } else if (currentSong > m_songs.length){
+      currentSong = 0;
+      m_Orchestra.loadMusic(m_songs[currentSong]);
+    } else {
+      currentSong = 0;
+      m_Orchestra.loadMusic(m_songs[currentSong]);
+    }
+  }
+
+  public void playMusic(){
+    m_Orchestra.loadMusic(m_songs[3]);
+    m_controlMode = ControlMode.kMusicMode;
+  }
+
+  public Command playMusiCommand(){
+    return Commands.runEnd(
+      () -> this.playMusic(), this::stop, this);
+  }
+
 }

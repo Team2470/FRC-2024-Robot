@@ -103,6 +103,7 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
+    m_controller.rightBumper().whileTrue(m_ShooterPivot.playMusiCommand());
   // m_controller.x().whileTrue(m_simpleFlywheel.spinCommand(6));
     // m_controller.y().whileTrue(m_simpleFlywheel.spinCommand(8));
     //m_controller.rightBumper().whileTrue(m_simpleFlywheel.spinCommand(-2));
@@ -306,10 +307,17 @@ public class RobotContainer {
     SmartDashboard.putNumber("Select Distance", 0);
   }
   private void setupShooter() {
+<<<<<<< HEAD
     m_simpleFlywheelBottom.setDefaultCommand(m_simpleFlywheelBottom.pidCommand(2000));
     m_simpleFlywheelTop.setDefaultCommand(m_simpleFlywheelTop.pidCommand(2000));
     m_ShooterPivot.setDefaultCommand(m_ShooterPivot.goToAngleCommand(45));
     m_IntakePivot.setDefaultCommand(m_IntakePivot.stowCommand());
+=======
+    // m_simpleFlywheelBottom.setDefaultCommand(m_simpleFlywheelBottom.pidCommand(2000));
+    // m_simpleFlywheelTop.setDefaultCommand(m_simpleFlywheelTop.pidCommand(2000));
+    // m_ShooterPivot.setDefaultCommand(m_ShooterPivot.goToAngleCommand(45));
+    // m_IntakePivot.setDefaultCommand(m_IntakePivot.stowCommand());
+>>>>>>> orhcestra
   }
   private void registerAutos(HashMap<String, String> autos) {
     for (String name: autos.keySet()) {
