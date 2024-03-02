@@ -113,7 +113,7 @@ public final class Constants {
       }
 
       // Comp robot
-      return (1848*(Math.pow(distance, -0.827)));
+      return (1848*(Math.pow(distance, -0.827))-1);
     }
   }
 
