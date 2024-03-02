@@ -310,7 +310,7 @@ public class ShooterPivot extends SubsystemBase {
   }
 
   public void playMusic(){
-    m_Orchestra.loadMusic(m_songs[3]);
+    m_Orchestra.loadMusic("song9.chrp");
     m_controlMode = ControlMode.kMusicMode;
   }
 
