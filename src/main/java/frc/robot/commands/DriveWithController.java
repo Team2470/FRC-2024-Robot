@@ -42,7 +42,7 @@ public class DriveWithController extends Command {
   private final SlewRateLimiter rotateFilter = new SlewRateLimiter(5);
 
   private final TrapezoidProfile.Constraints headingControllerConstraints =  new TrapezoidProfile.Constraints(DriveConstants.kMaxAngularVelocityRadiansPerSecond/4.0, 4*Math.PI);
-  private final ProfiledPIDController headingController = new ProfiledPIDController(8.0, 0, 0, headingControllerConstraints);
+  private final ProfiledPIDController headingController = new ProfiledPIDController(6.0, 0, 0, headingControllerConstraints);
   private boolean lastHeadingControllerEnabled = false;
 
   // Keep track of the last 5 module angles
