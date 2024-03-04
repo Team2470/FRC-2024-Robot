@@ -13,10 +13,15 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Servo;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 
 public class Climber extends SubsystemBase {
 
@@ -24,11 +29,14 @@ public class Climber extends SubsystemBase {
   private final VoltageOut m_motorRequest = new VoltageOut(0);
   
   private final Servo m_Servo;
+  private final DigitalInput m_ExtendLimit;
+  private final DigitalInput m_RetractLimit;
+  private final boolean m_isLeft;
 
 
   /** Creates a new ClimberPivot. */
-  public Climber(int motorID, int servoChannel, boolean isLeft) {
-
+  public Climber(int motorID, int servoChannel, int extendLimitChannel, int retractLimitChannel, boolean isLeft) {
+    m_isLeft = isLeft;
     TalonFXConfiguration config = new TalonFXConfiguration();
     if (isLeft){
       config.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;      
@@ -36,6 +44,8 @@ public class Climber extends SubsystemBase {
       config.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;        
     }
     config.MotorOutput.NeutralMode = NeutralModeValue.Brake;
+    config.CurrentLimits.SupplyCurrentLimit = 2;
+    config.CurrentLimits.SupplyCurrentLimitEnable = true;
 
     
     m_motor = new TalonFX(motorID, "rio");
@@ -47,39 +57,56 @@ public class Climber extends SubsystemBase {
 
     
     m_Servo = new Servo(servoChannel);
+    m_ExtendLimit = new DigitalInput(extendLimitChannel);
+    m_RetractLimit = new DigitalInput(retractLimitChannel);
   
 
+  }
+
+  public boolean isAtExtendLimit(){
+    return m_ExtendLimit.get();
+  }
+
+  public boolean isAtRetractLimit() {
+    return m_RetractLimit.get();
   }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-  }
-
-  public void up(){
-    
-  }
-  
-  public void down(){
+    SmartDashboard.putBoolean("Climber "+(m_isLeft? "Left":"Right")+" Is Extended", isAtExtendLimit());
+    SmartDashboard.putBoolean("Climber "+(m_isLeft? "Left":"Right")+" Is Retracted", isAtRetractLimit());
 
   }
 
-  public void stop(){
-
+  public void engageRatchet(){
+    m_Servo.setPosition(0);
+  }
+  public void disengageRatchet(){
+    m_Servo.setPosition(1);
   }
 
   public void setVoltage(double voltage){
-    m_motorRequest.withOutput(voltage);
+    m_motorRequest.withOutput(voltage)
+      .withLimitForwardMotion(isAtExtendLimit())
+      .withLimitReverseMotion(isAtRetractLimit());
+    m_motor.setControl(m_motorRequest);
   }
 
-  public Command upCommand(){
-    return Commands.runEnd(
-      () -> this.up(), this::stop, this);
+  public void stop(){
+    setVoltage(0);
   }
 
-  public Command downCommand(){
-    return Commands.runEnd(
-      () -> this.down(), this::stop, this);
+  public Command retractCommand(){
+    return new ParallelCommandGroup(
+      Commands.run(() -> engageRatchet(), this),
+      Commands.runEnd(() -> this.setVoltage(-2), this::stop, this));
   }
 
+    public Command extendCommand(){
+    return new ParallelCommandGroup(
+      Commands.run(() -> disengageRatchet(), this),
+      new WaitCommand(0.2),
+      Commands.runEnd(() -> this.setVoltage(2), this::stop, this));
+  }
 }
