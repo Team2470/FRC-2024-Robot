@@ -14,6 +14,7 @@ import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.filter.Debouncer.DebounceType;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -79,7 +80,7 @@ public class RobotContainer {
     );
 
     NamedCommands.registerCommands(new HashMap<String, Command>() {{
-      put("shoot", shootFlywheel());
+      // put("shoot", shootFlywheel());
     }});
 
     registerAutos(new HashMap<String, String>() {{
@@ -155,7 +156,7 @@ public class RobotContainer {
     //   m_simpleFlywheelLeft.feederShooterCommand(m_SimpleShooterFeeder)
     // ));
     m_buttonPad.button(1).whileTrue(visionShootCommand());
-    m_buttonPad.button(9).whileTrue(intakeCommand());
+    m_buttonPad.button(9).whileTrue(intakeCommand2());
 
     m_controller.back().whileTrue(new ParallelCommandGroup(
       m_simpleFlywheelBottom.pidCommand(10000),
@@ -317,10 +318,10 @@ public class RobotContainer {
     SmartDashboard.putNumber("Select Distance", 0);
   }
   private void setupShooter() {
-    m_simpleFlywheelBottom.setDefaultCommand(m_simpleFlywheelBottom.pidCommand(2000));
-    m_simpleFlywheelTop.setDefaultCommand(m_simpleFlywheelTop.pidCommand(2000));
-    m_ShooterPivot.setDefaultCommand(m_ShooterPivot.goToAngleCommand(45));
-    m_IntakePivot.setDefaultCommand(m_IntakePivot.stowCommand());
+    // m_simpleFlywheelBottom.setDefaultCommand(m_simpleFlywheelBottom.pidCommand(2000));
+    // m_simpleFlywheelTop.setDefaultCommand(m_simpleFlywheelTop.pidCommand(2000));
+    // m_ShooterPivot.setDefaultCommand(m_ShooterPivot.goToAngleCommand(45));
+    // m_IntakePivot.setDefaultCommand(m_IntakePivot.stowCommand());
   }
   private void registerAutos(HashMap<String, String> autos) {
     for (String name: autos.keySet()) {
@@ -384,6 +385,34 @@ public class RobotContainer {
       new SequentialCommandGroup(
         m_IntakePivot.downWarCommand().until(()-> m_Intake.isRingIntaked()),
         m_IntakePivot.intakeLocation()
+      ),
+        m_SimpleShooterFeeder.forward(),
+
+      new SequentialCommandGroup(
+        new WaitUntilCommand(()-> m_Intake.isRingIntaked()),
+        new StartEndCommand(
+          ()-> m_controller.getHID().setRumble(RumbleType.kBothRumble, .3),
+          ()-> m_controller.getHID().setRumble(RumbleType.kBothRumble, 0)
+          ).withTimeout(.2)
+      )
+    );
+  }
+
+  public Command intakeCommand2(){
+    return new ParallelDeadlineGroup(
+      new SequentialCommandGroup(
+        new WaitUntilCommand((()->m_TOF1.isTOF1WithinRange())),
+        new WaitCommand(0)
+      ),
+      new SequentialCommandGroup(
+       m_Intake.test_forwardsCommand().until(()-> m_Intake.isRingIntaked()),
+        new WaitCommand(1.3),
+         m_Intake.test_forwardsCommand()
+      ),
+      m_ShooterPivot.goToAngleCommand(45),
+      new SequentialCommandGroup(
+        m_IntakePivot.downWarCommand().until(()-> m_Intake.isRingIntaked()),
+        m_IntakePivot.stowCommand()
       ),
         m_SimpleShooterFeeder.forward(),
 
