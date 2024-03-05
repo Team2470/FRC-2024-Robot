@@ -54,12 +54,23 @@ public final class Constants {
      public static final int Intake_LEDnum = 6;
      public static final int TOF1_Index = 14;
      public static final int TOF1_LEDnum = 6;
-     public static final int SpinningUp_Index = 20;
-     public static final int SpinningUp_LEDnum = 6;
-     public static final int FullSpeed_Index = 26;
-     public static final int FullSpeed_LEDnum = 6;
-     public static final int Shooting_Index = 32;
-     public static final int Shooting_LEDnum = 6;
+    //  public static final int SpinningUp_Index = 20;
+    //  public static final int SpinningUp_LEDnum = 6;
+    //  public static final int FullSpeed_Index = 26;
+    //  public static final int FullSpeed_LEDnum = 6;
+     public static final int Shooter_Index = 32;
+     public static final int Shooter_LEDnum = 6;
+  }
+
+  public static class ClimberConstants{
+    public static final int kLeftMotorID = 25;
+    public static final int kLeftServoChannel = 8;
+    public static final int kLeftRetractChannel = 6;
+    public static final int kLeftExtendChannel = 7;
+    public static final int kRightMotorID = 26;
+    public static final int kRightServoChannel = 9;
+    public static final int kRightRetractChannel = 8;
+    public static final int kRightExtendChannel = 9;
   }
 
   public static class FlyWheelConstants {
@@ -273,12 +284,12 @@ public final class Constants {
       );
   }
 
-  public static class ClimberConstants{
-    public static final int kLeftMotorID = 25;
-    public static final int kLeftServoChannel = 1;
-    public static final int kRightMotorID = 26;
-    public static final int kRightServoChannel = 2;
-  }
+  // public static class ClimberConstants{
+  //   public static final int kLeftMotorID = 25;
+  //   public static final int kLeftServoChannel = 1;
+  //   public static final int kRightMotorID = 26;
+  //   public static final int kRightServoChannel = 2;
+  // }
   public static void override() {
     String serialNumber = RobotController.getSerialNumber();
     System.out.println("roboRIO Serial: "+serialNumber);

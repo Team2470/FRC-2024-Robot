@@ -145,7 +145,16 @@ public class SimpleFlywheel extends SubsystemBase {
   }
   public boolean isErrorInRange() {
     return (-5 < this.getErrorPercent() && this.getErrorPercent() < 5);
-}
+  }
+
+    public boolean isErrorBelow() {
+    return (-5 > this.getErrorPercent());
+  }
+
+    public boolean isErrorAbove() {
+    return (this.getErrorPercent() > 5);
+  }
+
 public Command waitUntilErrorInrange(){
   return Commands.waitUntil(()-> this.isErrorInRange());
 }
