@@ -97,10 +97,21 @@ public class Climber extends SubsystemBase {
   }
 
   public void engageRatchet(){
-    m_Servo.setPosition(0.35);
+    if(m_isLeft){
+      m_Servo.setPosition(0.35);
+    }
+    else{
+      m_Servo.setPosition(0.475);
+    }
+
   }
   public void disengageRatchet(){
+    if(m_isLeft){
     m_Servo.setPosition(0.475);
+    }
+    else{
+      m_Servo.setPosition(0.35);
+    }
   }
 
   public void setVoltage(double voltage){

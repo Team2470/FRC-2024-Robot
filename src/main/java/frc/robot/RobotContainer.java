@@ -75,11 +75,12 @@ public class RobotContainer {
                                                     ClimberConstants.kLeftRetractChannel, 
                                                     true);
   
-  // private final Climber m_ClimberRight = new Climber(ClimberConstants.kRightMotorID, 
-  //                                                   ClimberConstants.kRightServoChannel, 
-  //                                                   ClimberConstants.kRightExtendChannel, 
-  //                                                   ClimberConstants.kRightRetractChannel, 
-  //                                                   false);
+                                                    
+  private final Climber m_ClimberRight = new Climber(ClimberConstants.kRightMotorID, 
+                                                    ClimberConstants.kRightServoChannel, 
+                                                    ClimberConstants.kRightExtendChannel, 
+                                                    ClimberConstants.kRightRetractChannel, 
+                                                    false);
   // Auto
   private final RevDigit m_revDigit;
   private final AutoSelector m_autoSelector;
@@ -154,10 +155,10 @@ public class RobotContainer {
     m_controller.rightBumper().whileTrue(m_ShooterPivot.playMusiCommand());
     // m_controller.povUp().whileTrue(this.extendClimber());
     // m_controller.povDown().whileTrue(this.retractClimber());
-    m_controller.povUp().whileTrue(m_ClimberLeft.extendCommand());
-    m_controller.povDown().whileTrue(m_ClimberLeft.retractCommand());
-    // m_controller.povLeft().whileTrue(m_ClimberRight.extendCommand());
-    // m_controller.povRight().whileTrue(m_ClimberRight.retractCommand());
+    // m_controller.povUp().whileTrue(m_ClimberLeft.extendCommand());
+    // m_controller.povDown().whileTrue(m_ClimberLeft.retractCommand());
+    m_controller.povLeft().whileTrue(m_ClimberRight.extendCommand());
+    m_controller.povRight().whileTrue(m_ClimberRight.retractCommand());
   // m_controller.x().whileTrue(m_simpleFlywheel.spinCommand(6));
     // m_controller.y().whileTrue(m_simpleFlywheel.spinCommand(8));
     //m_controller.rightBumper().whileTrue(m_simpleFlywheel.spinCommand(-2));
