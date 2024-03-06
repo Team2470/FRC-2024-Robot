@@ -42,6 +42,7 @@ import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.IntakePivot;
 import frc.robot.subsystems.Orchestra6;
+import frc.robot.subsystems.Orchestra6V2;
 import frc.robot.subsystems.PhotonVisionSubsystem;
 import frc.robot.subsystems.ShooterPivot;
 import frc.robot.subsystems.SimpleFlywheel;
@@ -69,7 +70,11 @@ public class RobotContainer {
   private final TimeOfFlightSensorTest m_TOF1 = new TimeOfFlightSensorTest();
   private final IntakePivot m_IntakePivot = new IntakePivot();
   private final Intake m_Intake = new Intake();
-  private final Orchestra6 m_Orchestra6 = new Orchestra6(11,12,13,14);
+  private final Orchestra6 m_Orchestra6 = new Orchestra6(12,10,14,16);
+  private final Orchestra6V2 m_Orchestra6v21 = new Orchestra6V2(11);
+  private final Orchestra6V2 m_Orchestra6v22 = new Orchestra6V2(12);
+  private final Orchestra6V2 m_Orchestra6v23 = new Orchestra6V2(13);
+  private final Orchestra6V2 m_Orchestra6v24 = new Orchestra6V2(14);
   // Auto
   private final RevDigit m_revDigit;
   private final AutoSelector m_autoSelector;
@@ -117,6 +122,10 @@ public class RobotContainer {
   private void configureBindings() {
     m_controller.rightBumper().whileTrue(new ParallelCommandGroup(
       m_Orchestra6.playMusiCommand(),
+      // m_Orchestra6v21.playMusiCommand(),
+      // m_Orchestra6v22.playMusiCommand(),
+      // m_Orchestra6v23.playMusiCommand(),
+      // m_Orchestra6v24.playMusiCommand(),
       m_simpleFlywheelBottom.pidCommand(0),
       m_simpleFlywheelTop.pidCommand(0)
     ));
