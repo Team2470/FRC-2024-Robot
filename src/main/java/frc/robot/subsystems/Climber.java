@@ -14,6 +14,8 @@ import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -33,6 +35,7 @@ public class Climber extends SubsystemBase {
   private final DigitalInput m_ExtendLimit;
   private final DigitalInput m_RetractLimit;
   private final boolean m_isLeft;
+  private boolean m_homed;
 
 
   /** Creates a new ClimberPivot. */
@@ -45,15 +48,21 @@ public class Climber extends SubsystemBase {
       config.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;        
     }
     config.MotorOutput.NeutralMode = NeutralModeValue.Brake;
-    config.CurrentLimits.SupplyCurrentLimit = 2;
+    config.CurrentLimits.SupplyCurrentLimit = 20;
     config.CurrentLimits.SupplyCurrentLimitEnable = true;
+    config.SoftwareLimitSwitch.ForwardSoftLimitEnable = true;
+    config.SoftwareLimitSwitch.ForwardSoftLimitThreshold = 25;
+    config.SoftwareLimitSwitch.ReverseSoftLimitEnable = false;
+    config.SoftwareLimitSwitch.ReverseSoftLimitThreshold = 0;
+    config.OpenLoopRamps.VoltageOpenLoopRampPeriod = 0.5;
+
 
     
     m_motor = new TalonFX(motorID, "rio");
     m_motor.getConfigurator().apply(config);
     //m_motor.setInverted(isLeft);
   
-    //m_motor.getPosition().setUpdateFrequency(50);
+    m_motor.getPosition().setUpdateFrequency(50);
     m_motor.optimizeBusUtilization();
 
     
@@ -77,6 +86,13 @@ public class Climber extends SubsystemBase {
     // This method will be called once per scheduler run
     SmartDashboard.putBoolean("Climber "+(m_isLeft? "Left":"Right")+" Is Extended", isAtExtendLimit());
     SmartDashboard.putBoolean("Climber "+(m_isLeft? "Left":"Right")+" Is Retracted", isAtRetractLimit());
+    SmartDashboard.putBoolean("Climber "+(m_isLeft? "Left":"Right")+" Is Homed", m_homed);
+    SmartDashboard.putNumber("Climber "+(m_isLeft?"Left":"Right")+ " Position", m_motor.getPosition().getValue());
+
+    if (!m_homed && isAtRetractLimit())  {
+      m_motor.setPosition(0);
+      m_homed = true;
+    }
 
   }
 
@@ -88,6 +104,10 @@ public class Climber extends SubsystemBase {
   }
 
   public void setVoltage(double voltage){
+    if(!m_homed && voltage > 0){
+      voltage = 0;
+    }
+
     m_motorRequest.withOutput(voltage)
       .withLimitForwardMotion(isAtExtendLimit())
       .withLimitReverseMotion(isAtRetractLimit());
