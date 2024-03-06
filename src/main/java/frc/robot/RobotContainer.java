@@ -4,8 +4,12 @@
 
 package frc.robot;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
+import com.ctre.phoenix6.Orchestra;
+import com.ctre.phoenix6.hardware.TalonFX;
 import com.kennedyrobotics.auto.AutoSelector;
 import com.kennedyrobotics.hardware.misc.RevDigit;
 import com.pathplanner.lib.auto.NamedCommands;
@@ -37,6 +41,7 @@ import frc.robot.commands.DriveWithController;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.IntakePivot;
+import frc.robot.subsystems.Orchestra6;
 import frc.robot.subsystems.PhotonVisionSubsystem;
 import frc.robot.subsystems.ShooterPivot;
 import frc.robot.subsystems.SimpleFlywheel;
@@ -64,6 +69,7 @@ public class RobotContainer {
   private final TimeOfFlightSensorTest m_TOF1 = new TimeOfFlightSensorTest();
   private final IntakePivot m_IntakePivot = new IntakePivot();
   private final Intake m_Intake = new Intake();
+  private final Orchestra6 m_Orchestra6 = new Orchestra6(11,12,13,14);
   // Auto
   private final RevDigit m_revDigit;
   private final AutoSelector m_autoSelector;
@@ -71,7 +77,8 @@ public class RobotContainer {
   public RobotContainer() {
     SmartDashboard.putString("roboRio Serial Number", RobotController.getSerialNumber());
     // CameraServer.startAutomaticCapture();
-  
+
+
     // Auto Selector
     m_revDigit = new RevDigit().display("2470");
     
@@ -108,7 +115,11 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    m_controller.rightBumper().whileTrue(m_ShooterPivot.playMusiCommand());
+    m_controller.rightBumper().whileTrue(new ParallelCommandGroup(
+      m_Orchestra6.playMusiCommand(),
+      m_simpleFlywheelBottom.pidCommand(0),
+      m_simpleFlywheelTop.pidCommand(0)
+    ));
   // m_controller.x().whileTrue(m_simpleFlywheel.spinCommand(6));
     // m_controller.y().whileTrue(m_simpleFlywheel.spinCommand(8));
     //m_controller.rightBumper().whileTrue(m_simpleFlywheel.spinCommand(-2));
