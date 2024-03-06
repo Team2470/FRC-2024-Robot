@@ -63,14 +63,14 @@ public final class Constants {
   }
 
   public static class ClimberConstants{
-    public static final int kLeftMotorID = 25;
-    public static final int kLeftServoChannel = 8;
-    public static final int kLeftRetractChannel = 6;
-    public static final int kLeftExtendChannel = 7;
+    public static final int kLeftMotorID = 27;
+    public static final int kLeftServoChannel = 9;
+    public static final int kLeftRetractChannel = 8;
+    public static final int kLeftExtendChannel = 9;
     public static final int kRightMotorID = 26;
-    public static final int kRightServoChannel = 9;
-    public static final int kRightRetractChannel = 8;
-    public static final int kRightExtendChannel = 9;
+    public static final int kRightServoChannel = 8;
+    public static final int kRightRetractChannel = 7;
+    public static final int kRightExtendChannel = 6;
   }
 
   public static class FlyWheelConstants {

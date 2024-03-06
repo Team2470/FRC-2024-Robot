@@ -20,6 +20,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 
@@ -64,11 +65,11 @@ public class Climber extends SubsystemBase {
   }
 
   public boolean isAtExtendLimit(){
-    return m_ExtendLimit.get();
+    return !m_ExtendLimit.get();
   }
 
   public boolean isAtRetractLimit() {
-    return m_RetractLimit.get();
+    return !m_RetractLimit.get();
   }
 
   @Override
@@ -80,10 +81,10 @@ public class Climber extends SubsystemBase {
   }
 
   public void engageRatchet(){
-    m_Servo.setPosition(0);
+    m_Servo.setPosition(0.35);
   }
   public void disengageRatchet(){
-    m_Servo.setPosition(1);
+    m_Servo.setPosition(0.475);
   }
 
   public void setVoltage(double voltage){
@@ -99,15 +100,18 @@ public class Climber extends SubsystemBase {
 
   public Command retractCommand(){
     return new ParallelCommandGroup(
-      Commands.run(() -> engageRatchet(), this),
-      Commands.runEnd(() -> this.setVoltage(-2), this::stop, this));
+      Commands.run(() -> engageRatchet()),
+      Commands.runEnd(() -> this.setVoltage(-1), this::stop, this));
   }
 
     public Command extendCommand(){
     return new ParallelCommandGroup(
-      Commands.run(() -> disengageRatchet(), this),
-      new WaitCommand(0.2),
-      Commands.runEnd(() -> this.setVoltage(2), this::stop, this));
+      Commands.run(() -> disengageRatchet()),
+      new SequentialCommandGroup(
+        new WaitCommand(0.2),
+        Commands.runEnd(() -> this.setVoltage(4), this::stop, this)
+      )
+    );
   }
 
 
