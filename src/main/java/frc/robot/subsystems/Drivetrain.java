@@ -45,15 +45,7 @@ public class Drivetrain extends SubsystemBase {
   private final Pigeon2 m_imu;
   private final SwerveModule[] m_swerve_modules = new SwerveModule[4];
 
-  private boolean m_slowMode;
 
-  public boolean getSlowMode() {
-    return m_slowMode;
-  }
-
-  public void setSlowMode(boolean slowMode) {
-    m_slowMode = slowMode;
-  }
 
   public Drivetrain() {
     // : IMU setup
@@ -236,7 +228,7 @@ public class Drivetrain extends SubsystemBase {
 
     m_field.setRobotPose(getPose());
 
-    SmartDashboard.putBoolean("Slow Mode", m_slowMode);
+
   }
 
   public Rotation2d getIMUHeading() {
