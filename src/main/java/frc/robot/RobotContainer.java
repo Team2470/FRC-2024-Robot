@@ -26,6 +26,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
+import edu.wpi.first.wpilibj2.command.ScheduleCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
@@ -173,7 +174,7 @@ public class RobotContainer {
       m_simpleFlywheelBottom.pidCommand(0),
       m_simpleFlywheelTop.pidCommand(0)
     ));
-    
+
     m_controller.povUp().whileTrue(this.extendClimber());
     m_controller.povDown().whileTrue(this.retractClimber());
     // m_controller.povUp().whileTrue(m_ClimberLeft.extendCommand());
@@ -503,7 +504,7 @@ public class RobotContainer {
   }
 
   public Command retractClimber(){
-    return new ParallelCommandGroup(m_ClimberLeft.retractCommand(), m_ClimberRight.retractCommand() );
+    return new ParallelCommandGroup(m_ClimberLeft.retractCommand(), m_ClimberRight.retractCommand(), new ScheduleCommand( m_IntakePivot.downWarCommand(());
   }
 }
 
