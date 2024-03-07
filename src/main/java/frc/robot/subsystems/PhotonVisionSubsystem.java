@@ -64,6 +64,9 @@ public class PhotonVisionSubsystem extends SubsystemBase {
         boolean cameraHasTargets = cameraData.hasTargets();
         return cameraHasTargets;
     }
+    public boolean doesCameraHaveTarget(){
+        return doesCameraHaveTargets(camera1Data);
+    }
 
     public List<PhotonTrackedTarget> getCameraTargets(PhotonPipelineResult cameraData) {
         List<PhotonTrackedTarget> cameraTargetsList = cameraData.getTargets();

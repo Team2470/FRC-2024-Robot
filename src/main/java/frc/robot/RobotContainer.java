@@ -317,7 +317,10 @@ public class RobotContainer {
             // Heading Override
             () -> {
               if (m_buttonPad.getHID().getRawButton(1)){
-                return m_camera1.getRobotYaw();
+                if (m_camera1.doesCameraHaveTarget()){
+                  return m_camera1.getRobotYaw();                  
+                }
+                return null;
 
               }
 
