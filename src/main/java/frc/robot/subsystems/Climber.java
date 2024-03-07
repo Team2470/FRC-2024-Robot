@@ -4,6 +4,8 @@
 
 package frc.robot.subsystems;
 
+import java.util.function.BooleanSupplier;
+
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
@@ -81,6 +83,10 @@ public class Climber extends SubsystemBase {
     return !m_RetractLimit.get();
   }
 
+  public double getMotorRotations() {
+    return m_motor.getPosition().getValue();
+  }
+
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
@@ -144,6 +150,5 @@ public class Climber extends SubsystemBase {
       )
     );
   }
-
 
 }
