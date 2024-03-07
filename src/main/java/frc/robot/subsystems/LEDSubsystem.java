@@ -61,9 +61,12 @@ public class LEDSubsystem extends SubsystemBase {
     public enum LEDStripSegments {
         Intake(0),
         TOF1(1),
-        SpinningUp(2),
-        FullSpeed(3),
-        Shooting(4);
+        Shooter(2);
+        // SpinningUp(2),
+        // FullSpeed(3),
+        // Shooting(4),
+
+
   
         public final int value;
         private LEDStripSegments(int value) {
@@ -76,7 +79,8 @@ public class LEDSubsystem extends SubsystemBase {
         SegmentOff(0),
         SegmentsGreen(1),
         SegmentRed(2),
-        SegmentPink (3);
+        SegmentPink (3),
+        SegmentYellow(4);
 
         // AllGreen(3),
         // AllRed(4),
@@ -103,15 +107,15 @@ public class LEDSubsystem extends SubsystemBase {
             } else if (segment.value == LEDStripSegments.TOF1.value) {
                 index = CANdleConstants.TOF1_Index;
                 LEDnum = CANdleConstants.TOF1_LEDnum;
-            } else if (segment.value == LEDStripSegments.SpinningUp.value) {
-                index = CANdleConstants.SpinningUp_Index;
-                LEDnum = CANdleConstants.SpinningUp_LEDnum;
-            } else if (segment.value == LEDStripSegments.FullSpeed.value) {
-                index = CANdleConstants.FullSpeed_Index;
-                LEDnum = CANdleConstants.FullSpeed_LEDnum;
-            } else if (segment.value == LEDStripSegments.Shooting.value) {
-                index = CANdleConstants.Shooting_Index;
-                LEDnum = CANdleConstants.Shooting_LEDnum;
+            // } else if (segment.value == LEDStripSegments.SpinningUp.value) {
+            //     index = CANdleConstants.SpinningUp_Index;
+            //     LEDnum = CANdleConstants.SpinningUp_LEDnum;
+            // } else if (segment.value == LEDStripSegments.FullSpeed.value) {
+            //     index = CANdleConstants.FullSpeed_Index;
+            //     LEDnum = CANdleConstants.FullSpeed_LEDnum;
+            } else if (segment.value == LEDStripSegments.Shooter.value) {
+                index = CANdleConstants.Shooter_Index;
+                LEDnum = CANdleConstants.Shooter_LEDnum;
             }
 
             switch (status) {
@@ -123,6 +127,8 @@ public class LEDSubsystem extends SubsystemBase {
                 m_candle.setLEDs(255, 0, 0,0,index,LEDnum); break;
                 case 3: // Segment PINK
                 m_candle.setLEDs(254, 1, 154,0 ,index,LEDnum); break;
+                case 4:
+                m_candle.setLEDs(255, 255, 0, 0, index, LEDnum); break;
             }
         }
 
@@ -132,6 +138,38 @@ public class LEDSubsystem extends SubsystemBase {
         m_LEDs[segment] = status;
     }
 
+    public void changeIntakeGreen() {
+        changeLEDStatus(LEDStripSegments.Intake.value, LEDStripStatus.SegmentsGreen.value);
+    }
+    public void changeIntakeRed() {
+        changeLEDStatus(LEDStripSegments.Intake.value, LEDStripStatus.SegmentRed.value);
+    }
+    public void changeIntakePink() {
+        changeLEDStatus(LEDStripSegments.Intake.value, LEDStripStatus.SegmentPink.value);
+    }
+
+        public void changeTOF1Green() {
+        changeLEDStatus(LEDStripSegments.TOF1.value, LEDStripStatus.SegmentsGreen.value);
+    }
+    public void changeTOF1Red() {
+        changeLEDStatus(LEDStripSegments.TOF1.value, LEDStripStatus.SegmentRed.value);
+    }
+    public void changeTOF1Pink() {
+        changeLEDStatus(LEDStripSegments.TOF1.value, LEDStripStatus.SegmentPink.value);
+    }
+
+    public void changeShooterGreen() {
+        changeLEDStatus(LEDStripSegments.Shooter.value, LEDStripStatus.SegmentsGreen.value);
+    }
+    public void changeShooterRed() {
+        changeLEDStatus(LEDStripSegments.Shooter.value, LEDStripStatus.SegmentRed.value);
+    }
+    public void changeShooterPink() {
+        changeLEDStatus(LEDStripSegments.Shooter.value, LEDStripStatus.SegmentPink.value);
+    }
+    public void changeShooterYellow() {
+        changeLEDStatus(LEDStripSegments.Shooter.value, LEDStripStatus.SegmentYellow.value);
+    }
     public int getLEDStatus(int segment){
         return m_LEDs[segment];
     }
@@ -148,9 +186,9 @@ public class LEDSubsystem extends SubsystemBase {
         switch(segment) {
             case 0: changeActiveSegment(1); break;
             case 1: changeActiveSegment(2); break;
-            case 2: changeActiveSegment(3); break;
-            case 3: changeActiveSegment(4); break;
-            case 4: changeActiveSegment(0); break;
+            case 2: changeActiveSegment(0); break;
+            // case 3: changeActiveSegment(4); break;
+            // case 4: changeActiveSegment(0); break;
         }
     }
     public void incrementStatus(int segment) {
@@ -188,9 +226,9 @@ public class LEDSubsystem extends SubsystemBase {
 
         SmartDashboard.putNumber("Intake Segment Status", getLEDStatus(LEDStripSegments.Intake.value));
         SmartDashboard.putNumber("TOF Segment Status", getLEDStatus(LEDStripSegments.TOF1.value));
-        SmartDashboard.putNumber("Spinning Up Segment Status", getLEDStatus(LEDStripSegments.SpinningUp.value));
-        SmartDashboard.putNumber("Full Speed Segment Status", getLEDStatus(LEDStripSegments.FullSpeed.value));
-        SmartDashboard.putNumber("Shooting Segment Status", getLEDStatus(LEDStripSegments.Shooting.value));
+        // SmartDashboard.putNumber("Spinning Up Segment Status", getLEDStatus(LEDStripSegments.SpinningUp.value));
+        // SmartDashboard.putNumber("Full Speed Segment Status", getLEDStatus(LEDStripSegments.FullSpeed.value));
+        SmartDashboard.putNumber("Shooting Segment Status", getLEDStatus(LEDStripSegments.Shooter.value));
 
     //    m_candle.setLEDs(255, 0, 0, 0, 0, 8);
     //    m_candle.setLEDs(0, 255, 0, 0, 8, 5);

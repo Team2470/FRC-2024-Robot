@@ -4,8 +4,12 @@
 
 package frc.robot;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
+import com.ctre.phoenix6.Orchestra;
+import com.ctre.phoenix6.hardware.TalonFX;
 import com.kennedyrobotics.auto.AutoSelector;
 import com.kennedyrobotics.hardware.misc.RevDigit;
 import com.pathplanner.lib.auto.NamedCommands;
@@ -17,6 +21,7 @@ import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
@@ -33,16 +38,20 @@ import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.FlyWheelConstants;
 import frc.robot.Constants.ShooterPivotConstants;
 import frc.robot.Constants.VisionConstants;
+import frc.robot.Constants.ClimberConstants;
 import frc.robot.commands.DriveWithController;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.IntakePivot;
+import frc.robot.subsystems.Orchestra6;
+import frc.robot.subsystems.Orchestra6V2;
 import frc.robot.subsystems.PhotonVisionSubsystem;
 import frc.robot.subsystems.ShooterPivot;
 import frc.robot.subsystems.SimpleFlywheel;
 import frc.robot.subsystems.SimpleShooterFeeder;
 import frc.robot.subsystems.TimeOfFlightSensorTest;
 import frc.robot.subsystems.LEDSubsystem;
+import frc.robot.subsystems.Climber;
   
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -65,7 +74,23 @@ public class RobotContainer {
   private final TimeOfFlightSensorTest m_TOF1 = new TimeOfFlightSensorTest();
   private final IntakePivot m_IntakePivot = new IntakePivot();
   private final Intake m_Intake = new Intake();
+  private final Orchestra6 m_Orchestra6 = new Orchestra6(12,10,14,16);
+  private final Orchestra6V2 m_Orchestra6v21 = new Orchestra6V2(11);
+  private final Orchestra6V2 m_Orchestra6v22 = new Orchestra6V2(12);
+  private final Orchestra6V2 m_Orchestra6v23 = new Orchestra6V2(13);
+  private final Orchestra6V2 m_Orchestra6v24 = new Orchestra6V2(14);
   private final LEDSubsystem m_LEDs = new LEDSubsystem(m_controller);
+  private final Climber m_ClimberLeft = new Climber(ClimberConstants.kLeftMotorID, 
+                                                    ClimberConstants.kLeftServoChannel, 
+                                                    ClimberConstants.kLeftExtendChannel, 
+                                                    ClimberConstants.kLeftRetractChannel, 
+                                                    true);
+  
+  private final Climber m_ClimberRight = new Climber(ClimberConstants.kRightMotorID, 
+                                                    ClimberConstants.kRightServoChannel, 
+                                                    ClimberConstants.kRightExtendChannel, 
+                                                    ClimberConstants.kRightRetractChannel, 
+                                                    false);
   // Auto
   private final RevDigit m_revDigit;
   private final AutoSelector m_autoSelector;
@@ -73,7 +98,8 @@ public class RobotContainer {
   public RobotContainer() {
     SmartDashboard.putString("roboRio Serial Number", RobotController.getSerialNumber());
     // CameraServer.startAutomaticCapture();
-  
+
+
     // Auto Selector
     m_revDigit = new RevDigit().display("2470");
     
@@ -98,6 +124,33 @@ public class RobotContainer {
     setupShooter();
     addValuesToDashboard();
     configureBindings();
+
+    m_LEDs.setDefaultCommand(Commands.run(() -> {
+      if (m_Intake.isRingIntaked()) {
+        m_LEDs.changeIntakeGreen();
+      }
+      else {
+        m_LEDs.changeIntakeRed();
+      }
+
+      if (m_TOF1.isTOF1WithinRange()) {
+        m_LEDs.changeTOF1Green();
+      }
+      else {
+        m_LEDs.changeTOF1Red();
+      }
+
+      if (m_simpleFlywheelTop.isErrorInRange()) {
+        m_LEDs.changeShooterGreen();
+      }
+      else if(m_simpleFlywheelTop.isErrorBelow()){
+        m_LEDs.changeShooterRed();
+      }
+      else if(m_simpleFlywheelTop.isErrorAbove()){
+        m_LEDs.changeShooterYellow();
+      }
+
+    }, m_LEDs));
   }
 
   /**
@@ -110,7 +163,22 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    m_controller.rightBumper().whileTrue(m_ShooterPivot.playMusiCommand());
+    m_controller.rightBumper().whileTrue(new ParallelCommandGroup(
+      m_Orchestra6.playMusiCommand(),
+      // m_Orchestra6v21.playMusiCommand(),
+      // m_Orchestra6v22.playMusiCommand(),
+      // m_Orchestra6v23.playMusiCommand(),
+      // m_Orchestra6v24.playMusiCommand(),
+      m_simpleFlywheelBottom.pidCommand(0),
+      m_simpleFlywheelTop.pidCommand(0)
+    ));
+    // m_controller.rightBumper().whileTrue(m_ShooterPivot.playMusiCommand());
+    // m_controller.povUp().whileTrue(this.extendClimber());
+    // m_controller.povDown().whileTrue(this.retractClimber());
+    m_controller.povUp().whileTrue(m_ClimberLeft.extendCommand());
+    m_controller.povDown().whileTrue(m_ClimberLeft.retractCommand());
+    m_controller.povLeft().whileTrue(m_ClimberRight.extendCommand());
+    m_controller.povRight().whileTrue(m_ClimberRight.retractCommand());
   // m_controller.x().whileTrue(m_simpleFlywheel.spinCommand(6));
     // m_controller.y().whileTrue(m_simpleFlywheel.spinCommand(8));
     //m_controller.rightBumper().whileTrue(m_simpleFlywheel.spinCommand(-2));
@@ -397,6 +465,7 @@ public class RobotContainer {
           ()-> m_controller.getHID().setRumble(RumbleType.kBothRumble, 0)
           ).withTimeout(.2)
       )
+
     );
   }
 
@@ -426,6 +495,14 @@ public class RobotContainer {
           ).withTimeout(.2)
       )
     );
+  }
+
+  public Command extendClimber(){
+    return new ParallelCommandGroup(m_ClimberLeft.extendCommand(), m_ClimberRight.extendCommand());
+  }
+
+  public Command retractClimber(){
+    return new ParallelCommandGroup(m_ClimberLeft.retractCommand(), m_ClimberRight.retractCommand());
   }
 }
 
