@@ -18,9 +18,9 @@
           }
         },
         {
-          "type": "named",
+          "type": "path",
           "data": {
-            "name": "smartShoot"
+            "pathName": "D2-D1"
           }
         }
       ]

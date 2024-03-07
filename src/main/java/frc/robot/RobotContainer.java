@@ -84,13 +84,16 @@ public class RobotContainer {
     NamedCommands.registerCommands(new HashMap<String, Command>() {{
       put("shoot", shootFlywheel());
       put("smartShoot", autoShoot());
+      put("pickup", intakeCommand());
     }});
 
     registerAutos(new HashMap<String, String>() {{
-      put("TEST", "New Auto");
-      put("LFT1", "A[S1-D1]");
-      put("MID2", "A[S2-D2]");
-      put("LOW3", "A[S3-D3]");
+      //: basic branch autos
+      put("BSRC", "BSRC");
+      put("BCEN", "BCEN");
+      put("BAMP", "BAMP");
+      //: extended basic autos
+      //: center based autos
     }});
 
     m_autoSelector.initialize();
@@ -289,7 +292,7 @@ public class RobotContainer {
       m_simpleFlywheelBottom.pidCommand(() -> FlyWheelConstants.getRPM(m_camera1.FilteredEsimatedPoseNorm())),
       m_simpleFlywheelTop.pidCommand(() -> FlyWheelConstants.getRPM(m_camera1.FilteredEsimatedPoseNorm())),
       m_SimpleShooterFeeder.forward()
-    );
+    ).withTimeout(4);
   }
 
   public void autonomousInit() {  
@@ -364,15 +367,9 @@ public class RobotContainer {
           m_SimpleShooterFeeder.forward(),
           m_drivetrain.xStop().asProxy()
         )
-        
       )
     );
-
   }
-
-
-
-
   public Command intakeCommand(){
     return new ParallelDeadlineGroup(
       new SequentialCommandGroup(
@@ -400,7 +397,6 @@ public class RobotContainer {
       )
     );
   }
-
   public Command intakeCommand2(){
     return new ParallelDeadlineGroup(
       new SequentialCommandGroup(
@@ -438,14 +434,13 @@ public class RobotContainer {
 
       // Heading Override
       () -> {
-          return m_camera1.getRobotYaw();
+        return m_camera1.getRobotYaw();
       }).asProxy();
   }
-
   private Command autoShoot() {
     return new ParallelCommandGroup(
-      locateTarget(), visionShootCommand()
+      locateTarget(), 
+      visionShootCommand()
     ).withTimeout(5);
   }
 }
-
