@@ -82,7 +82,8 @@ public class RobotContainer {
     );
 
     NamedCommands.registerCommands(new HashMap<String, Command>() {{
-      // put("shoot", shootFlywheel());
+      put("shoot", shootFlywheel());
+      put("smartShoot", autoShoot());
     }});
 
     registerAutos(new HashMap<String, String>() {{
@@ -426,6 +427,25 @@ public class RobotContainer {
           ).withTimeout(.2)
       )
     );
+  }
+
+  private Command locateTarget() {
+   return new DriveWithController(
+      m_drivetrain,
+      () -> 0, () -> 0, () -> 0.0, 
+      () -> true, () -> false,
+      () -> false, () -> false,
+
+      // Heading Override
+      () -> {
+          return m_camera1.getRobotYaw();
+      }).asProxy();
+  }
+
+  private Command autoShoot() {
+    return new ParallelCommandGroup(
+      locateTarget(), visionShootCommand()
+    ).withTimeout(5);
   }
 }
 

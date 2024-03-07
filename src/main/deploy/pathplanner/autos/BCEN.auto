@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.75,
-      "y": 4.42
+      "x": 1.35,
+      "y": 5.55
     },
-    "rotation": 120.0
+    "rotation": 180.0
   },
   "command": {
     "type": "sequential",
@@ -14,13 +14,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "S3-D3"
+            "pathName": "S2-D2"
           }
         },
         {
-          "type": "path",
+          "type": "named",
           "data": {
-            "pathName": "D3-C3"
+            "name": "shoot"
           }
         }
       ]

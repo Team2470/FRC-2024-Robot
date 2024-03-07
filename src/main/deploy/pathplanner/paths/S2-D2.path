@@ -47,6 +47,29 @@
           ]
         }
       }
+    },
+    {
+      "name": "stop",
+      "waypointRelativePos": 0,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "pickup"
+              }
+            },
+            {
+              "type": "named",
+              "data": {
+                "name": "smartShoot"
+              }
+            }
+          ]
+        }
+      }
     }
   ],
   "globalConstraints": {

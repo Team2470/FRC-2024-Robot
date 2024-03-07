@@ -2,8 +2,8 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.7,
-      "y": 6.7
+      "x": 0.75,
+      "y": 6.67576051201485
     },
     "rotation": -120.0
   },
@@ -18,9 +18,9 @@
           }
         },
         {
-          "type": "path",
+          "type": "named",
           "data": {
-            "pathName": "D1-C3"
+            "name": "shoot"
           }
         }
       ]
