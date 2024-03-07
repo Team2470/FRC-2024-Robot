@@ -508,7 +508,7 @@ public class RobotContainer {
   }
 
   public Command retractClimber(){
-    return new ParallelCommandGroup(m_ClimberLeft.retractCommand(), m_ClimberRight.retractCommand(), new ScheduleCommand( m_IntakePivot.downWarCommand(());
+    return new ParallelCommandGroup(m_ClimberLeft.retractCommand(), m_ClimberRight.retractCommand(), new ScheduleCommand( m_IntakePivot.downWarCommand()));
   }
 }
 
