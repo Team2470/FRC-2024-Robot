@@ -137,7 +137,7 @@ public class Climber extends SubsystemBase {
 
   public Command retractCommand(){
     return new ParallelCommandGroup(
-      Commands.runEnd(() -> disengageRatchet(),() -> engageRatchet()),
+      Commands.run(() -> engageRatchet()),
       Commands.runEnd(() -> this.setVoltage(-3), this::stop, this));
   }
 
