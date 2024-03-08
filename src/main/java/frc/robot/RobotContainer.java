@@ -77,7 +77,7 @@ public class RobotContainer {
   private final TimeOfFlightSensorTest m_TOF1 = new TimeOfFlightSensorTest();
   private final IntakePivot m_IntakePivot = new IntakePivot();
   private final Intake m_Intake = new Intake();
-  private final Orchestra6 m_Orchestra6 = new Orchestra6(12,10,14,16);
+  private final Orchestra6 m_Orchestra6 = new Orchestra6(11,12,13,14);
   private final Orchestra6V2 m_Orchestra6v21 = new Orchestra6V2(11);
   private final Orchestra6V2 m_Orchestra6v22 = new Orchestra6V2(12);
   private final Orchestra6V2 m_Orchestra6v23 = new Orchestra6V2(13);
@@ -112,14 +112,18 @@ public class RobotContainer {
     );
 
     NamedCommands.registerCommands(new HashMap<String, Command>() {{
-      // put("shoot", shootFlywheel());
+      put("shoot", speakerShoot());
+      put("smartShoot", autoShoot());
+      put("pickup", intakeCommand().withTimeout(7));
     }});
 
     registerAutos(new HashMap<String, String>() {{
-      put("TEST", "New Auto");
-      put("LFT1", "A[S1-D1]");
-      put("MID2", "A[S2-D2]");
-      put("LOW3", "A[S3-D3]");
+      //: basic branch autos
+      put("BSRC", "BSRC");
+      put("BCEN", "BCEN");
+      put("BAMP", "BAMP");
+      //: extended basic autos
+      //: center based autos
     }});
 
     m_autoSelector.initialize();
@@ -229,7 +233,7 @@ public class RobotContainer {
     //   m_simpleFlywheelRight.pidCommand(()-> FlyWheelConstants.getRPM(m_camera1.FilteredEsimatedPoseNorm())),
     //   m_simpleFlywheelLeft.feederShooterCommand(m_SimpleShooterFeeder)
     // ));
-    m_buttonPad.button(1).whileTrue(visionShootCommand());
+    m_buttonPad.button(1).whileTrue(visionShootAndXStop());
     m_buttonPad.button(9).whileTrue(intakeCommand2());
 
     m_controller.back().whileTrue(new ParallelCommandGroup(
@@ -354,16 +358,21 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    return m_drivetrain.createAutoPath("New Auto", AutoConstants.kPathConstraints);
-    // return m_autoSelector.selected();
+    return m_autoSelector.selected();
   }
-  public Command shootFlywheel() {
+  public Command speakerShoot() {
     return new ParallelCommandGroup(
-      m_ShooterPivot.goToAngleCommand(() -> ShooterPivotConstants.getAngle((m_camera1.FilteredEsimatedPoseNorm()))),
-      m_simpleFlywheelBottom.pidCommand(() -> FlyWheelConstants.getRPM(m_camera1.FilteredEsimatedPoseNorm())),
-      m_simpleFlywheelTop.pidCommand(() -> FlyWheelConstants.getRPM(m_camera1.FilteredEsimatedPoseNorm())),
-      m_SimpleShooterFeeder.forward()
-    );
+        m_ShooterPivot.goToAngleCommand(59.92836363),
+        m_simpleFlywheelBottom.pidCommand(2326.626089),
+        m_simpleFlywheelTop.pidCommand(2326.626089),
+
+        new SequentialCommandGroup(
+          new WaitCommand(0.5), //wait for setpoint to change
+          new WaitUntilCommand(()-> m_simpleFlywheelBottom.isErrorInRange() && m_simpleFlywheelTop.isErrorInRange() && m_ShooterPivot.isAngleErrorInRange()),        
+          
+          m_SimpleShooterFeeder.forward()
+      )
+    ).withTimeout(4);
   }
 
   public void autonomousInit() {  
@@ -394,10 +403,10 @@ public class RobotContainer {
     SmartDashboard.putNumber("Select Distance", 0);
   }
   private void setupShooter() {
-    // m_simpleFlywheelBottom.setDefaultCommand(m_simpleFlywheelBottom.pidCommand(2000));
-    // m_simpleFlywheelTop.setDefaultCommand(m_simpleFlywheelTop.pidCommand(2000));
-    // m_ShooterPivot.setDefaultCommand(m_ShooterPivot.goToAngleCommand(45));
-    // m_IntakePivot.setDefaultCommand(m_IntakePivot.stowCommand());
+    m_simpleFlywheelBottom.setDefaultCommand(m_simpleFlywheelBottom.pidCommand(2000));
+    m_simpleFlywheelTop.setDefaultCommand(m_simpleFlywheelTop.pidCommand(2000));
+    m_ShooterPivot.setDefaultCommand(m_ShooterPivot.goToAngleCommand(45));
+    m_IntakePivot.setDefaultCommand(m_IntakePivot.stowCommand());
   }
   private void registerAutos(HashMap<String, String> autos) {
     for (String name: autos.keySet()) {
@@ -422,7 +431,7 @@ public class RobotContainer {
     return m_debouncer.calculate(isYawInRange());
   }
 
-  public Command visionShootCommand(){
+  public Command visionShootAndXStop(){
     return new ParallelCommandGroup(
       m_ShooterPivot.goToAngleCommand(()-> ShooterPivotConstants.getAngle((m_camera1.FilteredEsimatedPoseNorm()))),
       m_simpleFlywheelBottom.pidCommand(()-> FlyWheelConstants.getRPM(m_camera1.FilteredEsimatedPoseNorm())),
@@ -437,15 +446,25 @@ public class RobotContainer {
           m_SimpleShooterFeeder.forward(),
           m_drivetrain.xStop().asProxy()
         )
-        
       )
     );
-
   }
-
-
-
-
+  public Command visionShoot() {
+    return new ParallelCommandGroup(
+      m_ShooterPivot.goToAngleCommand(()-> ShooterPivotConstants.getAngle((m_camera1.FilteredEsimatedPoseNorm()))),
+      m_simpleFlywheelBottom.pidCommand(()-> FlyWheelConstants.getRPM(m_camera1.FilteredEsimatedPoseNorm())),
+      m_simpleFlywheelTop.pidCommand(()-> FlyWheelConstants.getRPM(m_camera1.FilteredEsimatedPoseNorm())),
+      // m_simpleFlywheelLeft.feederShooterCommand(m_SimpleShooterFeeder)
+      new SequentialCommandGroup(
+        new WaitCommand(0.25), //wait for setpoint to change
+        new WaitUntilCommand(()-> 
+          // isYawInRangeDebounced() && 
+          m_simpleFlywheelBottom.isErrorInRange() && m_simpleFlywheelTop.isErrorInRange() && m_ShooterPivot.isAngleErrorInRange()),
+        
+        m_SimpleShooterFeeder.forward()
+      )
+    );
+  }
   public Command intakeCommand(){
     return new ParallelDeadlineGroup(
       new SequentialCommandGroup(
@@ -474,7 +493,6 @@ public class RobotContainer {
 
     );
   }
-
   public Command intakeCommand2(){
     return new ParallelDeadlineGroup(
       new SequentialCommandGroup(
@@ -510,5 +528,23 @@ public class RobotContainer {
   public Command retractClimber(){
     return new ParallelCommandGroup(m_ClimberLeft.retractCommand(), m_ClimberRight.retractCommand(), new ScheduleCommand( m_IntakePivot.downWarCommand()));
   }
-}
 
+  private Command locateTarget() {
+   return new DriveWithController(
+      m_drivetrain,
+      () -> 0, () -> 0, () -> 0.0, 
+      () -> true, () -> false,
+      () -> false, () -> false,
+
+      // Heading Override
+      () -> {
+        return m_camera1.getRobotYaw();
+      }).asProxy();
+  }
+  private Command autoShoot() {
+    return new ParallelCommandGroup(
+      // locateTarget(), 
+      visionShoot()
+    ).withTimeout(5);
+  }
+}

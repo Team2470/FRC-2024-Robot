@@ -43,22 +43,42 @@
   "constraintZones": [],
   "eventMarkers": [
     {
-      "name": "Shoot1",
+      "name": "start",
       "waypointRelativePos": 0,
       "command": {
-        "type": "parallel",
+        "type": "sequential",
         "data": {
-          "commands": []
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "shoot"
+              }
+            }
+          ]
         }
       }
     },
     {
-      "name": "Pickup1",
-      "waypointRelativePos": 0.95,
+      "name": "stop",
+      "waypointRelativePos": 1.0,
       "command": {
-        "type": "parallel",
+        "type": "sequential",
         "data": {
-          "commands": []
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "pickup"
+              }
+            },
+            {
+              "type": "named",
+              "data": {
+                "name": "smartShoot"
+              }
+            }
+          ]
         }
       }
     }

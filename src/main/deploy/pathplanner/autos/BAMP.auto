@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.36,
-      "y": 5.54
+      "x": 0.75,
+      "y": 6.67576051201485
     },
-    "rotation": 180.0
+    "rotation": -120.0
   },
   "command": {
     "type": "sequential",
@@ -14,13 +14,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "S2-D2"
+            "pathName": "S1-D1"
           }
         },
         {
-          "type": "path",
+          "type": "named",
           "data": {
-            "pathName": "D2-C3"
+            "name": "smartShoot"
           }
         }
       ]

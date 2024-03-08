@@ -22,6 +22,12 @@
           "data": {
             "pathName": "S2-D2"
           }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "smartShoot"
+          }
         }
       ]
     }

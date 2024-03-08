@@ -3,9 +3,9 @@
   "startingPose": {
     "position": {
       "x": 0.75,
-      "y": 4.42
+      "y": 6.67576051201485
     },
-    "rotation": 120.0
+    "rotation": -120.0
   },
   "command": {
     "type": "sequential",
@@ -14,13 +14,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "S3-D3"
+            "pathName": "S1-D1"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "D3-C3"
+            "pathName": "D1-D2-D3"
           }
         }
       ]
