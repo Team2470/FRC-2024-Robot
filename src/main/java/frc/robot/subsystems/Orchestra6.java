@@ -44,8 +44,8 @@ public class Orchestra6 extends SubsystemBase {
   // m_Orchestra = new Orchestra(m_instruments);
 
   m_Orchestra = new Orchestra();
-  m_Orchestra.addInstrument(m_motor2);
   m_Orchestra.addInstrument(m_motor1);
+  m_Orchestra.addInstrument(m_motor2);
   m_Orchestra.addInstrument(m_motor3);
   m_Orchestra.addInstrument(m_motor4);
 

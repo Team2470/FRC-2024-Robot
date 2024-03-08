@@ -77,7 +77,7 @@ public class RobotContainer {
   private final TimeOfFlightSensorTest m_TOF1 = new TimeOfFlightSensorTest();
   private final IntakePivot m_IntakePivot = new IntakePivot();
   private final Intake m_Intake = new Intake();
-  private final Orchestra6 m_Orchestra6 = new Orchestra6(12,10,14,16);
+  private final Orchestra6 m_Orchestra6 = new Orchestra6(11,12,13,14);
   private final Orchestra6V2 m_Orchestra6v21 = new Orchestra6V2(11);
   private final Orchestra6V2 m_Orchestra6v22 = new Orchestra6V2(12);
   private final Orchestra6V2 m_Orchestra6v23 = new Orchestra6V2(13);
@@ -394,10 +394,10 @@ public class RobotContainer {
     SmartDashboard.putNumber("Select Distance", 0);
   }
   private void setupShooter() {
-    // m_simpleFlywheelBottom.setDefaultCommand(m_simpleFlywheelBottom.pidCommand(2000));
-    // m_simpleFlywheelTop.setDefaultCommand(m_simpleFlywheelTop.pidCommand(2000));
-    // m_ShooterPivot.setDefaultCommand(m_ShooterPivot.goToAngleCommand(45));
-    // m_IntakePivot.setDefaultCommand(m_IntakePivot.stowCommand());
+    m_simpleFlywheelBottom.setDefaultCommand(m_simpleFlywheelBottom.pidCommand(2000));
+    m_simpleFlywheelTop.setDefaultCommand(m_simpleFlywheelTop.pidCommand(2000));
+    m_ShooterPivot.setDefaultCommand(m_ShooterPivot.goToAngleCommand(45));
+    m_IntakePivot.setDefaultCommand(m_IntakePivot.stowCommand());
   }
   private void registerAutos(HashMap<String, String> autos) {
     for (String name: autos.keySet()) {
