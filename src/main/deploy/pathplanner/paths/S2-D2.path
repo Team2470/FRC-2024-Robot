@@ -16,11 +16,11 @@
     },
     {
       "anchor": {
-        "x": 2.45,
+        "x": 2.888624616628834,
         "y": 5.55
       },
       "prevControl": {
-        "x": 2.2,
+        "x": 2.638624616628834,
         "y": 5.55
       },
       "nextControl": null,
@@ -35,36 +35,13 @@
       "name": "start",
       "waypointRelativePos": 0.0,
       "command": {
-        "type": "parallel",
-        "data": {
-          "commands": [
-            {
-              "type": "named",
-              "data": {
-                "name": "shoot"
-              }
-            }
-          ]
-        }
-      }
-    },
-    {
-      "name": "stop",
-      "waypointRelativePos": 0,
-      "command": {
-        "type": "parallel",
+        "type": "sequential",
         "data": {
           "commands": [
             {
               "type": "named",
               "data": {
                 "name": "pickup"
-              }
-            },
-            {
-              "type": "named",
-              "data": {
-                "name": "smartShoot"
               }
             }
           ]
@@ -73,7 +50,7 @@
     }
   ],
   "globalConstraints": {
-    "maxVelocity": 3.0,
+    "maxVelocity": 2.75,
     "maxAcceleration": 3.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0
@@ -89,5 +66,5 @@
     "rotation": 180.0,
     "velocity": 0
   },
-  "useDefaultConstraints": true
+  "useDefaultConstraints": false
 }

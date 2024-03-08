@@ -112,9 +112,9 @@ public class RobotContainer {
     );
 
     NamedCommands.registerCommands(new HashMap<String, Command>() {{
-      put("shoot", shootFlywheel());
+      put("shoot", speakerShoot());
       put("smartShoot", autoShoot());
-      put("pickup", intakeCommand());
+      put("pickup", intakeCommand().withTimeout(7));
     }});
 
     registerAutos(new HashMap<String, String>() {{
@@ -233,7 +233,7 @@ public class RobotContainer {
     //   m_simpleFlywheelRight.pidCommand(()-> FlyWheelConstants.getRPM(m_camera1.FilteredEsimatedPoseNorm())),
     //   m_simpleFlywheelLeft.feederShooterCommand(m_SimpleShooterFeeder)
     // ));
-    m_buttonPad.button(1).whileTrue(visionShootCommand());
+    m_buttonPad.button(1).whileTrue(visionShootAndXStop());
     m_buttonPad.button(9).whileTrue(intakeCommand2());
 
     m_controller.back().whileTrue(new ParallelCommandGroup(
@@ -360,12 +360,18 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     return m_autoSelector.selected();
   }
-  public Command shootFlywheel() {
+  public Command speakerShoot() {
     return new ParallelCommandGroup(
-      m_ShooterPivot.goToAngleCommand(() -> ShooterPivotConstants.getAngle((m_camera1.FilteredEsimatedPoseNorm()))),
-      m_simpleFlywheelBottom.pidCommand(() -> FlyWheelConstants.getRPM(m_camera1.FilteredEsimatedPoseNorm())),
-      m_simpleFlywheelTop.pidCommand(() -> FlyWheelConstants.getRPM(m_camera1.FilteredEsimatedPoseNorm())),
-      m_SimpleShooterFeeder.forward()
+        m_ShooterPivot.goToAngleCommand(59.92836363),
+        m_simpleFlywheelBottom.pidCommand(2326.626089),
+        m_simpleFlywheelTop.pidCommand(2326.626089),
+
+        new SequentialCommandGroup(
+          new WaitCommand(0.5), //wait for setpoint to change
+          new WaitUntilCommand(()-> m_simpleFlywheelBottom.isErrorInRange() && m_simpleFlywheelTop.isErrorInRange() && m_ShooterPivot.isAngleErrorInRange()),        
+          
+          m_SimpleShooterFeeder.forward()
+      )
     ).withTimeout(4);
   }
 
@@ -425,7 +431,7 @@ public class RobotContainer {
     return m_debouncer.calculate(isYawInRange());
   }
 
-  public Command visionShootCommand(){
+  public Command visionShootAndXStop(){
     return new ParallelCommandGroup(
       m_ShooterPivot.goToAngleCommand(()-> ShooterPivotConstants.getAngle((m_camera1.FilteredEsimatedPoseNorm()))),
       m_simpleFlywheelBottom.pidCommand(()-> FlyWheelConstants.getRPM(m_camera1.FilteredEsimatedPoseNorm())),
@@ -440,6 +446,22 @@ public class RobotContainer {
           m_SimpleShooterFeeder.forward(),
           m_drivetrain.xStop().asProxy()
         )
+      )
+    );
+  }
+  public Command visionShoot() {
+    return new ParallelCommandGroup(
+      m_ShooterPivot.goToAngleCommand(()-> ShooterPivotConstants.getAngle((m_camera1.FilteredEsimatedPoseNorm()))),
+      m_simpleFlywheelBottom.pidCommand(()-> FlyWheelConstants.getRPM(m_camera1.FilteredEsimatedPoseNorm())),
+      m_simpleFlywheelTop.pidCommand(()-> FlyWheelConstants.getRPM(m_camera1.FilteredEsimatedPoseNorm())),
+      // m_simpleFlywheelLeft.feederShooterCommand(m_SimpleShooterFeeder)
+      new SequentialCommandGroup(
+        new WaitCommand(0.25), //wait for setpoint to change
+        new WaitUntilCommand(()-> 
+          // isYawInRangeDebounced() && 
+          m_simpleFlywheelBottom.isErrorInRange() && m_simpleFlywheelTop.isErrorInRange() && m_ShooterPivot.isAngleErrorInRange()),
+        
+        m_SimpleShooterFeeder.forward()
       )
     );
   }
@@ -521,8 +543,8 @@ public class RobotContainer {
   }
   private Command autoShoot() {
     return new ParallelCommandGroup(
-      locateTarget(), 
-      visionShootCommand()
+      // locateTarget(), 
+      visionShoot()
     ).withTimeout(5);
   }
 }

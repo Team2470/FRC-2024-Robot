@@ -12,15 +12,15 @@
     "data": {
       "commands": [
         {
-          "type": "path",
+          "type": "named",
           "data": {
-            "pathName": "S3-D3"
+            "name": "shoot"
           }
         },
         {
-          "type": "named",
+          "type": "path",
           "data": {
-            "name": "smartShoot"
+            "pathName": "S3-D3"
           }
         }
       ]
