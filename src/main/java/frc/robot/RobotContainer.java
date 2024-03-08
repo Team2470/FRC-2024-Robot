@@ -358,8 +358,7 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    return m_drivetrain.createAutoPath("New Auto", AutoConstants.kPathConstraints);
-    // return m_autoSelector.selected();
+    return m_autoSelector.selected();
   }
   public Command shootFlywheel() {
     return new ParallelCommandGroup(
