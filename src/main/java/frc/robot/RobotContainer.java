@@ -194,8 +194,8 @@ public class RobotContainer {
     // m_controller.rightTrigger().whileTrue(m_simpleFlywheelRight.openLoopCommand(()-> SmartDashboard.getNumber("Select Right Voltage", 0)));
     // m_buttonPad.button(10).whileTrue(m_simpleFlywheelBottom.pidCommand(()-> SmartDashboard.getNumber("Select Left RPM", 0)));
     // m_buttonPad.button(10).whileTrue(m_simpleFlywheelTop.pidCommand(()-> SmartDashboard.getNumber("Select Left RPM", 0)));
-    // m_buttonPad.button(8).whileTrue(m_ShooterPivot.openLoopCommand(2));
-    // m_buttonPad.button(12).whileTrue(m_ShooterPivot.openLoopCommand(-2));
+    m_buttonPad.button(8).whileTrue(m_ShooterPivot.openLoopCommand(2));
+    m_buttonPad.button(12).whileTrue(m_ShooterPivot.openLoopCommand(-2));
     // m_buttonPad.button(9).whileTrue(m_simpleFlywheelLeft.pidCommand(500));
     // m_buttonPad.button(9).whileTrue(m_simpleFlywheelRight.pidCommand(500));
     m_buttonPad.button(6).whileTrue(m_IntakePivot.downWarCommand());
@@ -254,12 +254,14 @@ public class RobotContainer {
     //       m_simpleFlywheelRight.pidCommand(()-> FlyWheelConstants.getRPM(SmartDashboard.getNumber("Select Distance", 0)))
     // ));
 
-    m_buttonPad.button(2).whileTrue(new ParallelCommandGroup(
-          m_ShooterPivot.goToAngleCommand(59.92836363),
-          m_simpleFlywheelBottom.pidCommand(2326.626089),
-          m_simpleFlywheelTop.pidCommand(2326.626089)
+    // m_buttonPad.button(2).whileTrue(new ParallelCommandGroup(
+    //       m_ShooterPivot.goToAngleCommand(59.92836363),
+    //       m_simpleFlywheelBottom.pidCommand(2326.626089),
+    //       m_simpleFlywheelTop.pidCommand(2326.626089)
 
-    ));
+    // ));
+
+    m_buttonPad.button(2).whileTrue(speakerShoot());
 //56.92836363
     m_buttonPad.button(3).whileTrue(new ParallelCommandGroup(
           m_ShooterPivot.goToAngleCommand(48.779296875),
@@ -268,12 +270,14 @@ public class RobotContainer {
           m_TOF1.feederIntakeCommand(m_SimpleShooterFeeder)
 
     ));
-    m_buttonPad.button(4).whileTrue(new ParallelCommandGroup(
-        m_ShooterPivot.goToAngleCommand(50),
-        m_simpleFlywheelBottom.pidCommand(1250),
-        m_simpleFlywheelTop.pidCommand(700)
+    // m_buttonPad.button(4).whileTrue(new ParallelCommandGroup(
+    //     m_ShooterPivot.goToAngleCommand(50),
+    //     m_simpleFlywheelBottom.pidCommand(1250),
+    //     m_simpleFlywheelTop.pidCommand(700)
 
-    ));
+    // ));
+
+    m_buttonPad.button(4).whileTrue(ampShoot());
 
     m_buttonPad.button(5).whileTrue(new ParallelCommandGroup(
         m_ShooterPivot.goToAngleCommand(57.91),
@@ -375,6 +379,21 @@ public class RobotContainer {
     ).withTimeout(4);
   }
 
+    public Command ampShoot() {
+    return new ParallelCommandGroup(
+        m_ShooterPivot.goToAngleCommand(50),
+        m_simpleFlywheelBottom.pidCommand(1250),
+        m_simpleFlywheelTop.pidCommand(750),
+
+        new SequentialCommandGroup(
+          new WaitCommand(2),
+          new WaitUntilCommand(()-> m_simpleFlywheelBottom.isErrorInRange() && m_simpleFlywheelTop.isErrorInRange()),        
+          
+          m_SimpleShooterFeeder.forward()
+      )
+    );
+  }
+
   public void autonomousInit() {  
     m_drivetrain.resetHeading();
     m_drivetrain.setNominalVoltages(AutoConstants.kAutoVoltageCompensation);
@@ -403,10 +422,10 @@ public class RobotContainer {
     SmartDashboard.putNumber("Select Distance", 0);
   }
   private void setupShooter() {
-    m_simpleFlywheelBottom.setDefaultCommand(m_simpleFlywheelBottom.pidCommand(2000));
-    m_simpleFlywheelTop.setDefaultCommand(m_simpleFlywheelTop.pidCommand(2000));
-    m_ShooterPivot.setDefaultCommand(m_ShooterPivot.goToAngleCommand(45));
-    m_IntakePivot.setDefaultCommand(m_IntakePivot.stowCommand());
+    // m_simpleFlywheelBottom.setDefaultCommand(m_simpleFlywheelBottom.pidCommand(2000));
+    // m_simpleFlywheelTop.setDefaultCommand(m_simpleFlywheelTop.pidCommand(2000));
+    // m_ShooterPivot.setDefaultCommand(m_ShooterPivot.goToAngleCommand(45));
+    // m_IntakePivot.setDefaultCommand(m_IntakePivot.stowCommand());
   }
   private void registerAutos(HashMap<String, String> autos) {
     for (String name: autos.keySet()) {
