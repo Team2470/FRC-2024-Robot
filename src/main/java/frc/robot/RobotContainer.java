@@ -79,11 +79,7 @@ public class RobotContainer {
   private final TimeOfFlightSensorTest m_TOF1 = new TimeOfFlightSensorTest();
   private final IntakePivot m_IntakePivot = new IntakePivot();
   private final Intake m_Intake = new Intake();
-  private final Orchestra6 m_Orchestra6 = new Orchestra6(11,12,13,14);
-  private final Orchestra6V2 m_Orchestra6v21 = new Orchestra6V2(11);
-  private final Orchestra6V2 m_Orchestra6v22 = new Orchestra6V2(12);
-  private final Orchestra6V2 m_Orchestra6v23 = new Orchestra6V2(13);
-  private final Orchestra6V2 m_Orchestra6v24 = new Orchestra6V2(14);
+  private final Orchestra6 m_Orchestra6 = new Orchestra6(11,12,13,14,26,27);
   private final LEDSubsystem m_LEDs = new LEDSubsystem(m_controller);
   private final Climber m_ClimberLeft = new Climber(ClimberConstants.kLeftMotorID, 
                                                     ClimberConstants.kLeftServoChannel, 
@@ -173,7 +169,8 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    m_controller.rightBumper().whileTrue(new ParallelCommandGroup(
+    m_controller.rightBumper().toggleOnTrue
+    (new ParallelCommandGroup(
       m_Orchestra6.playMusiCommand(),
       // m_Orchestra6v21.playMusiCommand(),
       // m_Orchestra6v22.playMusiCommand(),
@@ -203,12 +200,13 @@ public class RobotContainer {
     m_buttonPad.button(6).whileTrue(m_IntakePivot.downWarCommand());
     m_buttonPad.button(7).whileTrue(m_IntakePivot.stowCommand());
 
-    m_buttonPad.button(11).whileTrue(new ParallelCommandGroup(
-      m_ShooterPivot.goToAngleCommand(()-> ShooterPivotConstants.getAngle((m_camera1.FilteredEsimatedPoseNorm()))),
-      m_simpleFlywheelBottom.pidCommand(()-> FlyWheelConstants.getRPM(m_camera1.FilteredEsimatedPoseNorm())),
-      m_simpleFlywheelTop.pidCommand(()-> FlyWheelConstants.getRPM(m_camera1.FilteredEsimatedPoseNorm())),
-      m_SimpleShooterFeeder.forward()
-    ));
+    // m_buttonPad.button(11).whileTrue(new ParallelCommandGroup(
+    //   m_ShooterPivot.goToAngleCommand(()-> ShooterPivotConstants.getAngle((m_camera1.FilteredEsimatedPoseNorm()))),
+    //   m_simpleFlywheelBottom.pidCommand(()-> FlyWheelConstants.getRPM(m_camera1.FilteredEsimatedPoseNorm())),
+    //   m_simpleFlywheelTop.pidCommand(()-> FlyWheelConstants.getRPM(m_camera1.FilteredEsimatedPoseNorm())),
+    //   m_SimpleShooterFeeder.forward()
+    // ));
+    m_buttonPad.button(11).whileTrue(feed());
     m_buttonPad.button(10).whileTrue(m_Intake.test_reverseCommand());
     // m_controller.x().whileTrue(m_ShooterPivot.goToAngleCommand(37.08984375));
     // m_buttonPad.button(10).whileTrue(m_ShooterPivot.goToAngleCommand(()-> SmartDashboard.getNumber("Select Shooter Pivot Angle", 0)));
@@ -236,7 +234,7 @@ public class RobotContainer {
     //   m_simpleFlywheelLeft.feederShooterCommand(m_SimpleShooterFeeder)
     // ));
     m_buttonPad.button(1).whileTrue(visionShootAndXStop());
-    m_buttonPad.button(9).whileTrue(intakeCommand2());
+    m_buttonPad.button(9).whileTrue(intakeCommand());
     m_buttonPad.button(8).whileTrue(StageShoot());
 
     m_controller.back().whileTrue(new ParallelCommandGroup(
@@ -412,6 +410,25 @@ public class RobotContainer {
       )
     );
   }
+
+  private double angle;
+  private double rpm;
+
+  public Command feed(){
+    getAngleAndRPM();
+    return new ParallelCommandGroup(
+      m_ShooterPivot.goToAngleCommand(angle),
+      m_simpleFlywheelBottom.pidCommand(rpm),
+      m_simpleFlywheelTop.pidCommand(rpm),
+      m_SimpleShooterFeeder.forward()
+    );
+  }
+
+  private void getAngleAndRPM(){
+      angle = m_ShooterPivot.getAngle();
+      rpm = m_simpleFlywheelTop.getVelocity();
+  }
+
     public Command StageShoot() {
     return new ParallelCommandGroup(
       m_ShooterPivot.goToAngleCommand(34.56),
