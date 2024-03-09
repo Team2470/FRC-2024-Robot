@@ -12,21 +12,47 @@
     "data": {
       "commands": [
         {
-          "type": "named",
+          "type": "deadline",
           "data": {
-            "name": "shoot"
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "speaker-shoot"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "deploy-intake"
+                }
+              }
+            ]
           }
         },
         {
-          "type": "path",
+          "type": "parallel",
           "data": {
-            "pathName": "S2-D2"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "S2-D2"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "pickup"
+                }
+              }
+            ]
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "smartShoot"
+            "name": "auto-shoot"
           }
         }
       ]

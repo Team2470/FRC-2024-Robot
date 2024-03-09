@@ -3,9 +3,9 @@
   "startingPose": {
     "position": {
       "x": 0.75,
-      "y": 6.67576051201485
+      "y": 4.42
     },
-    "rotation": -120.0
+    "rotation": 120.0
   },
   "command": {
     "type": "sequential",
@@ -37,7 +37,32 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "S1-D1"
+                  "pathName": "S3-D3"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "pickup"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "auto-shoot"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "D3-D2"
                 }
               },
               {

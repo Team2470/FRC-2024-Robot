@@ -144,7 +144,7 @@ public double getErrorPercent(){
 	return 0;
 }
 public boolean isErrorInRange() {
-	return (-5 < this.getErrorPercent() && this.getErrorPercent() < 5);
+	return (-8 < this.getErrorPercent() && this.getErrorPercent() < 8);
 }
 
 	public boolean isErrorBelow() {
