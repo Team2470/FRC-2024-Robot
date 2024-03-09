@@ -34,10 +34,10 @@ private boolean m_homed;
 	public Climber(int motorID, int servoChannel, int extendLimitChannel, int retractLimitChannel, boolean isLeft) {
 		m_isLeft = isLeft;
 		TalonFXConfiguration config = new TalonFXConfiguration();
-		
-		config.MotorOutput.Inverted = isLeft ? 
+
+		config.MotorOutput.Inverted = isLeft ?
 			InvertedValue.Clockwise_Positive : InvertedValue.CounterClockwise_Positive;
-			
+
 		config.MotorOutput.NeutralMode = NeutralModeValue.Brake;
 		config.CurrentLimits.SupplyCurrentLimit = 20;
 		config.CurrentLimits.SupplyCurrentLimitEnable = true;

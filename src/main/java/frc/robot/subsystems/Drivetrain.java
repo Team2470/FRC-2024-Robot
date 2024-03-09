@@ -119,9 +119,9 @@ public class Drivetrain extends SubsystemBase {
 			moduleConfig,
 			Mk4iSwerveModuleHelper.GearRatio.L2,
 			config.drivingID,
-			config.steeringID, // : drving & steering IDs
+			config.steeringID, //: drving & steering IDs
 			config.encoderID,
-			config.offset.getRadians() // : encoder ID and offset (rotation)
+			config.offset.getRadians() //: encoder ID and offset (rotation)
 		);
 	}
 
@@ -192,12 +192,9 @@ public class Drivetrain extends SubsystemBase {
 	public void drive(double xSpeed, double ySpeed, double rotation, boolean feildRelative) {
 		ChassisSpeeds chassisSpeeds;
 
-		if (feildRelative) {
-		chassisSpeeds =
-			ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rotation, getOdomHeading());
-		} else {
-		chassisSpeeds = new ChassisSpeeds(xSpeed, ySpeed, rotation);
-		}
+		chassisSpeeds = feildRelative ? 
+			ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rotation, getOdomHeading()) : 
+			new ChassisSpeeds(xSpeed, ySpeed, rotation);
 
 		setChassisSpeeds(chassisSpeeds);
 	}
@@ -210,7 +207,7 @@ public class Drivetrain extends SubsystemBase {
 		drive(0, 0, 0, false);
 	}
 
-	@Override 
+	@Override
 	public void periodic() {
 
 		// Update robot pose

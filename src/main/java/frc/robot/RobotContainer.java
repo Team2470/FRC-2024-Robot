@@ -72,10 +72,12 @@ public class RobotContainer {
 	private final IntakePivot m_intakePivot = new IntakePivot();
 	private final Intake m_Intake = new Intake();
 	private final Orchestra6 m_Orchestra6 = new Orchestra6(11, 12, 13, 14);
+	
 	private final Orchestra6V2 m_Orchestra6v21 = new Orchestra6V2(11);
 	private final Orchestra6V2 m_Orchestra6v22 = new Orchestra6V2(12);
 	private final Orchestra6V2 m_Orchestra6v23 = new Orchestra6V2(13);
 	private final Orchestra6V2 m_Orchestra6v24 = new Orchestra6V2(14);
+
 	private final LEDSubsystem m_LEDs = new LEDSubsystem(m_controller);
 	private final Climber m_ClimberLeft =
 		new Climber(
@@ -204,7 +206,7 @@ public class RobotContainer {
 			m_simpleFlywheelTop.pidCommand(
 				() -> FlyWheelConstants.getRPM(m_camera1.FilteredEsimatedPoseNorm())),
 			m_SimpleShooterFeeder.forward()));
-		
+
 		m_buttonPad.button(10).whileTrue(m_Intake.test_reverseCommand());
 
 		// m_controller.x().whileTrue(m_ShooterPivot.goToAngleCommand(37.08984375));
@@ -349,7 +351,7 @@ public class RobotContainer {
 
 		m_controller.start().onTrue(new InstantCommand(
 			m_drivetrain::resetHeading)); // TODO this should also do
-	
+
 		// something with odometry? As
 		// it freaks out
 
@@ -464,7 +466,7 @@ public class RobotContainer {
 					&& m_ShooterPivot.isAngleErrorInRange()
 				),
 				new ParallelCommandGroup(
-					m_SimpleShooterFeeder.forward(), 
+					m_SimpleShooterFeeder.forward(),
 					m_drivetrain.xStop().asProxy()
 				)
 			)
@@ -553,8 +555,8 @@ public class RobotContainer {
 	private Command locateTarget() {
 		return new DriveWithController(
 			m_drivetrain,
-			() -> 0,
-			() -> 0,
+			() -> 0.0,
+			() -> 0.0,
 			() -> 0.0,
 			() -> true,
 			() -> false,

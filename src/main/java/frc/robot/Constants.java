@@ -102,7 +102,7 @@ public final class Constants {
 		public static double getRPM(double distance) {
 			if (kRobot == Robot.kSecond) //: ryans practice bot
 				return (227 * (Math.pow(distance, 0.578)));
-			
+
 			//: competition robot
 			return (178 * (Math.pow(distance, 0.633)));
 		}
@@ -274,7 +274,7 @@ public final class Constants {
 	}
 
 	public static class VisionConstants {
-		public static Transform3d kFrontRightCamera = 
+		public static Transform3d kFrontRightCamera =
 			new Transform3d(new Translation3d(
 				Units.inchesToMeters(-5.1),
 				Units.inchesToMeters(14.391),
