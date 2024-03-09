@@ -16,7 +16,9 @@ import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.filter.Debouncer.DebounceType;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -235,6 +237,7 @@ public class RobotContainer {
     // ));
     m_buttonPad.button(1).whileTrue(visionShootAndXStop());
     m_buttonPad.button(9).whileTrue(intakeCommand2());
+    m_buttonPad.button(8).whileTrue(StageShoot());
 
     m_controller.back().whileTrue(new ParallelCommandGroup(
       m_simpleFlywheelBottom.pidCommand(10000),
@@ -341,7 +344,24 @@ public class RobotContainer {
               //   default: return null;
               // }
               return null;
-            }));
+            },
+            () -> {
+              if (m_buttonPad.getHID().getRawButton(8)) {
+                if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Blue){
+                  return 152.79;
+                } else if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Red){
+                 return -152.79;
+                }
+              }
+
+              // switch (m_controller.getHID().getPOV()) 
+              //   case 0: return 0.0;
+              //   case 180: return 180.0;
+              //   default: return null;
+              // }
+              return null;
+            }            
+            ));
 
     m_controller
         .start()
@@ -386,8 +406,20 @@ public class RobotContainer {
         m_simpleFlywheelTop.pidCommand(750),
 
         new SequentialCommandGroup(
-          new WaitCommand(2),
-          new WaitUntilCommand(()-> m_simpleFlywheelBottom.isErrorInRange() && m_simpleFlywheelTop.isErrorInRange()),        
+          new WaitUntilCommand(()-> m_simpleFlywheelBottom.isErrorInRange() && m_simpleFlywheelTop.isErrorInRange() && m_ShooterPivot.isAngleErrorInRange()),        
+          
+          m_SimpleShooterFeeder.forward()
+      )
+    );
+  }
+    public Command StageShoot() {
+    return new ParallelCommandGroup(
+      m_ShooterPivot.goToAngleCommand(34.56),
+      m_simpleFlywheelBottom.pidCommand(3737),
+      m_simpleFlywheelTop.pidCommand(3737),
+
+        new SequentialCommandGroup(
+          new WaitUntilCommand(()-> m_simpleFlywheelBottom.isErrorInRange() && m_simpleFlywheelTop.isErrorInRange() && m_ShooterPivot.isAngleErrorInRange()),        
           
           m_SimpleShooterFeeder.forward()
       )
@@ -422,10 +454,10 @@ public class RobotContainer {
     SmartDashboard.putNumber("Select Distance", 0);
   }
   private void setupShooter() {
-    // m_simpleFlywheelBottom.setDefaultCommand(m_simpleFlywheelBottom.pidCommand(2000));
-    // m_simpleFlywheelTop.setDefaultCommand(m_simpleFlywheelTop.pidCommand(2000));
-    // m_ShooterPivot.setDefaultCommand(m_ShooterPivot.goToAngleCommand(45));
-    // m_IntakePivot.setDefaultCommand(m_IntakePivot.stowCommand());
+    m_simpleFlywheelBottom.setDefaultCommand(m_simpleFlywheelBottom.pidCommand(2000));
+    m_simpleFlywheelTop.setDefaultCommand(m_simpleFlywheelTop.pidCommand(2000));
+    m_ShooterPivot.setDefaultCommand(m_ShooterPivot.goToAngleCommand(45));
+    m_IntakePivot.setDefaultCommand(m_IntakePivot.stowCommand());
   }
   private void registerAutos(HashMap<String, String> autos) {
     for (String name: autos.keySet()) {
@@ -558,7 +590,7 @@ public class RobotContainer {
       // Heading Override
       () -> {
         return m_camera1.getRobotYaw();
-      }).asProxy();
+      },()-> null).asProxy();
   }
   private Command autoShoot() {
     return new ParallelCommandGroup(
