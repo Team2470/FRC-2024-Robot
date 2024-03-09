@@ -80,7 +80,7 @@ public void playMusic(){
 	m_Orchestra.play();
 }
 
-public Command playMusiCommand(){
+public Command playMusicCommand(){
 	return Commands.runEnd(
 	() -> this.playMusic(), this::stop, this);
 }
