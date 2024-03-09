@@ -22,24 +22,29 @@ public class Orchestra6 extends SubsystemBase {
   private final TalonFX m_motor2 ;
   private final TalonFX m_motor3 ;
   private final TalonFX m_motor4 ;
+  private final TalonFX m_motor5 ;
+  private final TalonFX m_motor6 ;
   double stableVal;
 
   Orchestra m_Orchestra;
 
-  public Orchestra6(int MotorID, int MotorID2, int MotorID3, int MotorID4) {
+  public Orchestra6(int MotorID, int MotorID2, int MotorID3, int MotorID4, int MotorID5, int MotorID6) {
 
     m_motor1 = new TalonFX(MotorID, "rio");
     m_motor2 = new TalonFX(MotorID2, "rio");
     m_motor3 = new TalonFX(MotorID3, "rio");
     m_motor4 = new TalonFX(MotorID4, "rio");
+    m_motor5 = new TalonFX(MotorID3, "rio");
+    m_motor6 = new TalonFX(MotorID4, "rio");
 
-    ParentDevice [] m_fxes =  { new TalonFX(MotorID, "rio"), new TalonFX(MotorID2, "rio"), new TalonFX(MotorID3, "rio"), new TalonFX(MotorID4, "rio") };   
+
+  //   ParentDevice [] m_fxes =  { new TalonFX(MotorID, "rio"), new TalonFX(MotorID2, "rio"), new TalonFX(MotorID3, "rio"), new TalonFX(MotorID4, "rio") };   
     
-    Collection<ParentDevice> m_instruments = new ArrayList<ParentDevice>();
+  //   Collection<ParentDevice> m_instruments = new ArrayList<ParentDevice>();
 
-    for (int i = 0; i < m_fxes.length; ++i) {
-      m_instruments.add(m_fxes[i]);
-  }
+  //   for (int i = 0; i < m_fxes.length; ++i) {
+  //     m_instruments.add(m_fxes[i]);
+  // }
 
   // m_Orchestra = new Orchestra(m_instruments);
 
@@ -48,12 +53,15 @@ public class Orchestra6 extends SubsystemBase {
   m_Orchestra.addInstrument(m_motor2);
   m_Orchestra.addInstrument(m_motor3);
   m_Orchestra.addInstrument(m_motor4);
+  m_Orchestra.addInstrument(m_motor5);
+  m_Orchestra.addInstrument(m_motor6);
+
 
 
   // m_Orchestra.addInstrument(m_instruments);
 
   // var status = m_Orchestra.loadMusic("song4.chrp");
-  m_Orchestra.loadMusic("SPB.chrp");
+  m_Orchestra.loadMusic("FC.chrp");
   
   // stableVal = (double)status.value;
 

@@ -31,7 +31,8 @@ public class DriveWithController extends Command {
   private final BooleanSupplier slowModeSupplier;
   private final BooleanSupplier disableXMovementSupplier;
   private final BooleanSupplier disableYMovementSupplier;
-  private final Supplier<Double> headingOverrideSupplier;
+  private final Supplier<Double> visionHeadingOverrideSupplier;
+  private final Supplier<Double> fieldHeadingOvverideSupplier;
 
   // State
   private boolean fieldOrient;
@@ -42,7 +43,9 @@ public class DriveWithController extends Command {
   private final SlewRateLimiter rotateFilter = new SlewRateLimiter(5);
 
   private final TrapezoidProfile.Constraints headingControllerConstraints =  new TrapezoidProfile.Constraints(DriveConstants.kMaxAngularVelocityRadiansPerSecond/4.0, 4*Math.PI);
-  private final ProfiledPIDController headingController = new ProfiledPIDController(6.0, 0, 0, headingControllerConstraints);
+  private final ProfiledPIDController visionHeadingController = new ProfiledPIDController(6.0, 0, 0, headingControllerConstraints);
+  private final ProfiledPIDController fieldHeadingController = new ProfiledPIDController(6.0, 0, 0, headingControllerConstraints);
+
   private boolean lastHeadingControllerEnabled = false;
 
   // Keep track of the last 5 module angles
@@ -64,7 +67,8 @@ public class DriveWithController extends Command {
       BooleanSupplier slowModeSupplier,
       BooleanSupplier disableXMovementSupplier,
       BooleanSupplier disableYMovementSupplier,
-      Supplier<Double> headingOverrideSupplier) {
+      Supplier<Double> visionHeadingOverrideSupplier,
+      Supplier<Double> fieldHeadingOverrideSupplier) {
 
     this.drive = drive;
     this.xVelocitySupplier = xVelocitySupplier;
@@ -74,11 +78,13 @@ public class DriveWithController extends Command {
     this.slowModeSupplier = slowModeSupplier;
     this.disableXMovementSupplier = disableXMovementSupplier;
     this.disableYMovementSupplier = disableYMovementSupplier;
-    this.headingOverrideSupplier = headingOverrideSupplier;
+    this.visionHeadingOverrideSupplier = visionHeadingOverrideSupplier;
+    this.fieldHeadingOvverideSupplier = fieldHeadingOverrideSupplier;
 
     addRequirements(drive);
 
-    headingController.enableContinuousInput(-Math.PI, Math.PI);
+    visionHeadingController.enableContinuousInput(-Math.PI, Math.PI);
+    fieldHeadingController.enableContinuousInput(-Math.PI, Math.PI);
   }
 
   @Override
@@ -110,7 +116,8 @@ public class DriveWithController extends Command {
       yMove = 0;
     }
 
-    Double headingOverride = headingOverrideSupplier.get();
+    Double visionHeadingOverride = visionHeadingOverrideSupplier.get();
+    Double fieldHeadingOverride = fieldHeadingOvverideSupplier.get();
 
     // Apply filter
     xMove = xFilter.calculate(xMove);
@@ -123,7 +130,7 @@ public class DriveWithController extends Command {
     rotate = MathUtil.applyDeadband(rotate, kDeadband);
 
     // Determine if the robot should be moving,
-    boolean moving = xMove != 0 || yMove != 0 || rotate != 0 || headingOverride != null;
+    boolean moving = xMove != 0 || yMove != 0 || rotate != 0 || visionHeadingOverride != null || fieldHeadingOverride != null;
 
     // Capture module angles
     SwerveModuleState[] currentModuleState = drive.getModuleStates();
@@ -161,19 +168,36 @@ public class DriveWithController extends Command {
       rotate *= Constants.DriveConstants.kMaxAngularVelocityRadiansPerSecond;
 
       // Heading controller
-      if (headingOverride != null) {
+      if (visionHeadingOverride != null) {
         if (!lastHeadingControllerEnabled) {
           // Reset heading controller if we are entering it for the first time
-          headingController.reset(new State(Math.toRadians(headingOverride), 0)); // TODO need to account for angular velocity
+          visionHeadingController.reset(new State(Math.toRadians(visionHeadingOverride), 0)); // TODO need to account for angular velocity
         }
 
         // Calculate the rotate command in Rad/Sec so we can reuse the PID values used in auto
-        headingController.setGoal(0);
-        rotate = headingController.calculate(Math.toRadians(headingOverride));
+        visionHeadingController.setGoal(0);
+        rotate = visionHeadingController.calculate(Math.toRadians(visionHeadingOverride));
         rotate = MathUtil.clamp(rotate, -headingControllerConstraints.maxVelocity, headingControllerConstraints.maxVelocity);
 
-        SmartDashboard.putNumber("DriveWithController - Heading goal", headingOverride);
-        SmartDashboard.putNumber("DriveWithController - Heading error", Math.toDegrees(headingController.getPositionError()));
+        SmartDashboard.putNumber("DriveWithController - Heading goal", visionHeadingOverride);
+        SmartDashboard.putNumber("DriveWithController - Heading error", Math.toDegrees(visionHeadingController.getPositionError()));
+      }
+
+      if (fieldHeadingOverride != null) {
+        if (!lastHeadingControllerEnabled) {
+          // Reset heading controller if we are entering it for the first time
+          fieldHeadingController.reset(new State(drive.getOdomHeading().getRadians(), 0)); // TODO need to account for angular velocity
+        }
+
+        // Calculate the rotate command in Rad/Sec so we can reuse the PID values used in auto
+        fieldHeadingController.setGoal(Math.toRadians(fieldHeadingOverride));
+        rotate = fieldHeadingController.calculate(drive.getOdomHeading().getRadians());
+        rotate = MathUtil.clamp(rotate, -headingControllerConstraints.maxVelocity, headingControllerConstraints.maxVelocity);
+
+        SmartDashboard.putNumber("DriveWithController - Heading goal", fieldHeadingOverride);
+        SmartDashboard.putNumber("DriveWithController - Heading error", Math.toDegrees(fieldHeadingController.getPositionError()));
+        SmartDashboard.putNumber("DriveWithController - feild override output", rotate);
+
       }
 
       SmartDashboard.putNumber("DriveWithController - xMove", xMove);
@@ -202,11 +226,13 @@ public class DriveWithController extends Command {
     }
 
     SmartDashboard.putBoolean(
-        "DriveWithController - Heading Override enabled", headingOverride != null);
+        "DriveWithController - Vision Heading Override enabled", visionHeadingOverride != null);
+      SmartDashboard.putBoolean(
+        "DriveWithController - Field Heading Override enabled", fieldHeadingOverride != null);
     SmartDashboard.putBoolean("DriveWithController - Moving", moving);
     SmartDashboard.putBoolean("DriveWithController - Field oriented", fieldOrient);
     lastMovingState = moving;
-    lastHeadingControllerEnabled = headingOverride != null;
+    lastHeadingControllerEnabled = visionHeadingOverride != null || fieldHeadingOverride != null;
   }
 
   @Override

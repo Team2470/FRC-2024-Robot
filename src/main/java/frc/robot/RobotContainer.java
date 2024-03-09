@@ -16,7 +16,9 @@ import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.filter.Debouncer.DebounceType;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -77,11 +79,7 @@ public class RobotContainer {
   private final TimeOfFlightSensorTest m_TOF1 = new TimeOfFlightSensorTest();
   private final IntakePivot m_IntakePivot = new IntakePivot();
   private final Intake m_Intake = new Intake();
-  private final Orchestra6 m_Orchestra6 = new Orchestra6(11,12,13,14);
-  private final Orchestra6V2 m_Orchestra6v21 = new Orchestra6V2(11);
-  private final Orchestra6V2 m_Orchestra6v22 = new Orchestra6V2(12);
-  private final Orchestra6V2 m_Orchestra6v23 = new Orchestra6V2(13);
-  private final Orchestra6V2 m_Orchestra6v24 = new Orchestra6V2(14);
+  private final Orchestra6 m_Orchestra6 = new Orchestra6(11,12,13,14,26,27);
   private final LEDSubsystem m_LEDs = new LEDSubsystem(m_controller);
   private final Climber m_ClimberLeft = new Climber(ClimberConstants.kLeftMotorID, 
                                                     ClimberConstants.kLeftServoChannel, 
@@ -171,7 +169,8 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    m_controller.rightBumper().whileTrue(new ParallelCommandGroup(
+    m_controller.rightBumper().toggleOnTrue
+    (new ParallelCommandGroup(
       m_Orchestra6.playMusiCommand(),
       // m_Orchestra6v21.playMusiCommand(),
       // m_Orchestra6v22.playMusiCommand(),
@@ -194,19 +193,20 @@ public class RobotContainer {
     // m_controller.rightTrigger().whileTrue(m_simpleFlywheelRight.openLoopCommand(()-> SmartDashboard.getNumber("Select Right Voltage", 0)));
     // m_buttonPad.button(10).whileTrue(m_simpleFlywheelBottom.pidCommand(()-> SmartDashboard.getNumber("Select Left RPM", 0)));
     // m_buttonPad.button(10).whileTrue(m_simpleFlywheelTop.pidCommand(()-> SmartDashboard.getNumber("Select Left RPM", 0)));
-    // m_buttonPad.button(8).whileTrue(m_ShooterPivot.openLoopCommand(2));
-    // m_buttonPad.button(12).whileTrue(m_ShooterPivot.openLoopCommand(-2));
+    m_buttonPad.button(8).whileTrue(m_ShooterPivot.openLoopCommand(2));
+    m_buttonPad.button(12).whileTrue(m_ShooterPivot.openLoopCommand(-2));
     // m_buttonPad.button(9).whileTrue(m_simpleFlywheelLeft.pidCommand(500));
     // m_buttonPad.button(9).whileTrue(m_simpleFlywheelRight.pidCommand(500));
     m_buttonPad.button(6).whileTrue(m_IntakePivot.downWarCommand());
     m_buttonPad.button(7).whileTrue(m_IntakePivot.stowCommand());
 
-    m_buttonPad.button(11).whileTrue(new ParallelCommandGroup(
-      m_ShooterPivot.goToAngleCommand(()-> ShooterPivotConstants.getAngle((m_camera1.FilteredEsimatedPoseNorm()))),
-      m_simpleFlywheelBottom.pidCommand(()-> FlyWheelConstants.getRPM(m_camera1.FilteredEsimatedPoseNorm())),
-      m_simpleFlywheelTop.pidCommand(()-> FlyWheelConstants.getRPM(m_camera1.FilteredEsimatedPoseNorm())),
-      m_SimpleShooterFeeder.forward()
-    ));
+    // m_buttonPad.button(11).whileTrue(new ParallelCommandGroup(
+    //   m_ShooterPivot.goToAngleCommand(()-> ShooterPivotConstants.getAngle((m_camera1.FilteredEsimatedPoseNorm()))),
+    //   m_simpleFlywheelBottom.pidCommand(()-> FlyWheelConstants.getRPM(m_camera1.FilteredEsimatedPoseNorm())),
+    //   m_simpleFlywheelTop.pidCommand(()-> FlyWheelConstants.getRPM(m_camera1.FilteredEsimatedPoseNorm())),
+    //   m_SimpleShooterFeeder.forward()
+    // ));
+    m_buttonPad.button(11).whileTrue(feed());
     m_buttonPad.button(10).whileTrue(m_Intake.test_reverseCommand());
     // m_controller.x().whileTrue(m_ShooterPivot.goToAngleCommand(37.08984375));
     // m_buttonPad.button(10).whileTrue(m_ShooterPivot.goToAngleCommand(()-> SmartDashboard.getNumber("Select Shooter Pivot Angle", 0)));
@@ -234,7 +234,8 @@ public class RobotContainer {
     //   m_simpleFlywheelLeft.feederShooterCommand(m_SimpleShooterFeeder)
     // ));
     m_buttonPad.button(1).whileTrue(visionShootAndXStop());
-    m_buttonPad.button(9).whileTrue(intakeCommand2());
+    m_buttonPad.button(9).whileTrue(intakeCommand());
+    m_buttonPad.button(8).whileTrue(StageShoot());
 
     m_controller.back().whileTrue(new ParallelCommandGroup(
       m_simpleFlywheelBottom.pidCommand(10000),
@@ -254,12 +255,14 @@ public class RobotContainer {
     //       m_simpleFlywheelRight.pidCommand(()-> FlyWheelConstants.getRPM(SmartDashboard.getNumber("Select Distance", 0)))
     // ));
 
-    m_buttonPad.button(2).whileTrue(new ParallelCommandGroup(
-          m_ShooterPivot.goToAngleCommand(59.92836363),
-          m_simpleFlywheelBottom.pidCommand(2326.626089),
-          m_simpleFlywheelTop.pidCommand(2326.626089)
+    // m_buttonPad.button(2).whileTrue(new ParallelCommandGroup(
+    //       m_ShooterPivot.goToAngleCommand(59.92836363),
+    //       m_simpleFlywheelBottom.pidCommand(2326.626089),
+    //       m_simpleFlywheelTop.pidCommand(2326.626089)
 
-    ));
+    // ));
+
+    m_buttonPad.button(2).whileTrue(speakerShoot());
 //56.92836363
     m_buttonPad.button(3).whileTrue(new ParallelCommandGroup(
           m_ShooterPivot.goToAngleCommand(48.779296875),
@@ -268,12 +271,14 @@ public class RobotContainer {
           m_TOF1.feederIntakeCommand(m_SimpleShooterFeeder)
 
     ));
-    m_buttonPad.button(4).whileTrue(new ParallelCommandGroup(
-        m_ShooterPivot.goToAngleCommand(50),
-        m_simpleFlywheelBottom.pidCommand(1250),
-        m_simpleFlywheelTop.pidCommand(700)
+    // m_buttonPad.button(4).whileTrue(new ParallelCommandGroup(
+    //     m_ShooterPivot.goToAngleCommand(50),
+    //     m_simpleFlywheelBottom.pidCommand(1250),
+    //     m_simpleFlywheelTop.pidCommand(700)
 
-    ));
+    // ));
+
+    m_buttonPad.button(4).whileTrue(ampShoot());
 
     m_buttonPad.button(5).whileTrue(new ParallelCommandGroup(
         m_ShooterPivot.goToAngleCommand(57.91),
@@ -337,7 +342,24 @@ public class RobotContainer {
               //   default: return null;
               // }
               return null;
-            }));
+            },
+            () -> {
+              if (m_buttonPad.getHID().getRawButton(8)) {
+                if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Blue){
+                  return 152.79;
+                } else if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Red){
+                 return -152.79;
+                }
+              }
+
+              // switch (m_controller.getHID().getPOV()) 
+              //   case 0: return 0.0;
+              //   case 180: return 180.0;
+              //   default: return null;
+              // }
+              return null;
+            }            
+            ));
 
     m_controller
         .start()
@@ -373,6 +395,52 @@ public class RobotContainer {
           m_SimpleShooterFeeder.forward()
       )
     ).withTimeout(4);
+  }
+
+    public Command ampShoot() {
+    return new ParallelCommandGroup(
+        m_ShooterPivot.goToAngleCommand(50),
+        m_simpleFlywheelBottom.pidCommand(1250),
+        m_simpleFlywheelTop.pidCommand(750),
+
+        new SequentialCommandGroup(
+          new WaitUntilCommand(()-> m_simpleFlywheelBottom.isErrorInRange() && m_simpleFlywheelTop.isErrorInRange() && m_ShooterPivot.isAngleErrorInRange()),        
+          
+          m_SimpleShooterFeeder.forward()
+      )
+    );
+  }
+
+  private double angle;
+  private double rpm;
+
+  public Command feed(){
+    getAngleAndRPM();
+    return new ParallelCommandGroup(
+      m_ShooterPivot.goToAngleCommand(angle),
+      m_simpleFlywheelBottom.pidCommand(rpm),
+      m_simpleFlywheelTop.pidCommand(rpm),
+      m_SimpleShooterFeeder.forward()
+    );
+  }
+
+  private void getAngleAndRPM(){
+      angle = m_ShooterPivot.getAngle();
+      rpm = m_simpleFlywheelTop.getVelocity();
+  }
+
+    public Command StageShoot() {
+    return new ParallelCommandGroup(
+      m_ShooterPivot.goToAngleCommand(34.56),
+      m_simpleFlywheelBottom.pidCommand(3737),
+      m_simpleFlywheelTop.pidCommand(3737),
+
+        new SequentialCommandGroup(
+          new WaitUntilCommand(()-> m_simpleFlywheelBottom.isErrorInRange() && m_simpleFlywheelTop.isErrorInRange() && m_ShooterPivot.isAngleErrorInRange()),        
+          
+          m_SimpleShooterFeeder.forward()
+      )
+    );
   }
 
   public void autonomousInit() {  
@@ -539,7 +607,7 @@ public class RobotContainer {
       // Heading Override
       () -> {
         return m_camera1.getRobotYaw();
-      }).asProxy();
+      },()-> null).asProxy();
   }
   private Command autoShoot() {
     return new ParallelCommandGroup(
