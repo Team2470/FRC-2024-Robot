@@ -65,6 +65,7 @@ public class RobotContainer {
 		new SimpleFlywheel(FlyWheelConstants.kLeftID, true);
 	private final SimpleFlywheel m_simpleFlywheelTop =
 		new SimpleFlywheel(FlyWheelConstants.kRightID, false);
+		
 	private final ShooterPivot m_ShooterPivot = new ShooterPivot();
 	private final Drivetrain m_drivetrain = new Drivetrain();
 	private final SimpleShooterFeeder m_SimpleShooterFeeder = new SimpleShooterFeeder(20);
