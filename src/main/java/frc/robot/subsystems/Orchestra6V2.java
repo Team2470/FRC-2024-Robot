@@ -4,54 +4,44 @@
 
 package frc.robot.subsystems;
 
-import java.util.ArrayList;
-import java.util.Collection;
-
 import com.ctre.phoenix6.Orchestra;
-import com.ctre.phoenix6.hardware.ParentDevice;
 import com.ctre.phoenix6.hardware.TalonFX;
-
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Orchestra6V2 extends SubsystemBase {
-  /** Creates a new Orchestra6. */
-  private final TalonFX m_motor;
-  double stableVal;
+/** Creates a new Orchestra6. */
+	private final TalonFX m_motor;
 
-  private final Orchestra m_Orchestra;
+	double stableVal;
 
-  public Orchestra6V2(int MotorID) {
+	private final Orchestra m_Orchestra;
 
-    m_motor = new TalonFX(MotorID, "rio");
+	public Orchestra6V2(int MotorID) {
+		m_motor = new TalonFX(MotorID, "rio");
+		m_Orchestra = new Orchestra();
+		m_Orchestra.addInstrument(m_motor);
 
+		// var status = m_Orchestra.loadMusic("song4.chrp");
+		m_Orchestra.loadMusic("song4.chrp");
+	}
 
+	@Override
+	public void periodic() {
+		// This method will be called once per scheduler run
+	}
 
-  m_Orchestra = new Orchestra();
+	public void playMusic() {
+		// m_Orchestra.loadMusic(song + ".chrp");
+		m_Orchestra.play();
+	}
 
-  m_Orchestra.addInstrument(m_motor);
+	public Command playMusiCommand() {
+		return Commands.runEnd(() -> this.playMusic(), this::stop, this);
+	}
 
-  // var status = m_Orchestra.loadMusic("song4.chrp");
-  m_Orchestra.loadMusic("song4.chrp");
-  
-  }
-  @Override
-  public void periodic() {
-    // This method will be called once per scheduler run
-  }
-
-  public void playMusic(){
-    // m_Orchestra.loadMusic(song + ".chrp");
-    m_Orchestra.play();
-  }
-
-  public Command playMusiCommand(){
-    return Commands.runEnd(
-      () -> this.playMusic(), this::stop, this);
-  }
-  public void stop() {
-    m_Orchestra.stop();
-  }
+	public void stop() {
+		m_Orchestra.stop();
+	}
 }

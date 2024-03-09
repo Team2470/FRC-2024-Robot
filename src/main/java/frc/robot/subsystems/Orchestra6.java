@@ -4,82 +4,84 @@
 
 package frc.robot.subsystems;
 
-import java.util.ArrayList;
-import java.util.Collection;
-
 import com.ctre.phoenix6.Orchestra;
 import com.ctre.phoenix6.hardware.ParentDevice;
 import com.ctre.phoenix6.hardware.TalonFX;
-
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import java.util.ArrayList;
+import java.util.Collection;
 
 public class Orchestra6 extends SubsystemBase {
-  /** Creates a new Orchestra6. */
-  private final TalonFX m_motor1 ;
-  private final TalonFX m_motor2 ;
-  private final TalonFX m_motor3 ;
-  private final TalonFX m_motor4 ;
-  double stableVal;
+/** Creates a new Orchestra6. */
+private final TalonFX m_motor1;
 
-  Orchestra m_Orchestra;
+private final TalonFX m_motor2;
+private final TalonFX m_motor3;
+private final TalonFX m_motor4;
+double stableVal;
 
-  public Orchestra6(int MotorID, int MotorID2, int MotorID3, int MotorID4) {
+Orchestra m_Orchestra;
 
-    m_motor1 = new TalonFX(MotorID, "rio");
-    m_motor2 = new TalonFX(MotorID2, "rio");
-    m_motor3 = new TalonFX(MotorID3, "rio");
-    m_motor4 = new TalonFX(MotorID4, "rio");
+public Orchestra6(int MotorID, int MotorID2, int MotorID3, int MotorID4) {
 
-    ParentDevice [] m_fxes =  { new TalonFX(MotorID, "rio"), new TalonFX(MotorID2, "rio"), new TalonFX(MotorID3, "rio"), new TalonFX(MotorID4, "rio") };   
-    
-    Collection<ParentDevice> m_instruments = new ArrayList<ParentDevice>();
+	m_motor1 = new TalonFX(MotorID, "rio");
+	m_motor2 = new TalonFX(MotorID2, "rio");
+	m_motor3 = new TalonFX(MotorID3, "rio");
+	m_motor4 = new TalonFX(MotorID4, "rio");
 
-    for (int i = 0; i < m_fxes.length; ++i) {
-      m_instruments.add(m_fxes[i]);
-  }
+	ParentDevice[] m_fxes = {
+	new TalonFX(MotorID, "rio"),
+	new TalonFX(MotorID2, "rio"),
+	new TalonFX(MotorID3, "rio"),
+	new TalonFX(MotorID4, "rio")
+	};
 
-  // m_Orchestra = new Orchestra(m_instruments);
+	Collection<ParentDevice> m_instruments = new ArrayList<ParentDevice>();
 
-  m_Orchestra = new Orchestra();
-  m_Orchestra.addInstrument(m_motor1);
-  m_Orchestra.addInstrument(m_motor2);
-  m_Orchestra.addInstrument(m_motor3);
-  m_Orchestra.addInstrument(m_motor4);
+	for (int i = 0; i < m_fxes.length; ++i) {
+		m_instruments.add(m_fxes[i]);
+	}
 
+	// m_Orchestra = new Orchestra(m_instruments);
 
-  // m_Orchestra.addInstrument(m_instruments);
+	m_Orchestra = new Orchestra();
+	m_Orchestra.addInstrument(m_motor1);
+	m_Orchestra.addInstrument(m_motor2);
+	m_Orchestra.addInstrument(m_motor3);
+	m_Orchestra.addInstrument(m_motor4);
 
-  // var status = m_Orchestra.loadMusic("song4.chrp");
-  m_Orchestra.loadMusic("SPB.chrp");
-  
-  // stableVal = (double)status.value;
+	// m_Orchestra.addInstrument(m_instruments);
 
+	// var status = m_Orchestra.loadMusic("song4.chrp");
+	m_Orchestra.loadMusic("SPB.chrp");
 
-    // m_Orchestra.addInstrument(m_motor1);
-    // m_Orchestra.addInstrument(m_motor2);
-    // m_Orchestra.addInstrument(m_motor3);
-    // m_Orchestra.addInstrument(m_motor4);
-  }
+	// stableVal = (double)status.value;
 
-  @Override
-  public void periodic() {
-    SmartDashboard.putNumber("status", stableVal);
-    // This method will be called once per scheduler run
-  }
+	// m_Orchestra.addInstrument(m_motor1);
+	// m_Orchestra.addInstrument(m_motor2);
+	// m_Orchestra.addInstrument(m_motor3);
+	// m_Orchestra.addInstrument(m_motor4);
+}
 
-  public void playMusic(){
-    // m_Orchestra.loadMusic(song + ".chrp");
-    m_Orchestra.play();
-  }
+@Override
+public void periodic() {
+	SmartDashboard.putNumber("status", stableVal);
+	// This method will be called once per scheduler run
+}
 
-  public Command playMusiCommand(){
-    return Commands.runEnd(
-      () -> this.playMusic(), this::stop, this);
-  }
-  public void stop() {
-    m_Orchestra.stop();
-  }
+public void playMusic() {
+	// m_Orchestra.loadMusic(song + ".chrp");
+	m_Orchestra.play();
+}
+
+public Command playMusiCommand() {
+	return Commands.runEnd(() -> this.playMusic(), this::stop, this);
+}
+
+public void stop() {
+	m_Orchestra.stop();
+}
 }
