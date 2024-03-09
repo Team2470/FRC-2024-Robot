@@ -10,92 +10,92 @@ import com.swervedrivespecialties.swervelib.MechanicalConfiguration;
 
 
 public class KrakenDriveControllerFactoryBuilder {
-    private double nominalVoltage = Double.NaN;
-    private double currentLimit = Double.NaN;
+	private double nominalVoltage = Double.NaN;
+	private double currentLimit = Double.NaN;
 
-    public KrakenDriveControllerFactoryBuilder withVoltageCompensation(double minimalVoltage) {
-        this.nominalVoltage = minimalVoltage;
-        return this;
-    }
-    public KrakenDriveControllerFactoryBuilder withCurrentLimit(double limit) {
-        this.currentLimit = limit;
-        return this;
-    }
+	public KrakenDriveControllerFactoryBuilder withVoltageCompensation(double minimalVoltage) {
+		this.nominalVoltage = minimalVoltage;
+		return this;
+	}
+	public KrakenDriveControllerFactoryBuilder withCurrentLimit(double limit) {
+		this.currentLimit = limit;
+		return this;
+	}
 
-    public boolean hasVoltageCompensation() {
-        return Double.isFinite(nominalVoltage);
-    }
+	public boolean hasVoltageCompensation() {
+		return Double.isFinite(nominalVoltage);
+	}
 
-    public DriveControllerFactory<ControllerImplementation, Integer> build() {
-        return new FactoryImplementation();
-    }
+	public DriveControllerFactory<ControllerImplementation, Integer> build() {
+		return new FactoryImplementation();
+	}
 
-    public boolean hasCurrentLimit() {
-        return Double.isFinite(currentLimit);
-    }
+	public boolean hasCurrentLimit() {
+		return Double.isFinite(currentLimit);
+	}
 
-    
 
-    private class FactoryImplementation implements DriveControllerFactory<ControllerImplementation, Integer> {
-        @Override public ControllerImplementation create(Integer driveConfiguration, String canbus, MechanicalConfiguration mechConfiguration) {
-            TalonFXConfiguration motorConfig = new TalonFXConfiguration();
-            motorConfig.MotorOutput.Inverted = mechConfiguration.isDriveInverted() ? 
-                InvertedValue.Clockwise_Positive : InvertedValue.CounterClockwise_Positive;
 
-            double sensorPositionCoefficient = Math.PI * mechConfiguration.getWheelDiameter() * mechConfiguration.getDriveReduction();
+	private class FactoryImplementation implements DriveControllerFactory<ControllerImplementation, Integer> {
+		@Override public ControllerImplementation create(Integer driveConfiguration, String canbus, MechanicalConfiguration mechConfiguration) {
+			TalonFXConfiguration motorConfig = new TalonFXConfiguration();
+			motorConfig.MotorOutput.Inverted = mechConfiguration.isDriveInverted() ?
+				InvertedValue.Clockwise_Positive : InvertedValue.CounterClockwise_Positive;
 
-            if (hasCurrentLimit()) {
-                motorConfig.CurrentLimits.SupplyCurrentLimit = currentLimit;
-                motorConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
-                motorConfig.CurrentLimits.StatorCurrentLimitEnable = false;                
-            }
+			double sensorPositionCoefficient = Math.PI * mechConfiguration.getWheelDiameter() * mechConfiguration.getDriveReduction();
 
-            if (hasVoltageCompensation()) {
-                motorConfig.Voltage.PeakForwardVoltage = nominalVoltage;
-                motorConfig.Voltage.PeakReverseVoltage = -nominalVoltage;
-            }
+			if (hasCurrentLimit()) {
+				motorConfig.CurrentLimits.SupplyCurrentLimit = currentLimit;
+				motorConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
+				motorConfig.CurrentLimits.StatorCurrentLimitEnable = false;
+			}
 
-            motorConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
+			if (hasVoltageCompensation()) {
+				motorConfig.Voltage.PeakForwardVoltage = nominalVoltage;
+				motorConfig.Voltage.PeakReverseVoltage = -nominalVoltage;
+			}
 
-            TalonFX motor = new TalonFX(driveConfiguration);
-            motor.getRotorPosition().setUpdateFrequency(50); // Default 4Hz
-            motor.getRotorVelocity().setUpdateFrequency(50); // Default 4Hz
-            motor.optimizeBusUtilization();
+			motorConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
 
-            motor.getRotorPosition().setUpdateFrequency(50);
-            motor.getRotorVelocity().setUpdateFrequency(50);
-            motor.optimizeBusUtilization();
+			TalonFX motor = new TalonFX(driveConfiguration);
+			motor.getRotorPosition().setUpdateFrequency(50); // Default 4Hz
+			motor.getRotorVelocity().setUpdateFrequency(50); // Default 4Hz
+			motor.optimizeBusUtilization();
 
-            motor.setNeutralMode(NeutralModeValue.Brake);
+			motor.getRotorPosition().setUpdateFrequency(50);
+			motor.getRotorVelocity().setUpdateFrequency(50);
+			motor.optimizeBusUtilization();
 
-            CtreUtils.checkCtreError(motor.getConfigurator().apply(motorConfig), "Failed to configure TalonFX");
-            return new ControllerImplementation(motor, sensorPositionCoefficient);
-        }
-    }
+			motor.setNeutralMode(NeutralModeValue.Brake);
 
-    private class ControllerImplementation implements DriveController {
-        private TalonFX motor;
-        private final double sensorPositionCoefficient;
+			CtreUtils.checkCtreError(motor.getConfigurator().apply(motorConfig), "Failed to configure TalonFX");
+			return new ControllerImplementation(motor, sensorPositionCoefficient);
+		}
+	}
 
-        public ControllerImplementation(TalonFX motor, double sensorPositionCoefficient) {
-            this.sensorPositionCoefficient = sensorPositionCoefficient;
-            this.motor = motor;
-        }
+	private class ControllerImplementation implements DriveController {
+		private TalonFX motor;
+		private final double sensorPositionCoefficient;
 
-        @Override public Object getDriveMotor() {
-            return this.motor;
-        }
+		public ControllerImplementation(TalonFX motor, double sensorPositionCoefficient) {
+			this.sensorPositionCoefficient = sensorPositionCoefficient;
+			this.motor = motor;
+		}
 
-        @Override public void setReferenceVoltage(double voltage) {
-            this.motor.setVoltage(voltage);
-        }
+		@Override public Object getDriveMotor() {
+			return this.motor;
+		}
 
-        @Override public double getStateVelocity() {
-            return this.motor.getRotorVelocity().getValue() * sensorPositionCoefficient;
-        }
+		@Override public void setReferenceVoltage(double voltage) {
+			this.motor.setVoltage(voltage);
+		}
 
-        @Override public double getStateDistance() {
-            return this.motor.getRotorPosition().getValue() * sensorPositionCoefficient;
-        }
-    }
+		@Override public double getStateVelocity() {
+			return this.motor.getRotorVelocity().getValue() * sensorPositionCoefficient;
+		}
+
+		@Override public double getStateDistance() {
+			return this.motor.getRotorPosition().getValue() * sensorPositionCoefficient;
+		}
+	}
 }
