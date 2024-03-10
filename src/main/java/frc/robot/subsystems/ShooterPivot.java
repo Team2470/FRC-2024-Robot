@@ -65,7 +65,7 @@ private int currentSong = 0;
 //
 
 private final ProfiledPIDController m_pidController = new ProfiledPIDController(ShooterPivotConstants.kP, ShooterPivotConstants.kI, ShooterPivotConstants.kD,
-new TrapezoidProfile.Constraints(Math.toRadians(90), Math.toRadians(90)));
+new TrapezoidProfile.Constraints(Math.toRadians(135), Math.toRadians(150)));
 
 private ArmFeedforward m_Feedforward =
 	new ArmFeedforward(0, ShooterPivotConstants.kG, ShooterPivotConstants.kV, ShooterPivotConstants.kA);
@@ -217,6 +217,7 @@ public void periodic() {
 	SmartDashboard.putNumber("shooter Pivot" + " Motor Output Voltage", outputVoltage);
 	SmartDashboard.putNumber("shooter Pivot" + " Motor Setpoint Position", m_demand);
 	SmartDashboard.putBoolean("Shooter Pivot" + "In range", isAngleErrorInRange());
+	SmartDashboard.putString("Shooter Pivot Control Mode", m_controlMode.toString());
 }
 
 public double getErrorAngle(){

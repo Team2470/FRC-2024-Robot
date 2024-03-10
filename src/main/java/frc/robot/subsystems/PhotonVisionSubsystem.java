@@ -128,7 +128,7 @@ public class PhotonVisionSubsystem extends SubsystemBase {
 
 	public double getRobotYaw(){
 		// return -m_yaw.getDouble(-180)+180;
-		return robotYaw+1.5;
+		return robotYaw;
 	}
 
 	@Override
