@@ -176,8 +176,8 @@ public class RobotContainer {
 			m_simpleFlywheelTop.pidCommand(0)
 		));
 
-		m_controller.povUp().whileTrue(this.extendClimber());
-		m_controller.povDown().whileTrue(this.retractClimber());
+		m_controller.y().whileTrue(this.extendClimber());
+		m_controller.b().whileTrue(this.retractClimber());
 		m_buttonPad.button(8).whileTrue(m_shooterPivot.openLoopCommand(2));
 		m_buttonPad.button(12).whileTrue(m_shooterPivot.openLoopCommand(-2));
 		m_buttonPad.button(6).whileTrue(m_intakePivot.deploy());
@@ -287,7 +287,7 @@ public class RobotContainer {
 				() -> m_controller.getHID().getXButton() || m_ClimberLeft.getMotorRotations() > 2 || m_ClimberRight.getMotorRotations() > 2,
 
 				// Disable X Movement
-				() -> m_controller.getHID().getBButton(),
+				() -> m_controller.getHID().getRawButton(13),
 
 				// Disable Y Movement
 				() -> false,
