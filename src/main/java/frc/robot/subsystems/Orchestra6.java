@@ -58,7 +58,7 @@ m_Orchestra.addInstrument(m_motor6);
 // m_Orchestra.addInstrument(m_instruments);
 
 // var status = m_Orchestra.loadMusic("song4.chrp");
-m_Orchestra.loadMusic("FC.chrp");
+m_Orchestra.loadMusic("SPB.chrp");
 
 // stableVal = (double)status.value;
 

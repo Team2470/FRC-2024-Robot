@@ -24,6 +24,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
+import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.ScheduleCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -106,9 +107,9 @@ public class RobotContainer {
 		NamedCommands.registerCommands(new HashMap<String, Command>() {{
 			put("speaker-shoot", speakerShoot());
 			put("auto-shoot", new ParallelCommandGroup(
-				autoShoot(), m_intakePivot.stowCommand()
+				autoShoot(), m_intakePivot.stowCommand().withTimeout(4)
 			));
-			put("pickup", intakeCommand().withTimeout(8));
+			put("pickup", intakeCommand().withTimeout(4));
 			put("deploy-intake", m_intakePivot.deploy());
 		}});
 
@@ -482,10 +483,9 @@ public class RobotContainer {
 			// m_simpleFlywheelLeft.feederShooterCommand(m_SimpleShooterFeeder)
 			new SequentialCommandGroup(
 				new WaitCommand(0.25), //wait for setpoint to change
-				new WaitUntilCommand(() ->
-				// isYawInRangeDebounced() &&
-					m_simpleFlywheelBottom.isErrorInRange() && m_simpleFlywheelTop.isErrorInRange() && m_shooterPivot.isAngleErrorInRange()
-				),
+				new WaitUntilCommand(() -> 
+					m_simpleFlywheelBottom.isErrorInRange() && m_simpleFlywheelTop.isErrorInRange() && m_shooterPivot.isAngleErrorInRange()),
+
 				m_feeder.forward()
 			)
 		);
@@ -497,19 +497,19 @@ public class RobotContainer {
 				new WaitCommand(0)
 			),
 			new SequentialCommandGroup(
-				m_intake.test_forwardsCommand().until(()-> m_intake.isRingIntaked()),
+				m_intake.test_forwardsCommand().until(() -> m_intake.isRingIntaked()),
 				new WaitCommand(1.3),
 				m_intake.test_forwardsCommand()
 			),
 			m_shooterPivot.goToAngleCommand(45),
 			new SequentialCommandGroup(
-				m_intakePivot.deploy().until(()-> m_intake.isRingIntaked()),
+				m_intakePivot.deploy().until(() -> m_intake.isRingIntaked()),
 				m_intakePivot.intakeLocation()
 			),
 			m_feeder.forward(),
 
 			new SequentialCommandGroup(
-				new WaitUntilCommand(()-> m_intake.isRingIntaked()),
+				new WaitUntilCommand(() -> m_intake.isRingIntaked()),
 				new StartEndCommand(
 					() -> m_controller.getHID().setRumble(RumbleType.kBothRumble, .3),
 					() -> m_controller.getHID().setRumble(RumbleType.kBothRumble, 0)
@@ -553,6 +553,6 @@ public class RobotContainer {
 		return new ParallelCommandGroup(m_ClimberLeft.retractCommand(), m_ClimberRight.retractCommand(), new ScheduleCommand( m_intakePivot.deploy()));
 	}
 	private Command autoShoot() {
-		return visionShoot().asProxy().withTimeout(4);
+		return visionShoot().withTimeout(3);
 	}
 }
