@@ -61,7 +61,7 @@ public class LEDSubsystem extends SubsystemBase {
     public enum LEDStripSegments {
         Intake(0),
         TOF1(1),
-        Photon(2),
+        Vision(2),
         Shooter(3);
         
         
@@ -116,6 +116,9 @@ public class LEDSubsystem extends SubsystemBase {
             // } else if (segment.value == LEDStripSegments.FullSpeed.value) {
             //     index = CANdleConstants.FullSpeed_Index;
             //     LEDnum = CANdleConstants.FullSpeed_LEDnum;
+            }else if (segment.value == LEDStripSegments.Vision.value) {
+                index = CANdleConstants.Vision_Index;
+                LEDnum = CANdleConstants.Vision_LEDNum;
             } else if (segment.value == LEDStripSegments.Shooter.value) {
                 index = CANdleConstants.Shooter_Index;
                 LEDnum = CANdleConstants.Shooter_LEDnum;
@@ -162,13 +165,13 @@ public class LEDSubsystem extends SubsystemBase {
     }
 
     public void changeVisionGreen() {
-        changeLEDStatus(LEDStripSegments.Photon.value, LEDStripStatus.SegmentsGreen.value);
+        changeLEDStatus(LEDStripSegments.Vision.value, LEDStripStatus.SegmentsGreen.value);
     }
       public void changeVisionRed() {
-        changeLEDStatus(LEDStripSegments.Photon.value, LEDStripStatus.SegmentRed.value);
+        changeLEDStatus(LEDStripSegments.Vision.value, LEDStripStatus.SegmentRed.value);
     }
       public void changeVisionPink() {
-        changeLEDStatus(LEDStripSegments.Photon.value, LEDStripStatus.SegmentPink.value);
+        changeLEDStatus(LEDStripSegments.Vision.value, LEDStripStatus.SegmentPink.value);
     }
 
     public void changeShooterGreen() {
@@ -243,7 +246,7 @@ public class LEDSubsystem extends SubsystemBase {
         // SmartDashboard.putNumber("Spinning Up Segment Status", getLEDStatus(LEDStripSegments.SpinningUp.value));
         // SmartDashboard.putNumber("Full Speed Segment Status", getLEDStatus(LEDStripSegments.FullSpeed.value));
         SmartDashboard.putNumber("Shooting Segment Status", getLEDStatus(LEDStripSegments.Shooter.value));
-        SmartDashboard.putNumber("Photon Vision Status", getLEDStatus(LEDStripSegments.Photon.value));
+        SmartDashboard.putNumber("Photon Vision Status", getLEDStatus(LEDStripSegments.Vision.value));
 
     //    m_candle.setLEDs(255, 0, 0, 0, 0, 8);
     //    m_candle.setLEDs(0, 255, 0, 0, 8, 5);

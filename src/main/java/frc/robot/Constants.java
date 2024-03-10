@@ -51,15 +51,17 @@ public static Robot kRobot = Robot.kCompetition;
 public static class CANdleConstants{
 	public static final int CANdleID = 1;
 	public static final int Intake_Index = 8;
-	public static final int Intake_LEDnum = 6;
-	public static final int TOF1_Index = 14;
-	public static final int TOF1_LEDnum = 6;
+	public static final int Intake_LEDnum = 8;
+	public static final int TOF1_Index = 16;
+	public static final int TOF1_LEDnum = 7;
 	//  public static final int SpinningUp_Index = 20;
 	//  public static final int SpinningUp_LEDnum = 6;
 	//  public static final int FullSpeed_Index = 26;
 	//  public static final int FullSpeed_LEDnum = 6;
-	public static final int Shooter_Index = 32;
-	public static final int Shooter_LEDnum = 6;
+	public static final int Vision_Index = 23;
+	public static final int Vision_LEDNum = 7;
+	public static final int Shooter_Index = 30;
+	public static final int Shooter_LEDnum = 8;
 }
 
 public static class ClimberConstants{

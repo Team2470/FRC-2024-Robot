@@ -78,7 +78,6 @@ public class RobotContainer {
 	private final Intake m_intake = new Intake();
 	private final Orchestra6 m_Orchestra6 = new Orchestra6(11,12,13,14,26,27);
 	private final LEDSubsystem m_LEDs = new LEDSubsystem(m_controller);
-	private final PhotonVisionSubsystem m_PhotonVisionSubsystem = new PhotonVisionSubsystem(null);
 	private final Climber m_ClimberLeft = new Climber(ClimberConstants.kLeftMotorID,
 														ClimberConstants.kLeftServoChannel,
 														ClimberConstants.kLeftExtendChannel,
@@ -147,7 +146,7 @@ public class RobotContainer {
 			m_LEDs.changeTOF1Red();
 		}
 
-		if(m_PhotonVisionSubsystem.doesCameraHaveTarget()) {
+		if(m_camera1.doesCameraHaveTarget()) {
 			m_LEDs.changeVisionGreen();
 		} else {
 			m_LEDs.changeVisionRed();
