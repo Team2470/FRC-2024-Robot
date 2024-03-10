@@ -107,7 +107,7 @@ public class RobotContainer {
 		NamedCommands.registerCommands(new HashMap<String, Command>() {{
 			put("speaker-shoot", speakerShoot());
 			put("auto-shoot", new ParallelCommandGroup(
-				autoShoot(), m_intakePivot.stowCommand().withTimeout(4)
+				autoShoot(), m_intakePivot.stowCommand().withTimeout(3.1)
 			));
 			put("pickup", intakeCommand().withTimeout(4));
 			put("deploy-intake", m_intakePivot.deploy());
@@ -197,8 +197,8 @@ public class RobotContainer {
 		//   m_simpleFlywheelRight.pidCommand(()-> FlyWheelConstants.getRPM(m_camera1.FilteredEsimatedPoseNorm())),
 		//   m_simpleFlywheelLeft.feederShooterCommand(m_SimpleShooterFeeder)
 		// ));
-		// m_buttonPad.button(1).whileTrue(visionShootAndXStop());
-		m_buttonPad.button(1).whileTrue(m_shooterPivot.goToAngleCommand(SmartDashboard.getNumber("Select Shooter Pivot Angle", 0)));
+		m_buttonPad.button(1).whileTrue(visionShootAndXStop());
+		// m_buttonPad.button(1).whileTrue(m_shooterPivot.goToAngleCommand(SmartDashboard.getNumber("Select Shooter Pivot Angle", 0)));
 		m_buttonPad.button(9).whileTrue(intakeCommand());
 		m_buttonPad.button(8).whileTrue(StageShoot());
 
