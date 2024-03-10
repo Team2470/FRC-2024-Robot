@@ -228,7 +228,7 @@ public double getErrorAngle(){
 
 public boolean isAngleErrorInRange(){
 	if (m_controlMode == ControlMode.kPID){
-	return (0.35 > getErrorAngle() && getErrorAngle() > -0.35);
+	return (0.7 > getErrorAngle() && getErrorAngle() > -0.7);
 	}
 	return false;
 }

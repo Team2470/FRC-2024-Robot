@@ -134,7 +134,8 @@ public static class ShooterPivotConstants {
 	public static double getAngle(double distance) {
 	if (kRobot == Robot.kSecond) {
 		// Second robot
-		return (1166*(Math.pow(distance,-0.736)))-2;
+		// return (1166*(Math.pow(distance,-0.736)))-5;
+		return (1764*(Math.pow(distance,-0.818)))-2;
 	}
 
 	// Comp robot

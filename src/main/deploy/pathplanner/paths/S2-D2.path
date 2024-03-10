@@ -16,11 +16,11 @@
     },
     {
       "anchor": {
-        "x": 2.888624616628834,
+        "x": 2.9,
         "y": 5.55
       },
       "prevControl": {
-        "x": 2.638624616628834,
+        "x": 2.65,
         "y": 5.55
       },
       "nextControl": null,
@@ -30,27 +30,9 @@
   ],
   "rotationTargets": [],
   "constraintZones": [],
-  "eventMarkers": [
-    {
-      "name": "start",
-      "waypointRelativePos": 0.0,
-      "command": {
-        "type": "sequential",
-        "data": {
-          "commands": [
-            {
-              "type": "named",
-              "data": {
-                "name": "pickup"
-              }
-            }
-          ]
-        }
-      }
-    }
-  ],
+  "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 2.75,
+    "maxVelocity": 2.5,
     "maxAcceleration": 3.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0

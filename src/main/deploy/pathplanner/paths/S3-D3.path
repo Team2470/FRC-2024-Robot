@@ -8,20 +8,36 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.5872209522196823,
-        "y": 4.086084221551159
+        "x": 0.9682874623372801,
+        "y": 4.057497528770031
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 2.45,
-        "y": 4.1
+        "x": 2.4799967088104524,
+        "y": 4.135934791979994
       },
       "prevControl": {
-        "x": 1.4500000000000002,
-        "y": 4.1
+        "x": 1.6752173653366604,
+        "y": 4.129279008184726
+      },
+      "nextControl": {
+        "x": 2.6237587260926363,
+        "y": 4.137123750062432
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 2.3,
+        "y": 4.85
+      },
+      "prevControl": {
+        "x": 2.3511289374049276,
+        "y": 4.560033386839062
       },
       "nextControl": null,
       "isLocked": false,
@@ -30,59 +46,13 @@
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.6,
-      "rotationDegrees": 180.0,
-      "rotateFast": false
-    },
-    {
-      "waypointRelativePos": 0.05,
-      "rotationDegrees": 120.0,
-      "rotateFast": false
+      "waypointRelativePos": 0.9,
+      "rotationDegrees": -179.70057526517712,
+      "rotateFast": true
     }
   ],
   "constraintZones": [],
-  "eventMarkers": [
-    {
-      "name": "start",
-      "waypointRelativePos": 0,
-      "command": {
-        "type": "sequential",
-        "data": {
-          "commands": [
-            {
-              "type": "named",
-              "data": {
-                "name": "shoot"
-              }
-            }
-          ]
-        }
-      }
-    },
-    {
-      "name": "stop",
-      "waypointRelativePos": 1.0,
-      "command": {
-        "type": "sequential",
-        "data": {
-          "commands": [
-            {
-              "type": "named",
-              "data": {
-                "name": "pickup"
-              }
-            },
-            {
-              "type": "named",
-              "data": {
-                "name": "smartShoot"
-              }
-            }
-          ]
-        }
-      }
-    }
-  ],
+  "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 3.0,
     "maxAcceleration": 3.0,
@@ -91,7 +61,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 180.0,
+    "rotation": 160.0,
     "rotateFast": false
   },
   "reversed": false,

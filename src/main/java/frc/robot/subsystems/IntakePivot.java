@@ -189,18 +189,18 @@ public Command intakeLocation() {
 	);
 }
 
-public Command downWarCommand() {
+public Command deploy() {
 	return openLoopCommand(()-> -8.5);
 }
 
 
 
-public Command goToAngleCommand(DoubleSupplier angleSupplier){
+public Command goToAngle(DoubleSupplier angleSupplier){
 	return Commands.runEnd(
 	() -> this.setPIDSetpoint(angleSupplier.getAsDouble()), this::stop, this);
 }
 
-public Command goToAngleCommand(double angleDegrees){
-	return goToAngleCommand(()-> angleDegrees);
+public Command goToAngle(double angleDegrees){
+	return goToAngle(()-> angleDegrees);
 }
 }
