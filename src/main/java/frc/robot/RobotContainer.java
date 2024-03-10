@@ -548,6 +548,34 @@ public class RobotContainer {
 			)
 		);
 	}
+
+	public Command intakingCommand(){
+		return new ParallelRaceGroup(
+			//intake roll till ring detected by right sight
+			m_intake.test_forwardsCommand().until(() -> m_intake.isRingIntaked()),	
+			m_intakePivot.deploy()			
+		);	
+	}
+	public Command intakeUpCommand(){
+		return new ParallelDeadlineGroup(
+			new WaitUntilCommand((()->m_TOF1.isTOF1WithinRange())),//deadline
+			new SequentialCommandGroup(
+				new WaitUntilCommand(()-> m_intakePivot.getAngle() > 55),
+				m_intake.test_forwardsCommand()
+			),
+			m_shooterPivot.goToAngleCommand(45),
+			m_intakePivot.intakeLocation(),
+			m_feeder.forward()
+		);
+	}	
+	public Command splitIntake(){
+		return(new SequentialCommandGroup(
+			intakingCommand(),
+			intakeUpCommand()
+		));
+	}
+
+
 	public Command intakeCommand2(){
 		return new ParallelDeadlineGroup(
 			new SequentialCommandGroup(

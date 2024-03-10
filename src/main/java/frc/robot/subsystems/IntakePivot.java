@@ -184,7 +184,7 @@ public Command stowCommand() {
 
 public Command intakeLocation() {
 	return new SequentialCommandGroup(
-	new InstantCommand(()-> uplimit = 50),
+	new InstantCommand(()-> uplimit = 55),
 	openLoopCommand(()-> 6)
 	);
 }
