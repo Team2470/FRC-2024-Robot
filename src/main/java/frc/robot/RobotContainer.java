@@ -107,11 +107,12 @@ public class RobotContainer {
 
 		NamedCommands.registerCommands(new HashMap<String, Command>() {{
 			put("speaker-shoot", speakerShoot());
-			put("auto-shoot", new ParallelCommandGroup(
-				autoShoot(), m_intakePivot.stowCommand().until(()-> (m_intakePivot.getAngle() > 80))
+			put("auto-shoot", new ParallelRaceGroup(
+				autoShoot(), m_intakePivot.stowCommand()
 			));
 			put("pickup", intakeCommand().withTimeout(4));
 			put("deploy-intake", m_intakePivot.deploy());
+			put("Intake-up", m_intakePivot.stowCommand().until(()-> (m_intakePivot.getAngle() > 80)));
 		}});
 
 		registerAutos(new HashMap<String, String>() {{
@@ -121,6 +122,8 @@ public class RobotContainer {
 			put("BAMP", "BAMP");
 			//: extended basic autos
 			put("ESRC", "ESRC");
+			put("DSRC", "DSRC");
+			put("FSRC", "FSRC");
 
 			//: center based autos
 		}});
@@ -285,9 +288,10 @@ public class RobotContainer {
 
 				// Slow Mode
 				() -> m_controller.getHID().getXButton() || m_ClimberLeft.getMotorRotations() > 2 || m_ClimberRight.getMotorRotations() > 2,
+				
 
 				// Disable X Movement
-				() -> m_controller.getHID().getRawButton(13),
+				() -> false,
 
 				// Disable Y Movement
 				() -> false,
@@ -353,7 +357,7 @@ public class RobotContainer {
 
 				m_feeder.forward()
 			)
-		).withTimeout(1.5);
+		).withTimeout(2);
 	}
 
 	public Command ampShoot() {
@@ -509,6 +513,7 @@ public class RobotContainer {
 
 					new ParallelRaceGroup(
 						m_feeder.forward(),
+						m_intake.test_forwardsCommand(),
 						new SequentialCommandGroup(
 							new WaitUntilCommand(()->m_TOF1.isTOF1OutOfRange()),
 							new WaitCommand(0.25)
