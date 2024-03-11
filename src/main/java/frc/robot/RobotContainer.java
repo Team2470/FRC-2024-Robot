@@ -53,6 +53,7 @@ import frc.robot.subsystems.SimpleShooterFeeder;
 import frc.robot.subsystems.TimeOfFlightSensorTest;
 import frc.robot.subsystems.LEDSubsystem;
 import frc.robot.subsystems.Climber;
+import frc.robot.subsystems.PhotonVisionSubsystem;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -148,12 +149,18 @@ public class RobotContainer {
 			m_LEDs.changeTOF1Red();
 		}
 
+		if(m_camera1.doesCameraHaveTarget()) {
+			m_LEDs.changeVisionGreen();
+		} else {
+			m_LEDs.changeVisionRed();
+		}
+
 		if (m_simpleFlywheelTop.isErrorInRange()) {
 			m_LEDs.changeShooterGreen();
 		} else if(m_simpleFlywheelTop.isErrorBelow()){
-			m_LEDs.changeShooterRed();
-		} else if(m_simpleFlywheelTop.isErrorAbove()){
 			m_LEDs.changeShooterYellow();
+		} else if(m_simpleFlywheelTop.isErrorAbove()){
+			m_LEDs.changeShooterRed();
 		}
 
 		}, m_LEDs));
