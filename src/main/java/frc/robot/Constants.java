@@ -5,6 +5,7 @@
 package frc.robot;
 
 import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.RobotController;
@@ -110,6 +111,18 @@ public static class FlyWheelConstants {
 
 	// Comp robot
 	return (178*(Math.pow(distance, 0.633)));
+	}
+
+	public static final InterpolatingDoubleTreeMap kRPMMap = new InterpolatingDoubleTreeMap();
+	static {
+		kRPMMap.put(76.4, 2696.0);
+		kRPMMap.put(95.0, 3287.0);
+		kRPMMap.put(117.0, 3559.0);
+		kRPMMap.put(130.0, 3949.0);
+		kRPMMap.put(148.5, 4265.5);
+		kRPMMap.put(167.73, 4556.6);
+		kRPMMap.put(185.0, 4853.1);
+		kRPMMap.put(209.0, 5154.87);
 	}
 }
 
