@@ -122,7 +122,7 @@ public static class ShooterPivotConstants {
 	public static double encoderOffset = 140.889-21;
 
 
-	public static double kP = 35;
+	public static double kP = 70;
 	public static double kI = 11;
 	public static double kD = 1;
 	public static double kF = 0;
