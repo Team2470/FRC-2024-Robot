@@ -113,6 +113,8 @@ public class RobotContainer {
 			put("pickup", intakeCommand().withTimeout(4));
 			put("deploy-intake", m_intakePivot.deploy());
 			put("Intake-up", m_intakePivot.stowCommand().until(()-> (m_intakePivot.getAngle() > 80)));
+			put("IntakeP1", m_intaking());
+			put("IntakeP2", intakeUpCommand());
 		}});
 
 		registerAutos(new HashMap<String, String>() {{
