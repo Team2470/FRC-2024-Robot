@@ -192,7 +192,9 @@ public class RobotContainer {
 		m_buttonPad.button(12).whileTrue(m_shooterPivot.openLoopCommand(-2));
 		m_buttonPad.button(6).whileTrue(m_intakePivot.deploy());
 		m_buttonPad.button(7).whileTrue(m_intakePivot.stowCommand());
-
+    m_buttonPad.button(1).whileTrue(m_simpleFlywheelBottom.pidCommand(()-> SmartDashboard.getNumber("Select Left RPM", 0))); 
+    m_buttonPad.button(1).whileTrue(m_simpleFlywheelTop.pidCommand(()-> SmartDashboard.getNumber("Select Left RPM", 0))); 
+    m_buttonPad.button(1).whileTrue(m_shooterPivot.goToAngleCommand(()-> SmartDashboard.getNumber("Select Shooter Pivot Angle", 45))); 
 		// m_buttonPad.button(11).whileTrue(new ParallelCommandGroup(
 		//   m_ShooterPivot.goToAngleCommand(()-> ShooterPivotConstants.getAngle((m_camera1.FilteredEsimatedPoseNorm()))),
 		//   m_simpleFlywheelBottom.pidCommand(()-> FlyWheelConstants.getRPM(m_camera1.FilteredEsimatedPoseNorm())),
@@ -208,7 +210,7 @@ public class RobotContainer {
 		//   m_simpleFlywheelRight.pidCommand(()-> FlyWheelConstants.getRPM(m_camera1.FilteredEsimatedPoseNorm())),
 		//   m_simpleFlywheelLeft.feederShooterCommand(m_SimpleShooterFeeder)
 		// ));
-		m_buttonPad.button(1).whileTrue(visionShootAndXStop());
+		m_buttonPad.button(100).whileTrue(visionShootAndXStop());
    		// m_buttonPad.button(1).whileTrue(m_shooterPivot.goToAngleCommand(()-> SmartDashboard.getNumber("Select Shooter Pivot Angle", 0))); 
 		m_buttonPad.button(9).whileTrue(intakeCommand());
 
@@ -442,22 +444,22 @@ public class RobotContainer {
 		SmartDashboard.putNumber("Select Distance", 0);
 	}
 	private void setupShooter() {
-		m_simpleFlywheelBottom.setDefaultCommand(m_simpleFlywheelBottom.pidCommand(2000));
-		m_simpleFlywheelTop.setDefaultCommand(m_simpleFlywheelTop.pidCommand(2000));
-		// m_shooterPivot.setDefaultCommand(m_shooterPivot.goToAngleCommand(45));
-		m_intakePivot.setDefaultCommand(m_intakePivot.stowCommand());
-		m_shooterPivot.setDefaultCommand(
-			new SequentialCommandGroup(
-				new ParallelDeadlineGroup(
-					new SequentialCommandGroup(
-						new WaitCommand(0.1),
-						new WaitUntilCommand( ()-> m_shooterPivot.isAngleErrorInRange())
-					),
-					m_shooterPivot.goToAngleCommand(45)
-				),
-				new RunCommand(()-> {})
-			)
-		);
+		// m_simpleFlywheelBottom.setDefaultCommand(m_simpleFlywheelBottom.pidCommand(2000));
+		// m_simpleFlywheelTop.setDefaultCommand(m_simpleFlywheelTop.pidCommand(2000));
+		// // m_shooterPivot.setDefaultCommand(m_shooterPivot.goToAngleCommand(45));
+		// m_intakePivot.setDefaultCommand(m_intakePivot.stowCommand());
+		// m_shooterPivot.setDefaultCommand(
+		// 	new SequentialCommandGroup(
+		// 		new ParallelDeadlineGroup(
+		// 			new SequentialCommandGroup(
+		// 				new WaitCommand(0.1),
+		// 				new WaitUntilCommand( ()-> m_shooterPivot.isAngleErrorInRange())
+		// 			),
+		// 			m_shooterPivot.goToAngleCommand(45)
+		// 		),
+		// 		new RunCommand(()-> {})
+		// 	)
+		// );
 	}
 	private void registerAutos(HashMap<String, String> autos) {
 		for (String name: autos.keySet()) {
