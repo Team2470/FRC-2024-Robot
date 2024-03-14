@@ -124,9 +124,13 @@ public static class ShooterPivotConstants {
 	public static boolean encoderDirection = true;
 	public static double encoderOffset = 140.889-21;
 
+	// Fast gains
+	// public static double kP = 70;
+	// public static double kI = 11;
+	// public static double kD = 1;
 
-	public static double kP = 70;
-	public static double kI = 11;
+	public static double kP = 55;
+	public static double kI = 5;
 	public static double kD = 1;
 	public static double kF = 0;
 	public static double kG = 0.45;
