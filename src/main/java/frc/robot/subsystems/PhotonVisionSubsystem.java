@@ -119,7 +119,7 @@ public class PhotonVisionSubsystem extends SubsystemBase {
 	}
 
 	public double FilteredEsimatedPoseNorm() {
-		return FilteredEsimatedPoseNorm;
+		return FilteredEsimatedPoseNorm + 6;
 	}
 
 	public boolean isDataValid() {
@@ -167,7 +167,7 @@ public class PhotonVisionSubsystem extends SubsystemBase {
 					EstimatedPoseNorm = Units.metersToInches(EstimatedPoseNorm);
 					FilteredEsimatedPoseNorm = m_distanceFilter.calculate(EstimatedPoseNorm);
 					
-					FilteredEsimatedPoseNorm = 77.5 + 16.7 * (FilteredEsimatedPoseNorm) + 0.256 * (Math.pow(FilteredEsimatedPoseNorm, 2));
+					// FilteredEsimatedPoseNorm = 77.5 + 16.7 * (FilteredEsimatedPoseNorm) + 0.256 * (Math.pow(FilteredEsimatedPoseNorm, 2));
 
 
 					isDataValid = true;
