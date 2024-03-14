@@ -127,8 +127,12 @@ public class RobotContainer {
 			put("FSRC", "FSRC");
 
 			//: center based autos
+
+			//: extra stuff
+			put("MOVE", "MOVE");
 		}});
 
+		m_autoSelector.registerCommand("SHOT", "SHOT", speakerShoot());
 		m_autoSelector.initialize();
 
 		// TODO Uncomment after test on robot that angles make sense

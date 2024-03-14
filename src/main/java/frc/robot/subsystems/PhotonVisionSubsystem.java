@@ -166,6 +166,10 @@ public class PhotonVisionSubsystem extends SubsystemBase {
 					EstimatedPoseNorm = currentPose.get().estimatedPose.getTranslation().minus(tagPose.getTranslation()).getNorm();
 					EstimatedPoseNorm = Units.metersToInches(EstimatedPoseNorm);
 					FilteredEsimatedPoseNorm = m_distanceFilter.calculate(EstimatedPoseNorm);
+					
+					FilteredEsimatedPoseNorm = 77.5 + 16.7 * (FilteredEsimatedPoseNorm) + 0.256 * (Math.pow(FilteredEsimatedPoseNorm, 2));
+
+
 					isDataValid = true;
 				}
 			}
