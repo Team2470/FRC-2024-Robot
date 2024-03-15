@@ -32,6 +32,8 @@ public class PhotonVisionSubsystem extends SubsystemBase {
 	private double robotYaw;
 	private final MedianFilter m_distanceFilter = new MedianFilter(5);
 
+	public double offset = 0;
+
 	private final double CAMERA_HEIGHT_METERES = Units.inchesToMeters(10);
 	private final double TARGET_HEIGHT_METERS = Units.inchesToMeters(50);
 	private final double CAMERA_PITCH_RADIANS = Units.degreesToRadians(0);
@@ -114,12 +116,12 @@ public class PhotonVisionSubsystem extends SubsystemBase {
 		return DistanceToTarget;
 	}
 
-	public double getFilteredDistance() {
-		return FilteredDistanceToTarget;
-	}
+	// public double getFilteredDistance() {
+	// 	return FilteredDistanceToTarget;
+	// }
 
 	public double FilteredEsimatedPoseNorm() {
-		return FilteredEsimatedPoseNorm + 6;
+		return FilteredEsimatedPoseNorm + 6 + offset;
 	}
 
 	public boolean isDataValid() {
@@ -213,6 +215,7 @@ public class PhotonVisionSubsystem extends SubsystemBase {
 		SmartDashboard.putNumber("Calculated distance", FilteredDistanceToTargetOnField);
 		SmartDashboard.putBoolean("is data valid?", isDataValid());
 		SmartDashboard.putNumber("GetYAW", getRobotYaw());
+		SmartDashboard.putNumber("Vision Offset Number", offset);
 
 	}
 

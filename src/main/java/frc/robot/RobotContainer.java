@@ -130,9 +130,13 @@ public class RobotContainer {
 
 			//: extra stuff
 			put("MOVE", "MOVE");
+
+			put("SSRC", "SSRC");
+			put("SCEN", "SCEN");
+			put("SAMP", "SAMP");
+
 		}});
 
-		m_autoSelector.registerCommand("SHOT", "SHOT", speakerShoot());
 		m_autoSelector.initialize();
 
 		// TODO Uncomment after test on robot that angles make sense
@@ -196,6 +200,11 @@ public class RobotContainer {
 		m_buttonPad.button(12).whileTrue(m_shooterPivot.openLoopCommand(-2));
 		m_buttonPad.button(6).whileTrue(m_intakePivot.deploy());
 		m_buttonPad.button(7).whileTrue(m_intakePivot.stowCommand());
+
+		m_controller.povUp().onTrue(new InstantCommand(()-> m_camera1.offset+=1));
+		m_controller.povDown().onTrue(new InstantCommand(()-> m_camera1.offset -=1));
+		m_controller.povLeft().onTrue(new InstantCommand(()-> m_camera1.offset = 0));
+		
 
 		// m_buttonPad.button(11).whileTrue(new ParallelCommandGroup(
 		//   m_ShooterPivot.goToAngleCommand(()-> ShooterPivotConstants.getAngle((m_camera1.FilteredEsimatedPoseNorm()))),
