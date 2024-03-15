@@ -41,7 +41,7 @@
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "D3"
     }
   ],
   "rotationTargets": [
@@ -65,7 +65,7 @@
     "rotateFast": false
   },
   "reversed": false,
-  "folder": null,
+  "folder": "basic autos",
   "previewStartingState": {
     "rotation": 120.0,
     "velocity": 0.0

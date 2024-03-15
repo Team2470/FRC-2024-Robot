@@ -37,7 +37,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "S3-D3"
+                  "pathName": "BITP1"
                 }
               },
               {
@@ -50,9 +50,46 @@
           }
         },
         {
+          "type": "path",
+          "data": {
+            "pathName": "BITP2"
+          }
+        },
+        {
           "type": "named",
           "data": {
             "name": "auto-shoot"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "deploy-intake"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "BITP3"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "pickup"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "BITP4"
           }
         }
       ]

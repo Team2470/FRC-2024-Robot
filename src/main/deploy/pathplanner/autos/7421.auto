@@ -2,8 +2,8 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.6433764218879787,
-      "y": 4.372744601345059
+      "x": 0.75,
+      "y": 4.42
     },
     "rotation": 120.0
   },
@@ -37,7 +37,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "S3-D3"
+                  "pathName": "7421P1"
                 }
               },
               {
@@ -47,6 +47,49 @@
                 }
               }
             ]
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "7421P2"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "auto-shoot"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "deploy-intake"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "7421P3"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "pickup"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "7421P4"
           }
         },
         {

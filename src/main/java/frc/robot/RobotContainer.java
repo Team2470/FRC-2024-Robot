@@ -135,6 +135,7 @@ public class RobotContainer {
 			put("SCEN", "SCEN");
 			put("SAMP", "SAMP");
 
+			put("KEWL", "KEWL");
 		}});
 
 		m_autoSelector.initialize();
@@ -549,7 +550,8 @@ public class RobotContainer {
 			),
 			new SequentialCommandGroup(
 				m_intake.test_forwardsCommand().until(() -> m_intake.isRingIntaked()),
-				new WaitCommand(1.3),
+				// new WaitCommand(1.3),
+				new WaitUntilCommand(()-> m_intakePivot.getAngle() > 50),
 				m_intake.test_forwardsCommand()
 			),
 			m_shooterPivot.goToAngleCommand(45),
