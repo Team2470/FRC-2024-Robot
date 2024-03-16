@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.35,
-      "y": 5.55
+      "x": 0.6433764218879787,
+      "y": 4.372744601345059
     },
-    "rotation": -179.58622012576348
+    "rotation": 121.26373169437743
   },
   "command": {
     "type": "sequential",
@@ -37,7 +37,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "S2-D2"
+                  "pathName": "FAR2'1"
                 }
               },
               {
@@ -50,9 +50,21 @@
           }
         },
         {
+          "type": "path",
+          "data": {
+            "pathName": "FAR2'2"
+          }
+        },
+        {
           "type": "named",
           "data": {
             "name": "auto-shoot"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "deploy-intake"
           }
         },
         {
@@ -62,7 +74,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "D3-D2"
+                  "pathName": "FAR2'3"
                 }
               },
               {
@@ -78,6 +90,31 @@
           "type": "named",
           "data": {
             "name": "auto-shoot"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "deploy-intake"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "FAR2'4"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "pickup"
+                }
+              }
+            ]
           }
         }
       ]

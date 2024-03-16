@@ -3,32 +3,38 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.9,
-        "y": 5.55
+        "x": 0.6433764218879787,
+        "y": 4.372744601345059
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.3552185662929883,
-        "y": 5.565311310802802
+        "x": 6.19944302951669,
+        "y": 1.3219925538950177
       },
       "isLocked": false,
-      "linkedName": "D2"
+      "linkedName": "D1"
     },
     {
       "anchor": {
-        "x": 2.5477852757507313,
-        "y": 6.757878020260545
+        "x": 7.85,
+        "y": 2.449846341134125
       },
       "prevControl": {
-        "x": 1.4014420821634435,
-        "y": 5.935099437766444
+        "x": 5.894367824771685,
+        "y": 1.4144395856359284
       },
       "nextControl": null,
       "isLocked": false,
       "linkedName": null
     }
   ],
-  "rotationTargets": [],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.5,
+      "rotationDegrees": 161.81768398795023,
+      "rotateFast": false
+    }
+  ],
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
@@ -39,13 +45,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -146.99334872358702,
+    "rotation": 180.0,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "1710 autos",
+  "folder": "FAR1 Autos",
   "previewStartingState": {
-    "rotation": -179.86138683363524,
+    "rotation": 120.0,
     "velocity": 0
   },
   "useDefaultConstraints": true

@@ -117,26 +117,27 @@ public class RobotContainer {
 		}});
 
 		registerAutos(new HashMap<String, String>() {{
-			//: basic branch autos
-			put("BSRC", "BSRC");
-			put("BCEN", "BCEN");
-			put("BAMP", "BAMP");
-			//: extended basic autos
-			put("ESRC", "ESRC");
-			put("DSRC", "DSRC");
-			put("FSRC", "FSRC");
+			//: basic autos - 2 note score
+			put("2SRC", "2SRC");
+			put("2CEN", "2CEN");
+			put("2AMP", "2AMP");
 
-			//: center based autos
-
-			//: extra stuff
+			//: only moves - nothing else
 			put("MOVE", "MOVE");
 
-			put("SSRC", "SSRC");
-			put("SCEN", "SCEN");
-			put("SAMP", "SAMP");
+			//: single note autos - shoot only
+			put("1SRC", "1SRC");
+			put("1CEN", "1CEN");
+			put("1AMP", "1AMP");
+			
+			//: extra autos - lots of notes
+			put("FAR1", "FAR1");	
+			put("FAR2", "FAR2");
+			put("4SRC", "4SRC");	
 
-			put("KEWL", "KEWL");
-			put("1710", "1710");
+			put("3SRC", "3SRC");
+			put("3CEN", "3CEN");
+			put("3AMP", "3AMP");
 		}});
 
 		m_autoSelector.initialize();

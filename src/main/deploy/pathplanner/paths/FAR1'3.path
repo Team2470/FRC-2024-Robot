@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.9,
-        "y": 5.55
+        "x": 3.25,
+        "y": 2.9
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.3552185662929883,
-        "y": 5.565311310802802
+        "x": 6.458568054973947,
+        "y": 1.4393029173445737
       },
       "isLocked": false,
-      "linkedName": "D2"
+      "linkedName": null
     },
     {
       "anchor": {
-        "x": 2.5477852757507313,
-        "y": 6.757878020260545
+        "x": 7.854244897678984,
+        "y": 0.7673103634495558
       },
       "prevControl": {
-        "x": 1.4014420821634435,
-        "y": 5.935099437766444
+        "x": 5.469111478763498,
+        "y": 1.9136535570368438
       },
       "nextControl": null,
       "isLocked": false,
@@ -39,13 +39,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -146.99334872358702,
+    "rotation": -179.40934278535337,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "1710 autos",
+  "folder": "FAR1 Autos",
   "previewStartingState": {
-    "rotation": -179.86138683363524,
+    "rotation": 126.13365547048797,
     "velocity": 0
   },
   "useDefaultConstraints": true
