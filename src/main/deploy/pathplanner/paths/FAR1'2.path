@@ -3,16 +3,16 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 7.85,
-        "y": 2.45
+        "x": 7.9,
+        "y": 2.3
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.036182486779388,
-        "y": 1.1001196777168332
+        "x": 5.39468543982133,
+        "y": 1.4402426048095331
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "C4"
     },
     {
       "anchor": {
@@ -45,13 +45,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 123.14699583225602,
+    "rotation": 137.5416781369854,
     "rotateFast": false
   },
   "reversed": false,
   "folder": "FAR1 Autos",
   "previewStartingState": {
-    "rotation": 179.92561157371415,
+    "rotation": -160.18110538130958,
     "velocity": 0
   },
   "useDefaultConstraints": true

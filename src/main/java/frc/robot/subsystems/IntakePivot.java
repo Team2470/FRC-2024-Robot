@@ -20,6 +20,7 @@ import com.ctre.phoenix.sensors.AbsoluteSensorRange;
 import com.ctre.phoenix.sensors.CANCoder;
 import com.ctre.phoenix.sensors.SensorInitializationStrategy;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
 
@@ -56,7 +57,8 @@ public IntakePivot() {
 	m_motor.restoreFactoryDefaults();
 	m_motor.setInverted(true);
 	m_motor.setOpenLoopRampRate(0.3);
-	m_motor.setSmartCurrentLimit(10);
+	m_motor.setSmartCurrentLimit(20);
+	m_motor.setIdleMode(IdleMode.kBrake);
 
 
 	// m_encoder = new CANCoder(Constants.IntakePivotConstants.EncoderID, Constants.IntakePivotConstants.EncoderCANBus);

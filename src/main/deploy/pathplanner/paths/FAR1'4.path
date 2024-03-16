@@ -3,16 +3,16 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 7.85,
-        "y": 0.77
+        "x": 8.0,
+        "y": 0.85
       },
       "prevControl": null,
       "nextControl": {
-        "x": 5.875878418423503,
-        "y": 1.7102700872068415
+        "x": 5.84814430890123,
+        "y": 1.6640465713363868
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "C5"
     },
     {
       "anchor": {
@@ -20,8 +20,8 @@
         "y": 2.9
       },
       "prevControl": {
-        "x": 5.4975016418501275,
-        "y": 1.883048669700944
+        "x": 5.367419743848496,
+        "y": 1.8396959316441164
       },
       "nextControl": null,
       "isLocked": false,
@@ -31,7 +31,7 @@
   "rotationTargets": [
     {
       "waypointRelativePos": 0.2,
-      "rotationDegrees": 155.0,
+      "rotationDegrees": 157.11955384719178,
       "rotateFast": false
     },
     {
@@ -56,7 +56,7 @@
   "reversed": false,
   "folder": "FAR1 Autos",
   "previewStartingState": {
-    "rotation": 180.0,
+    "rotation": 162.8972710309476,
     "velocity": 0
   },
   "useDefaultConstraints": true
