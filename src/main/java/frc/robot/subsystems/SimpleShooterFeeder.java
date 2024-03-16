@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import java.util.function.DoubleSupplier;
 
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkLowLevel.PeriodicFrame;
 
@@ -17,10 +18,11 @@ public class SimpleShooterFeeder extends SubsystemBase {
 	// public final RelativeEncoder m_encoder;
 
 	public SimpleShooterFeeder(int canID) {
-		m_SimpleShooterFeeder = new CANSparkMax(canID, MotorType.kBrushed);
+		m_SimpleShooterFeeder = new CANSparkMax(canID, MotorType.kBrushless);
 		m_SimpleShooterFeeder.restoreFactoryDefaults();
 		m_SimpleShooterFeeder.setInverted(false);
 		m_SimpleShooterFeeder.setSmartCurrentLimit(40);
+		m_SimpleShooterFeeder.setIdleMode(IdleMode.kBrake);
 		// m_encoder = m_SimpleShooterFeeder.getEncoder();
 
 		// Reduce CAN Bus usage, since we are using this as a dumb motor for week zero we can turn down
@@ -83,10 +85,10 @@ public class SimpleShooterFeeder extends SubsystemBase {
 
 
 	public void feedShooter() {
-		m_SimpleShooterFeeder.setVoltage(12);
+		m_SimpleShooterFeeder.setVoltage(8);
 	}
 	public void reverseFeeder() {
-		m_SimpleShooterFeeder.setVoltage((-12));
+		m_SimpleShooterFeeder.setVoltage((-8));
 	}
 
 	public void stopFeeder() {

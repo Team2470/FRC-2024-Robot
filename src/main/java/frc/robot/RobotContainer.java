@@ -136,6 +136,7 @@ public class RobotContainer {
 			put("SAMP", "SAMP");
 
 			put("KEWL", "KEWL");
+			put("1710", "1710");
 		}});
 
 		m_autoSelector.initialize();
