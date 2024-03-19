@@ -259,8 +259,8 @@ public class RobotContainer {
 	//56.92836363
 		m_buttonPad.button(3).whileTrue(new ParallelCommandGroup(
 			m_shooterPivot.goToAngleCommand(48.779296875),
-			m_simpleFlywheelBottom.pidCommand(-2500),
-			m_simpleFlywheelTop.pidCommand(-2500),
+			m_simpleFlywheelBottom.pidCommand(-1700),
+			m_simpleFlywheelTop.pidCommand(-1700),
 			m_TOF1.feederIntakeCommand(m_feeder)
 		));
 
@@ -554,6 +554,7 @@ public class RobotContainer {
 				m_intake.test_forwardsCommand().until(() -> m_intake.isRingIntaked()),
 				// new WaitCommand(1.3),
 				new WaitUntilCommand(()-> m_intakePivot.getAngle() > 50),
+				new WaitCommand(0.2),
 				m_intake.test_forwardsCommand()
 			),
 			m_shooterPivot.goToAngleCommand(45),
