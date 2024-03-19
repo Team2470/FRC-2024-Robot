@@ -118,26 +118,27 @@ public class RobotContainer {
 		}});
 
 		registerAutos(new HashMap<String, String>() {{
-			//: basic branch autos
-			put("BSRC", "BSRC");
-			put("BCEN", "BCEN");
-			put("BAMP", "BAMP");
-			//: extended basic autos
-			put("ESRC", "ESRC");
-			put("DSRC", "DSRC");
-			put("FSRC", "FSRC");
+			//: basic autos - 2 note score
+			put("2SRC", "2SRC");
+			put("2CEN", "2CEN");
+			put("2AMP", "2AMP");
 
-			//: center based autos
-
-			//: extra stuff
+			//: only moves - nothing else
 			put("MOVE", "MOVE");
 
-			put("SSRC", "SSRC");
-			put("SCEN", "SCEN");
-			put("SAMP", "SAMP");
+			//: single note autos - shoot only
+			put("1SRC", "1SRC");
+			put("1CEN", "1CEN");
+			put("1AMP", "1AMP");
+			
+			//: extra autos - lots of notes
+			put("FAR1", "FAR1");	
+			put("FAR2", "FAR2");
+			put("4SRC", "4SRC");	
 
-			put("KEWL", "KEWL");
-			put("1710", "1710");
+			put("3SRC", "3SRC");
+			put("3CEN", "3CEN");
+			put("3AMP", "3AMP");
 		}});
 
 		m_autoSelector.initialize();
@@ -259,8 +260,8 @@ public class RobotContainer {
 	//56.92836363
 		m_buttonPad.button(3).whileTrue(new ParallelCommandGroup(
 			m_shooterPivot.goToAngleCommand(48.779296875),
-			m_simpleFlywheelBottom.pidCommand(-2500),
-			m_simpleFlywheelTop.pidCommand(-2500),
+			m_simpleFlywheelBottom.pidCommand(-1700),
+			m_simpleFlywheelTop.pidCommand(-1700),
 			m_TOF1.feederIntakeCommand(m_feeder)
 		));
 
@@ -554,6 +555,7 @@ public class RobotContainer {
 				m_intake.test_forwardsCommand().until(() -> m_intake.isRingIntaked()),
 				// new WaitCommand(1.3),
 				new WaitUntilCommand(()-> m_intakePivot.getAngle() > 50),
+				new WaitCommand(0.2),
 				m_intake.test_forwardsCommand()
 			),
 			m_shooterPivot.goToAngleCommand(45),

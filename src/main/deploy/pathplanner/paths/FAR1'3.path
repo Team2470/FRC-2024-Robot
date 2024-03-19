@@ -3,32 +3,38 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 7.85,
-        "y": 2.45
+        "x": 3.25,
+        "y": 2.9
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.356602983476237,
-        "y": 1.3219925538950177
+        "x": 4.812737553403035,
+        "y": 2.0985476205186653
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 1.1056115805925304,
-        "y": 3.781083598203233
+        "x": 8.0,
+        "y": 0.85
       },
       "prevControl": {
-        "x": 1.7804749123011738,
-        "y": 1.2018114126318356
+        "x": 7.123913346925792,
+        "y": 1.192566709457744
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "C5"
     }
   ],
-  "rotationTargets": [],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.45,
+      "rotationDegrees": 156.07714051023484,
+      "rotateFast": false
+    }
+  ],
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
@@ -39,13 +45,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 109.29004621918877,
+    "rotation": 160.201123645475,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "wip autos",
+  "folder": "FAR1 Autos",
   "previewStartingState": {
-    "rotation": 0,
+    "rotation": 126.13365547048797,
     "velocity": 0
   },
   "useDefaultConstraints": true

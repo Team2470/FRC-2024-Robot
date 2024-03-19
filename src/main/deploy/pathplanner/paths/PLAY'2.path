@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.9,
-        "y": 5.55
+        "x": 7.845000194504893,
+        "y": 0.915225614235013
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.3552185662929883,
-        "y": 5.565311310802802
+        "x": 6.217932435864871,
+        "y": 1.3959501792877462
       },
       "isLocked": false,
-      "linkedName": "D2"
+      "linkedName": null
     },
     {
       "anchor": {
-        "x": 2.5477852757507313,
-        "y": 6.757878020260545
+        "x": 2.409114728139366,
+        "y": 3.3650719553691366
       },
       "prevControl": {
-        "x": 1.4014420821634435,
-        "y": 5.935099437766444
+        "x": 3.6571496566416553,
+        "y": 2.736432139530946
       },
       "nextControl": null,
       "isLocked": false,
@@ -39,13 +39,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -146.99334872358702,
+    "rotation": 136.2188752351313,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "1710 autos",
+  "folder": "playoff",
   "previewStartingState": {
-    "rotation": -179.86138683363524,
+    "rotation": 159.25391972431663,
     "velocity": 0
   },
   "useDefaultConstraints": true

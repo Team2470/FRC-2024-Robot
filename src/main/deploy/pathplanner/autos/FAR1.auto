@@ -37,7 +37,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "S3-D3"
+                  "pathName": "FAR1'1"
                 }
               },
               {
@@ -50,9 +50,40 @@
           }
         },
         {
+          "type": "path",
+          "data": {
+            "pathName": "FAR1'2"
+          }
+        },
+        {
           "type": "named",
           "data": {
             "name": "auto-shoot"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "deploy-intake"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "FAR1'3"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "pickup"
+                }
+              }
+            ]
           }
         }
       ]
