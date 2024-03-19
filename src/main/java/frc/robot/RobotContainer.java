@@ -73,7 +73,8 @@ public class RobotContainer {
 	private final ShooterPivot m_shooterPivot = new ShooterPivot();
 	private final Drivetrain m_drivetrain = new Drivetrain();
 	private final SimpleShooterFeeder m_feeder = new SimpleShooterFeeder(20);
-	private final TimeOfFlightSensorTest m_TOF1 = new TimeOfFlightSensorTest();
+	private final TimeOfFlightSensorTest m_TOF1 = new TimeOfFlightSensorTest(1);
+	private final TimeOfFlightSensorTest m_TOF2 = new TimeOfFlightSensorTest(2);
 	private final IntakePivot m_intakePivot = new IntakePivot();
 	private final Intake m_intake = new Intake();
 	private final Orchestra6 m_Orchestra6 = new Orchestra6(11,12,13,14,26,27);
@@ -225,7 +226,7 @@ public class RobotContainer {
 		// ));
 		m_buttonPad.button(1).whileTrue(visionShootAndXStop());
    		// m_buttonPad.button(1).whileTrue(m_shooterPivot.goToAngleCommand(()-> SmartDashboard.getNumber("Select Shooter Pivot Angle", 0))); 
-		m_buttonPad.button(9).whileTrue(intakeCommand());
+		m_buttonPad.button(9).whileTrue(intakeCommand2());
 
 		//keep
 		// m_buttonPad.button(8).whileTrue(StageShoot());
@@ -574,12 +575,11 @@ public class RobotContainer {
 	public Command intakeCommand2(){
 		return new ParallelDeadlineGroup(
 			new SequentialCommandGroup(
-				new WaitUntilCommand((() -> m_TOF1.isTOF1WithinRange())),
-				new WaitCommand(0)
+				new WaitUntilCommand((() -> m_TOF2.isTOF1WithinRange()))
 			),
 			new SequentialCommandGroup(
 				m_intake.test_forwardsCommand().until(() -> m_intake.isRingIntaked()),
-				new WaitCommand(1.3),
+				new WaitUntilCommand(()-> m_intakePivot.getAngle() > 87),
 				m_intake.test_forwardsCommand()
 			),
 			m_shooterPivot.goToAngleCommand(45),
@@ -587,17 +587,13 @@ public class RobotContainer {
 				m_intakePivot.deploy().until(() -> m_intake.isRingIntaked()),
 				m_intakePivot.stowCommand()
 			),
-			m_feeder.forward(),
-
 			new SequentialCommandGroup(
-				new WaitUntilCommand(()-> m_intake.isRingIntaked()),
-				new StartEndCommand(
-					() -> m_controller.getHID().setRumble(RumbleType.kBothRumble, .3),
-					() -> m_controller.getHID().setRumble(RumbleType.kBothRumble, 0)
-				).withTimeout(.2)
+				m_feeder.forward().until(()-> m_TOF1.isTOF1WithinRange()),	
+				m_feeder.forwardPercent(0.2).until(()-> m_TOF2.isTOF2WithinRange())
 			)
 		);
 	}
+
 
 	public Command extendClimber(){
 		return new ParallelCommandGroup(m_ClimberLeft.extendCommand(), m_ClimberRight.extendCommand());

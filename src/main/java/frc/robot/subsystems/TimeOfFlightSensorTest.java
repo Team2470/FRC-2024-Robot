@@ -12,10 +12,11 @@ public class TimeOfFlightSensorTest extends SubsystemBase {
 	// private final TimeOfFlight m_TimeOfFlight_2;
 
 	// private double initialEncoderValue;
-
-	public TimeOfFlightSensorTest(){
-		m_TimeOfFlight_1 = new TimeOfFlight(1);
+	private int Tof;
+	public TimeOfFlightSensorTest(int TofID){
+		m_TimeOfFlight_1 = new TimeOfFlight(TofID);
 		// m_TimeOfFlight_2 = new TimeOfFlight(2);
+		Tof = TofID;
 	}
 
 	public double getRange_TOF1(){
@@ -60,6 +61,10 @@ public class TimeOfFlightSensorTest extends SubsystemBase {
 
 	public boolean isTOF1WithinRange() {
 		return (this.getRange_TOF1() < 150);
+
+	}
+	public boolean isTOF2WithinRange() {
+		return (this.getRange_TOF1() < 200);
 
 	}
 
@@ -131,14 +136,14 @@ public class TimeOfFlightSensorTest extends SubsystemBase {
 
 	@Override
 	public void periodic() {
-		SmartDashboard.putNumber("Range_TOF1", getRange_TOF1());
-		SmartDashboard.putNumber("Ambient Light_TOF1", getRange_TOF1());
-		SmartDashboard.putNumber("Range Sigma_TOF1", getRange_TOF1());
-		SmartDashboard.putNumber("Sample Time_TOF1", getRange_TOF1());
-		SmartDashboard.putBoolean("Is TOF1 Within Range",isTOF1WithinRange());
+		SmartDashboard.putNumber("Range_TOF" + Tof, getRange_TOF1());
+		SmartDashboard.putNumber("Ambient Light_TOF" + Tof, getRange_TOF1());
+		SmartDashboard.putNumber("Range Sigma_TOF" + Tof, getRange_TOF1());
+		SmartDashboard.putNumber("Sample Time_TOF" + Tof, getRange_TOF1());
+		SmartDashboard.putBoolean("Is TOF" + Tof + "Within Range",isTOF1WithinRange());
 		// SmartDashboard.putNumber("Range_TOF2", getRange_TOF2());
 		// SmartDashboard.putBoolean("Is TOF2 Within Range",isTOF2WithinRange());
-		SmartDashboard.putNumber("Variable Voltage", variableVoltage());
+		SmartDashboard.putNumber("Variable Voltage TOF" + Tof, variableVoltage());
 	}
 
 

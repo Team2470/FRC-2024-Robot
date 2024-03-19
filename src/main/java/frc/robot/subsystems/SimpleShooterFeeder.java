@@ -87,6 +87,11 @@ public class SimpleShooterFeeder extends SubsystemBase {
 	public void feedShooter() {
 		m_SimpleShooterFeeder.setVoltage(8);
 	}
+
+	public void feedShooterPercent(double percent) {
+		m_SimpleShooterFeeder.setVoltage(percent * 12);
+	}
+
 	public void reverseFeeder() {
 		m_SimpleShooterFeeder.setVoltage((-8));
 	}
@@ -110,7 +115,12 @@ public class SimpleShooterFeeder extends SubsystemBase {
 			this::stopFeeder,
 			this);
 	}
-
+	public Command forwardPercent(double percent) {
+		return Commands.runEnd(
+			() -> this.feedShooterPercent(percent),
+			this::stopFeeder,
+			this);
+	}
 
 	public Command reverse() {
 		return Commands.runEnd(
