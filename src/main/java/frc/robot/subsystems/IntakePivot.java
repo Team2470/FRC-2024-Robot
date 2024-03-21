@@ -57,8 +57,9 @@ public IntakePivot() {
 	m_motor.restoreFactoryDefaults();
 	m_motor.setInverted(true);
 	m_motor.setOpenLoopRampRate(0.3);
-	m_motor.setSmartCurrentLimit(20);
+	m_motor.setSmartCurrentLimit(40);
 	m_motor.setIdleMode(IdleMode.kBrake);
+	m_motor.setOpenLoopRampRate(0.25);
 
 
 	// m_encoder = new CANCoder(Constants.IntakePivotConstants.EncoderID, Constants.IntakePivotConstants.EncoderCANBus);
@@ -179,20 +180,24 @@ private Command openLoopCommand(double OutputVoltage) {
 public Command stowCommand() {
 	return new SequentialCommandGroup(
 	new InstantCommand(()-> uplimit = 90),
-	openLoopCommand(()-> 6).until(()->getAngle() > 60),
-	openLoopCommand(()-> 3)
+	openLoopCommand(()-> 4).until(()->getAngle() > 60),
+	openLoopCommand(()-> 1.5).until(()-> getAngle() > 110),
+	openLoopCommand(0.3).until(()-> getAngle() > 115)
 	);
 }
 
 public Command intakeLocation() {
 	return new SequentialCommandGroup(
 	new InstantCommand(()-> uplimit = 50),
-	openLoopCommand(()-> 6)
+	openLoopCommand(()-> 4)
 	);
 }
 
 public Command deploy() {
-	return openLoopCommand(()-> -8.5);
+	return new SequentialCommandGroup(
+		openLoopCommand(()-> -3).until(()-> getAngle() < 10),
+		openLoopCommand(-0.25)
+	);
 }
 
 

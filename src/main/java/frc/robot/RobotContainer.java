@@ -95,6 +95,8 @@ public class RobotContainer {
 	private final RevDigit m_revDigit;
 	private final AutoSelector m_autoSelector;
 
+	private boolean slowMode;
+
 	public RobotContainer() {
 		SmartDashboard.putString("roboRio Serial Number", RobotController.getSerialNumber());
 		// CameraServer.startAutomaticCapture();
@@ -280,12 +282,16 @@ public class RobotContainer {
 			m_simpleFlywheelTop.pidCommand(2300)
 		));
 
+		
+
 
 
 		//dont go 2800-3200 rpm (Harmonics ;] )
 		// Configure default commands
 
 		// Configure default commands
+
+		
 		m_drivetrain.setDefaultCommand(
 			new DriveWithController(
 				m_drivetrain,
@@ -311,7 +317,8 @@ public class RobotContainer {
 				() -> !m_controller.getHID().getAButton(),
 
 				// Slow Mode
-				() -> m_controller.getHID().getXButton() || m_ClimberLeft.getMotorRotations() > 2 || m_ClimberRight.getMotorRotations() > 2,
+				// () -> m_controller.getHID().getXButton() || m_ClimberLeft.getMotorRotations() > 2 || m_ClimberRight.getMotorRotations() > 2,
+				() -> m_controller.getHID().getXButton(),		
 				
 
 				// Disable X Movement
@@ -463,18 +470,19 @@ public class RobotContainer {
 		m_simpleFlywheelTop.setDefaultCommand(m_simpleFlywheelTop.pidCommand(2000));
 		// m_shooterPivot.setDefaultCommand(m_shooterPivot.goToAngleCommand(45));
 		m_intakePivot.setDefaultCommand(m_intakePivot.stowCommand());
-		m_shooterPivot.setDefaultCommand(
-			new SequentialCommandGroup(
-				new ParallelDeadlineGroup(
-					new SequentialCommandGroup(
-						new WaitCommand(0.1),
-						new WaitUntilCommand( ()-> m_shooterPivot.isAngleErrorInRange())
-					),
-					m_shooterPivot.goToAngleCommand(45)
-				),
-				new RunCommand(()-> {})
-			)
-		);
+		// m_shooterPivot.setDefaultCommand(
+		// 	new SequentialCommandGroup(
+		// 		new ParallelDeadlineGroup(
+		// 			new SequentialCommandGroup(
+		// 				new WaitCommand(0.1),
+		// 				new WaitUntilCommand( ()-> m_shooterPivot.isAngleErrorInRange())
+		// 			),
+		// 			m_shooterPivot.goToAngleCommand(45)
+		// 		),
+		// 		new RunCommand(()-> {})
+		// 	)
+		// )
+		;
 	}
 	private void registerAutos(HashMap<String, String> autos) {
 		for (String name: autos.keySet()) {
@@ -543,7 +551,8 @@ public class RobotContainer {
 							new WaitCommand(0.25)
 						)
 					)
-					));
+					)
+					);
 	}
 	public Command intakeCommand(){
 		return new ParallelDeadlineGroup(
@@ -606,5 +615,9 @@ public class RobotContainer {
 	}
 	private Command autoShoot() {
 		return visionShoot();
+	}
+
+	public void slowmodething(){
+		slowMode = !slowMode;
 	}
 }
