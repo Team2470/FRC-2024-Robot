@@ -109,7 +109,8 @@ public static class FlyWheelConstants {
 	}
 
 	// Comp robot
-	return (178*(Math.pow(distance, 0.633)));
+	// return (178*(Math.pow(distance, 0.633)));
+	return (166*(Math.pow(distance, 0.647)));	
 	}
 }
 
@@ -118,14 +119,18 @@ public static class ShooterPivotConstants {
 	public static final int EncoderID = 21;
 	public static final String MotorCANBus = "rio";
 	public static final String EncoderCANBus = "rio";
-	public static int reverseSoftLimit = 175;
+	public static int reverseSoftLimit = 250;
 	public static int forwardSoftLimit = 1024;
 	public static boolean encoderDirection = true;
 	public static double encoderOffset = 140.889-21;
 
+	// Fast gains
+	// public static double kP = 70;
+	// public static double kI = 11;
+	// public static double kD = 1;
 
-	public static double kP = 70;
-	public static double kI = 11;
+	public static double kP = 55;
+	public static double kI = 5;
 	public static double kD = 1;
 	public static double kF = 0;
 	public static double kG = 0.45;
@@ -141,7 +146,8 @@ public static class ShooterPivotConstants {
 	}
 
 	// Comp robot
-	return (1848*(Math.pow(distance, -0.827)));
+	// return (1848*(Math.pow(distance, -0.827)));
+	return (2250*(Math.pow(distance, -0.869))) + 2;
 	}
 }
 

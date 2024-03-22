@@ -83,7 +83,7 @@ public final class NeoSteerControllerFactoryBuilder {
 
 			//
 			// The following frames are not required
-			//
+			// 
 
 			// Default 50ms: Analog Sensor Voltage, Analog Sensor Velocity, Analog Sensor Position
 			checkNeoError(motor.setPeriodicFramePeriod(CANSparkMax.PeriodicFrame.kStatus3, 500), "Failed to set periodic status frame 3 rate");

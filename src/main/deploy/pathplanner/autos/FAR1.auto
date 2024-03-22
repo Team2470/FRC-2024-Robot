@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.35,
-      "y": 5.55
+      "x": 0.6433764218879787,
+      "y": 4.372744601345059
     },
-    "rotation": -179.58622012576348
+    "rotation": 120.0
   },
   "command": {
     "type": "sequential",
@@ -37,63 +37,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "S2-D2"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "pickup"
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "auto-shoot"
-          }
-        },
-        {
-          "type": "parallel",
-          "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "D3-D2"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "pickup"
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "auto-shoot"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Intake-up"
-          }
-        },
-        {
-          "type": "parallel",
-          "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "D2-D4"
+                  "pathName": "FAR1'1"
                 }
               },
               {
@@ -108,7 +52,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "D4-D5"
+            "pathName": "FAR1'2"
           }
         },
         {
@@ -120,7 +64,26 @@
         {
           "type": "named",
           "data": {
-            "name": "Intake-up"
+            "name": "deploy-intake"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "FAR1'3"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "pickup"
+                }
+              }
+            ]
           }
         }
       ]

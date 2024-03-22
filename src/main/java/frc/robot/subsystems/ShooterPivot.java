@@ -7,6 +7,7 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
@@ -84,6 +85,8 @@ public ShooterPivot() {
 	m_motor.configReverseSoftLimitThreshold(ShooterPivotConstants.reverseSoftLimit);
 	m_motor.configForwardSoftLimitThreshold(ShooterPivotConstants.forwardSoftLimit);
 	m_motor.setNeutralMode(NeutralMode.Brake);
+	m_motor.configOpenloopRamp(0.3);
+
 	// set voltage dosen't work with voltage compensation
 	// m_motor.configVoltageCompSaturation(10);
 	// m_motor.enableVoltageCompensation(true);
@@ -98,6 +101,7 @@ public ShooterPivot() {
 	m_encoder.configMagnetOffset(ShooterPivotConstants.encoderOffset);
 	m_encoder.configAbsoluteSensorRange(AbsoluteSensorRange.Signed_PlusMinus180);
 	m_encoder.configSensorInitializationStrategy(SensorInitializationStrategy.BootToAbsolutePosition);
+
 
 	m_motor.configRemoteFeedbackFilter(m_encoder, 0);
 	m_motor.configSelectedFeedbackSensor(RemoteFeedbackDevice.RemoteSensor0);
@@ -203,8 +207,10 @@ public void periodic() {
 		break;
 	}
 
+	
 	if (m_controlMode != ControlMode.kMusicMode){
-	m_motor.setVoltage(outputVoltage);
+		outputVoltage = MathUtil.clamp(outputVoltage, -7, 7);
+		m_motor.setVoltage(outputVoltage);
 	// Do something with the motor
 	}
 

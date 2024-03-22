@@ -3,32 +3,38 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 7.85,
-        "y": 7.35
+        "x": 2.6217429011434596,
+        "y": 3.096975563320497
       },
       "prevControl": null,
       "nextControl": {
-        "x": 7.200116114517944,
-        "y": 6.933923582132878
+        "x": 6.143974810472144,
+        "y": 0.7488209571013738
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "7421P2-End"
     },
     {
       "anchor": {
-        "x": 5.546262728889094,
-        "y": 6.726025815687995
+        "x": 7.863489600853075,
+        "y": 2.4128675284377605
       },
       "prevControl": {
-        "x": 6.587379693957052,
-        "y": 7.001144446373305
+        "x": 6.559986453305945,
+        "y": 2.4221122316089634
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "7421P3-end"
     }
   ],
-  "rotationTargets": [],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.4,
+      "rotationDegrees": -173.07573135323852,
+      "rotateFast": false
+    }
+  ],
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
@@ -39,13 +45,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -168.48616881551297,
-    "rotateFast": true
+    "rotation": -179.5724274931666,
+    "rotateFast": false
   },
   "reversed": false,
-  "folder": null,
+  "folder": "7421 autos",
   "previewStartingState": {
-    "rotation": -167.03,
+    "rotation": 130.19204603696954,
     "velocity": 0
   },
   "useDefaultConstraints": true
