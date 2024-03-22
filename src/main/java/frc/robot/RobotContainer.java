@@ -207,10 +207,17 @@ public class RobotContainer {
 		m_buttonPad.button(6).whileTrue(m_intakePivot.deploy());
 		m_buttonPad.button(7).whileTrue(m_intakePivot.stowCommand());
 
-		m_controller.povUp().onTrue(new InstantCommand(()-> m_camera1.offset+=1));
-		m_controller.povDown().onTrue(new InstantCommand(()-> m_camera1.offset -=1));
-		m_controller.povLeft().onTrue(new InstantCommand(()-> m_camera1.offset = 0));
-		
+		// m_controller.povUp().onTrue(new InstantCommand(()-> m_camera1.offset+=1));
+		// m_controller.povDown().onTrue(new InstantCommand(()-> m_camera1.offset -=1));
+		// m_controller.povLeft().onTrue(new InstantCommand(()-> m_camera1.offset = 0));
+		m_controller.leftBumper().whileTrue(feed());
+		m_controller.povUp().whileTrue(new ParallelCommandGroup(
+			m_simpleFlywheelBottom.pidCommand(()-> SmartDashboard.getNumber("Select Left RPM", 0)),
+			m_simpleFlywheelTop.pidCommand(()-> SmartDashboard.getNumber("Select Left RPM", 0)),
+			m_shooterPivot.goToAngleCommand(()-> SmartDashboard.getNumber("Select Shooter Pivot Angle", 45))
+			
+		));
+		m_controller.povDown().whileTrue(intakeCommand2());
 
 		// m_buttonPad.button(11).whileTrue(new ParallelCommandGroup(
 		//   m_ShooterPivot.goToAngleCommand(()-> ShooterPivotConstants.getAngle((m_camera1.FilteredEsimatedPoseNorm()))),
@@ -227,7 +234,10 @@ public class RobotContainer {
 		//   m_simpleFlywheelRight.pidCommand(()-> FlyWheelConstants.getRPM(m_camera1.FilteredEsimatedPoseNorm())),
 		//   m_simpleFlywheelLeft.feederShooterCommand(m_SimpleShooterFeeder)
 		// ));
-		m_buttonPad.button(1).whileTrue(visionShootAndXStop());
+		m_buttonPad.button(1).whileTrue(m_simpleFlywheelBottom.pidCommand(()-> SmartDashboard.getNumber("Select Left RPM", 0)));  
+		m_buttonPad.button(1).whileTrue(m_simpleFlywheelTop.pidCommand(()-> SmartDashboard.getNumber("Select Left RPM", 0)));  
+		m_buttonPad.button(1).whileTrue(m_shooterPivot.goToAngleCommand(()-> SmartDashboard.getNumber("Select Shooter Pivot Angle", 45)));
+		// m_buttonPad.button(1).whileTrue(visionShootAndXStop());
    		// m_buttonPad.button(1).whileTrue(m_shooterPivot.goToAngleCommand(()-> SmartDashboard.getNumber("Select Shooter Pivot Angle", 0))); 
 		m_buttonPad.button(9).whileTrue(intakeCommand2());
 
@@ -338,7 +348,7 @@ public class RobotContainer {
 					return null;
 				},
 				() -> {
-					if (m_buttonPad.getHID().getRawButton(8)) {
+					if (m_buttonPad.getHID().getRawButton(88)) {
 						if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Blue){
 							return 152.79;
 						} else if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Red){
@@ -466,8 +476,8 @@ public class RobotContainer {
 		SmartDashboard.putNumber("Select Distance", 0);
 	}
 	private void setupShooter() {
-		m_simpleFlywheelBottom.setDefaultCommand(m_simpleFlywheelBottom.pidCommand(2000));
-		m_simpleFlywheelTop.setDefaultCommand(m_simpleFlywheelTop.pidCommand(2000));
+		// m_simpleFlywheelBottom.setDefaultCommand(m_simpleFlywheelBottom.pidCommand(2000));
+		// m_simpleFlywheelTop.setDefaultCommand(m_simpleFlywheelTop.pidCommand(2000));
 		// m_shooterPivot.setDefaultCommand(m_shooterPivot.goToAngleCommand(45));
 		m_intakePivot.setDefaultCommand(m_intakePivot.stowCommand());
 		// m_shooterPivot.setDefaultCommand(
