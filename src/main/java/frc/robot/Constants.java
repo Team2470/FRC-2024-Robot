@@ -51,15 +51,17 @@ public static Robot kRobot = Robot.kCompetition;
 public static class CANdleConstants{
 	public static final int CANdleID = 1;
 	public static final int Intake_Index = 8;
-	public static final int Intake_LEDnum = 6;
-	public static final int TOF1_Index = 14;
-	public static final int TOF1_LEDnum = 6;
+	public static final int Intake_LEDnum = 8;
+	public static final int TOF1_Index = 16;
+	public static final int TOF1_LEDnum = 7;
 	//  public static final int SpinningUp_Index = 20;
 	//  public static final int SpinningUp_LEDnum = 6;
 	//  public static final int FullSpeed_Index = 26;
 	//  public static final int FullSpeed_LEDnum = 6;
-	public static final int Shooter_Index = 32;
-	public static final int Shooter_LEDnum = 6;
+	public static final int Vision_Index = 23;
+	public static final int Vision_LEDNum = 7;
+	public static final int Shooter_Index = 30;
+	public static final int Shooter_LEDnum = 8;
 }
 
 public static class ClimberConstants{
@@ -107,7 +109,21 @@ public static class FlyWheelConstants {
 	}
 
 	// Comp robot
-	return (178*(Math.pow(distance, 0.633)));
+	// return (178*(Math.pow(distance, 0.633)));
+	// return (513*(Math.pow(distance, 0.439)));	
+	if (distance < 150){
+		return 4000;
+	} else if (distance > 150 && distance < 180){
+		return 5000;
+	} else if (distance > 180 && distance < 245){
+		return 6000;
+	} else if(distance > 250){
+		return 5000;
+	} else {
+		return 4000;
+	}
+
+
 	}
 }
 
@@ -116,14 +132,18 @@ public static class ShooterPivotConstants {
 	public static final int EncoderID = 21;
 	public static final String MotorCANBus = "rio";
 	public static final String EncoderCANBus = "rio";
-	public static int reverseSoftLimit = 175;
+	public static int reverseSoftLimit = 250;
 	public static int forwardSoftLimit = 1024;
 	public static boolean encoderDirection = true;
 	public static double encoderOffset = 140.889-21;
 
+	// Fast gains
+	// public static double kP = 70;
+	// public static double kI = 11;
+	// public static double kD = 1;
 
-	public static double kP = 70;
-	public static double kI = 11;
+	public static double kP = 55;
+	public static double kI = 5;
 	public static double kD = 1;
 	public static double kF = 0;
 	public static double kG = 0.45;
@@ -139,7 +159,9 @@ public static class ShooterPivotConstants {
 	}
 
 	// Comp robot
-	return (1848*(Math.pow(distance, -0.827)));
+	// return (1848*(Math.pow(distance, -0.827)));
+	// return (2250*(Math.pow(distance, -0.869))) + 2;
+	return (1053*(Math.pow(distance, -0.708)));
 	}
 }
 

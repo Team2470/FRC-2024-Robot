@@ -1,0 +1,25 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 0.6766573533147072,
+      "y": 4.383177909212962
+    },
+    "rotation": 119.51149855709032
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "speaker-shoot"
+          }
+        }
+      ]
+    }
+  },
+  "folder": "shooting",
+  "choreoAuto": false
+}

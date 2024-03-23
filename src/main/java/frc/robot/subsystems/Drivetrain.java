@@ -20,6 +20,7 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
@@ -190,8 +191,12 @@ public void drive(double xSpeed, double ySpeed, double rotation, boolean feildRe
 	ChassisSpeeds chassisSpeeds;
 
 	if (feildRelative) {
-	chassisSpeeds =
-		ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rotation, getOdomHeading());
+		Rotation2d heading = getOdomHeading();
+		if(DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Red){
+			heading = heading.plus(Rotation2d.fromDegrees(180));
+		}
+		chassisSpeeds =
+			ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rotation, heading);
 	} else {
 	chassisSpeeds = new ChassisSpeeds(xSpeed, ySpeed, rotation);
 	}

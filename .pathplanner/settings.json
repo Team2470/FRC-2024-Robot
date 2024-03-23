@@ -2,8 +2,18 @@
   "robotWidth": 0.9,
   "robotLength": 0.9,
   "holonomicMode": true,
-  "pathFolders": [],
-  "autoFolders": [],
+  "pathFolders": [
+    "1710 autos",
+    "7421 autos",
+    "FAR1 Autos",
+    "FAR2 Autos",
+    "playoff",
+    "basic autos"
+  ],
+  "autoFolders": [
+    "basic",
+    "shooting"
+  ],
   "defaultMaxVel": 3.0,
   "defaultMaxAccel": 3.0,
   "defaultMaxAngVel": 540.0,
