@@ -601,6 +601,13 @@ public class RobotContainer {
 			new SequentialCommandGroup(
 				m_feeder.forward().until(()-> m_TOF1.isTOF1WithinRange()),	
 				m_feeder.forwardPercent(0.2).until(()-> m_TOF2.isTOF2WithinRange())
+			),
+			new SequentialCommandGroup(
+				new WaitUntilCommand(() -> m_intake.isRingIntaked()),
+				new StartEndCommand(
+					() -> m_controller.getHID().setRumble(RumbleType.kBothRumble, .3),
+					() -> m_controller.getHID().setRumble(RumbleType.kBothRumble, 0)
+				).withTimeout(.2)
 			)
 		);
 	}

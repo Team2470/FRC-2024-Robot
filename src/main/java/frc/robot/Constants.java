@@ -110,7 +110,20 @@ public static class FlyWheelConstants {
 
 	// Comp robot
 	// return (178*(Math.pow(distance, 0.633)));
-	return (166*(Math.pow(distance, 0.647)));	
+	// return (513*(Math.pow(distance, 0.439)));	
+	if (distance < 150){
+		return 4000;
+	} else if (distance > 150 && distance < 180){
+		return 5000;
+	} else if (distance > 180 && distance < 245){
+		return 6000;
+	} else if(distance > 250){
+		return 5000;
+	} else {
+		return 4000;
+	}
+
+
 	}
 }
 
@@ -147,7 +160,8 @@ public static class ShooterPivotConstants {
 
 	// Comp robot
 	// return (1848*(Math.pow(distance, -0.827)));
-	return (2250*(Math.pow(distance, -0.869))) + 2;
+	// return (2250*(Math.pow(distance, -0.869))) + 2;
+	return (1053*(Math.pow(distance, -0.708)));
 	}
 }
 
