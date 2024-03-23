@@ -52,7 +52,6 @@ public Climber(int motorID, int servoChannel, int extendLimitChannel, int retrac
 	config.OpenLoopRamps.VoltageOpenLoopRampPeriod = 0.5;
 
 
-
 	m_motor = new TalonFX(motorID, "rio");
 	m_motor.getConfigurator().apply(config);
 	//m_motor.setInverted(isLeft);

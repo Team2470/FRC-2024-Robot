@@ -13,6 +13,7 @@ import com.pathplanner.lib.commands.FollowPathCommand;
 
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.filter.Debouncer.DebounceType;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -96,6 +97,9 @@ public class RobotContainer {
 	private final AutoSelector m_autoSelector;
 
 	private boolean slowMode;
+
+  private final DigitalInput m_brakeButton = new DigitalInput(3);
+  
 
 	public RobotContainer() {
 		SmartDashboard.putString("roboRio Serial Number", RobotController.getSerialNumber());
@@ -365,6 +369,20 @@ public class RobotContainer {
 		// m_controller.povRight().whileTrue(new RobotTurnToAngle(m_drivetrain, 0));
 
 		// m_controller.povLeft().whileTrue(new RobotTurnToAngle(m_drivetrain, 180));
+    new Trigger(() -> m_brakeButton.get()).whileTrue(new StartEndCommand(
+        ()-> {
+        m_intakePivot.setBrakeMode(false);
+        m_feeder.setBrakeMode(false);
+        m_shooterPivot.setBrakeMode(false);
+      },
+      () -> {
+        m_intakePivot.setBrakeMode(true);
+        m_feeder.setBrakeMode(true);
+        m_shooterPivot.setBrakeMode(true);
+      }
+    ).ignoringDisable(true));
+
+    
 	}
 
 	/**
@@ -441,9 +459,15 @@ public class RobotContainer {
 	public void autonomousInit() {
 		m_drivetrain.resetHeading();
 		m_drivetrain.setNominalVoltages(AutoConstants.kAutoVoltageCompensation);
+    m_intakePivot.setBrakeMode(true);
+    m_feeder.setBrakeMode(true);
+    m_shooterPivot.setBrakeMode(true);
 	}
 	public void teleopInit() {
 		m_drivetrain.setNominalVoltages(DriveConstants.kDriveVoltageCompensation);
+    m_intakePivot.setBrakeMode(true);
+    m_feeder.setBrakeMode(true);
+    m_shooterPivot.setBrakeMode(true);
 	}
 	public void robotPeriodic() {
 		SmartDashboard.putNumber("Angle", ShooterPivotConstants.getAngle(m_camera1.FilteredEsimatedPoseNorm()));
