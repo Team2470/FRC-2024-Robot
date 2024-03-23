@@ -117,7 +117,7 @@ public class RobotContainer {
 			put("pickup", intakeCommand().withTimeout(4));
 			put("deploy-intake", m_intakePivot.deploy());
 			put("Intake-up", m_intakePivot.stowCommand().until(()-> (m_intakePivot.getAngle() > 80)));
-			put("IntakeP1", m_intaking());
+			put("IntakeP1", intakingCommand());
 			put("IntakeP2", intakeUpCommand());
 		}});
 
@@ -595,14 +595,17 @@ public class RobotContainer {
 	}
 	public Command intakeUpCommand(){
 		return new ParallelDeadlineGroup(
-			new WaitUntilCommand((()->m_TOF1.isTOF1WithinRange())),//deadline
+			new WaitUntilCommand((()->m_TOF1.isTOF2WithinRange())),//deadline
 			new SequentialCommandGroup(
-				new WaitUntilCommand(()-> m_intakePivot.getAngle() > 55),
+				new WaitUntilCommand(()-> m_intakePivot.getAngle() > 87),
 				m_intake.test_forwardsCommand()
 			),
 			m_shooterPivot.goToAngleCommand(45),
-			m_intakePivot.intakeLocation(),
-			m_feeder.forward()
+			m_intakePivot.stowCommand(),
+			new SequentialCommandGroup(
+				m_feeder.forward().until(()-> m_TOF1.isTOF1WithinRange()),	
+				m_feeder.forwardPercent(0.2).until(()-> m_TOF2.isTOF2WithinRange())
+			)
 		);
 	}	
 	public Command splitIntake(){
