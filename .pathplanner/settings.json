@@ -4,13 +4,17 @@
   "holonomicMode": true,
   "pathFolders": [
     "1710 autos",
+    "4AMP",
+    "4SRC",
     "7421 autos",
     "FAR1 Autos",
     "FAR2 Autos",
-    "playoff",
-    "basic autos"
+    "basic autos",
+    "playoff"
   ],
   "autoFolders": [
+    "Cam Autos",
+    "New Folder",
     "basic",
     "shooting"
   ],
