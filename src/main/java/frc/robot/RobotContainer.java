@@ -115,7 +115,7 @@ public class RobotContainer {
 
 		NamedCommands.registerCommands(new HashMap<String, Command>() {{
 			put("speaker-shoot", speakerShoot());
-			put("auto-shoot", new ParallelRaceGroup(
+			put("auto-shoot", new ParallelDeadlineGroup(
 				autoShoot(), m_intakePivot.stowCommand()
 			));
 			put("pickup", intakeCommand().withTimeout(4));
@@ -376,14 +376,14 @@ public class RobotContainer {
 		// m_controller.povLeft().whileTrue(new RobotTurnToAngle(m_drivetrain, 180));
     new Trigger(() -> m_brakeButton.get()).whileTrue(new StartEndCommand(
         ()-> {
-        m_intakePivot.setBrakeMode(false);
-        m_feeder.setBrakeMode(false);
-        m_shooterPivot.setBrakeMode(false);
-      },
-      () -> {
         m_intakePivot.setBrakeMode(true);
         m_feeder.setBrakeMode(true);
         m_shooterPivot.setBrakeMode(true);
+      },
+      () -> {
+        m_intakePivot.setBrakeMode(false);
+        m_feeder.setBrakeMode(false);
+        m_shooterPivot.setBrakeMode(false);
       }
     ).ignoringDisable(true));
 
@@ -499,19 +499,18 @@ public class RobotContainer {
 		m_simpleFlywheelTop.setDefaultCommand(m_simpleFlywheelTop.pidCommand(2000));
 		// m_shooterPivot.setDefaultCommand(m_shooterPivot.goToAngleCommand(45));
 		m_intakePivot.setDefaultCommand(m_intakePivot.stowCommand());
-		// m_shooterPivot.setDefaultCommand(
-		// 	new SequentialCommandGroup(
-		// 		new ParallelDeadlineGroup(
-		// 			new SequentialCommandGroup(
-		// 				new WaitCommand(0.1),
-		// 				new WaitUntilCommand( ()-> m_shooterPivot.isAngleErrorInRange())
-		// 			),
-		// 			m_shooterPivot.goToAngleCommand(45)
-		// 		),
-		// 		new RunCommand(()-> {})
-		// 	)
-		// )
-		;
+		m_shooterPivot.setDefaultCommand(
+			new SequentialCommandGroup(
+				new ParallelDeadlineGroup(
+					new SequentialCommandGroup(
+						new WaitCommand(0.1),
+						new WaitUntilCommand( ()-> m_shooterPivot.isAngleErrorInRange())
+					),
+					m_shooterPivot.goToAngleCommand(45)
+				),
+				new RunCommand(()-> {})
+			)
+		);
 	}
 	private void registerAutos(HashMap<String, String> autos) {
 		for (String name: autos.keySet()) {
@@ -576,7 +575,7 @@ public class RobotContainer {
 						m_feeder.forward(),
 						m_intake.test_forwardsCommand(),
 						new SequentialCommandGroup(
-							new WaitUntilCommand(()->m_TOF1.isTOF1OutOfRange()),
+							new WaitUntilCommand(()-> m_TOF2.isTOF1OutOfRange() && m_TOF1.isTOF1OutOfRange()),
 							new WaitCommand(0.25)
 						)
 					)
@@ -622,7 +621,7 @@ public class RobotContainer {
 	}
 	public Command intakeUpCommand(){
 		return new ParallelDeadlineGroup(
-			new WaitUntilCommand((()->m_TOF1.isTOF2WithinRange())),//deadline
+			new WaitUntilCommand((()->m_TOF2.isTOF1WithinRange())),//deadline
 			new SequentialCommandGroup(
 				new WaitUntilCommand(()-> m_intakePivot.getAngle() > 87),
 				m_intake.test_forwardsCommand()

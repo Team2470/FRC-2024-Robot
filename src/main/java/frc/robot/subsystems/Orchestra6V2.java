@@ -30,7 +30,7 @@ m_Orchestra = new Orchestra();
 m_Orchestra.addInstrument(m_motor);
 
 // var status = m_Orchestra.loadMusic("song4.chrp");
-m_Orchestra.loadMusic("song4.chrp");
+m_Orchestra.loadMusic("SPB");
 
 }
 @Override
