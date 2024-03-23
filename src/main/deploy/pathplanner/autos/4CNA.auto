@@ -116,12 +116,6 @@
           "data": {
             "name": "auto-shoot"
           }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Fixed Start Coast"
-          }
         }
       ]
     }
