@@ -22,6 +22,7 @@ import com.ctre.phoenix.sensors.SensorInitializationStrategy;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
+import com.revrobotics.CANSparkLowLevel.PeriodicFrame;
 
 
 
@@ -60,6 +61,34 @@ public IntakePivot() {
 	m_motor.setSmartCurrentLimit(40);
 	m_motor.setIdleMode(IdleMode.kBrake);
 	m_motor.setOpenLoopRampRate(0.25);
+
+
+			// m_encoder = m_SimpleShooterFeeder.getEncoder();
+
+	// Reduce CAN Bus usage, since we are using this as a dumb motor for week zero we can turn down
+	// a lot of the status frame periods. When we start using the encoder, then we can increase the
+	// kStatus2 frame back to 20ms (or 10ms)
+	//
+	// See ths page for what each frame contains: https://docs.revrobotics.com/sparkmax/operating-modes/control-interfaces#can-packet-structure
+	//
+	// Default 10ms: Applied output, Faults, Sticky Faults, Is Follower
+	m_motor.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 100);
+	// Default 20ms: Motor Velocity, Motor Temperature, Motor Voltage, Motor Current
+	m_motor.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 500);
+	// Default 20ms: Motor Position
+	m_motor.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 500);
+	// Default 50ms: Analog Sensor Voltage, Analog Sensor Velocity, Analog Sensor Position
+	m_motor.setPeriodicFramePeriod(PeriodicFrame.kStatus3, 500);
+	// Default 20ms: Alternate Encoder Velocity, Alternate Encoder Position
+	m_motor.setPeriodicFramePeriod(PeriodicFrame.kStatus4, 500);
+	// Default 200ms: Duty Cycle Absolute Encoder Position, Duty Cycle Absolute Encoder Absolute Angle
+	m_motor.setPeriodicFramePeriod(PeriodicFrame.kStatus5, 500);
+	// Default 200ms: Duty Cycle Absolute Encoder Velocity,  Duty Cycle Absolute Encoder Frequency
+	m_motor.setPeriodicFramePeriod(PeriodicFrame.kStatus6, 500);
+	// IDK what status 7 is, but I'm not going to touch it.
+	// m_SimpleShooterFeeder.setPeriodicFramePeriod(PeriodicFrame.kStatus7, 500);
+
+	m_motor.burnFlash();
 
 
 	// m_encoder = new CANCoder(Constants.IntakePivotConstants.EncoderID, Constants.IntakePivotConstants.EncoderCANBus);
@@ -157,6 +186,14 @@ public void stop() {
 	setOutputVoltage(0);
 }
 
+public void setBrakeMode (boolean enabled) {
+	if(enabled) {
+		m_motor.setIdleMode(IdleMode.kBrake);
+		
+	} else {
+		m_motor.setIdleMode(IdleMode.kCoast);
+	}
+}
 
 /**
 * Example command factory method.
