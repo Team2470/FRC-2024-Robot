@@ -113,11 +113,11 @@ public static class FlyWheelConstants {
 	// return (513*(Math.pow(distance, 0.439)));	
 	if (distance < 150){
 		return 4000;
-	} else if (distance > 150 && distance < 180){
+	} else if (distance >= 150 && distance < 180){
 		return 5000;
-	} else if (distance > 180 && distance < 245){
+	} else if (distance >= 180 && distance < 250){
 		return 6000;
-	} else if(distance > 250){
+	} else if(distance >= 250){
 		return 5000;
 	} else {
 		return 4000;

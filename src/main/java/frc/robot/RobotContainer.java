@@ -143,6 +143,7 @@ public class RobotContainer {
 			put("3SRC", "3SRC");
 			put("3CEN", "3CEN");
 			put("3AMP", "3AMP");
+			put("test", "test");
 		}});
 
 		m_autoSelector.initialize();
@@ -204,14 +205,16 @@ public class RobotContainer {
 
 		m_controller.y().whileTrue(this.extendClimber());
 		m_controller.b().whileTrue(this.retractClimber());
-		m_buttonPad.button(8).whileTrue(m_shooterPivot.openLoopCommand(2));
-		m_buttonPad.button(12).whileTrue(m_shooterPivot.openLoopCommand(-2));
+		// m_buttonPad.button(8).whileTrue(m_shooterPivot.openLoopCommand(2));
+		// m_buttonPad.button(12).whileTrue(m_shooterPivot.openLoopCommand(-2));
 		m_buttonPad.button(6).whileTrue(m_intakePivot.deploy());
 		m_buttonPad.button(7).whileTrue(m_intakePivot.stowCommand());
 
 		m_controller.povUp().onTrue(new InstantCommand(()-> m_camera1.offset+=1));
 		m_controller.povDown().onTrue(new InstantCommand(()-> m_camera1.offset -=1));
 		m_controller.povLeft().onTrue(new InstantCommand(()-> m_camera1.offset = 0));
+		m_buttonPad.button(8).whileTrue(intakingCommand());
+		m_buttonPad.button(12).whileTrue(intakeUpCommand());
 		
 
 		// m_buttonPad.button(11).whileTrue(new ParallelCommandGroup(
@@ -340,7 +343,7 @@ public class RobotContainer {
 					return null;
 				},
 				() -> {
-					if (m_buttonPad.getHID().getRawButton(8)) {
+					if (m_buttonPad.getHID().getRawButton(88)) {
 						if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Blue){
 							return 152.79;
 						} else if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Red){
