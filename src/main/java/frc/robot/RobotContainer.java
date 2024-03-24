@@ -144,6 +144,8 @@ public class RobotContainer {
 			put("3CEN", "3CEN");
 			put("3AMP", "3AMP");
 			put("test", "test");
+			put("4CNA", "4CNA");
+			put("4CNS", "4CNS");
 		}});
 
 		m_autoSelector.initialize();
