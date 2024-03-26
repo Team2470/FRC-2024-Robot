@@ -118,9 +118,9 @@ public class RobotContainer {
 			put("auto-shoot", new ParallelDeadlineGroup(
 				autoShoot(), m_intakePivot.stowCommand()
 			));
-			put("pickup", intakeCommand().withTimeout(4));
-			put("deploy-intake", m_intakePivot.deploy());
-			put("Intake-up", m_intakePivot.stowCommand().until(()-> (m_intakePivot.getAngle() > 80)));
+			put("pickup", intakeCommand());
+			put("deploy-intake", m_intakePivot.deploy().withTimeout(2));
+			put("Intake-up", m_intakePivot.stowCommand().withTimeout(2));
 			put("IntakeP1", intakingCommand());
 			put("IntakeP2", intakeUpCommand());
 		}});
@@ -148,6 +148,8 @@ public class RobotContainer {
 			put("3CEN", "3CEN");
 			put("3AMP", "3AMP");
 			put("test", "test");
+			put("4CNA", "4CNA"); 
+			put("4CNS", "4CNS"); 
 		}});
 
 		m_autoSelector.initialize();
@@ -562,9 +564,9 @@ public class RobotContainer {
 	}
 	public Command visionShoot() {
 		return new ParallelRaceGroup(
-			m_shooterPivot.goToAngleCommand(()-> ShooterPivotConstants.getAngle((m_camera1.FilteredEsimatedPoseNorm()))),
-			m_simpleFlywheelBottom.pidCommand(()-> FlyWheelConstants.getRPM(m_camera1.FilteredEsimatedPoseNorm())),
-			m_simpleFlywheelTop.pidCommand(()-> FlyWheelConstants.getRPM(m_camera1.FilteredEsimatedPoseNorm())),
+			m_shooterPivot.goToAngleCommand(35),
+			m_simpleFlywheelBottom.pidCommand(1000),
+			m_simpleFlywheelTop.pidCommand(1000),
 			// m_simpleFlywheelLeft.feederShooterCommand(m_SimpleShooterFeeder)
 			new SequentialCommandGroup(
 				new WaitCommand(0.25), //wait for setpoint to change
@@ -580,7 +582,7 @@ public class RobotContainer {
 						)
 					)
 					)
-					);
+					).withTimeout(2);
 	}
 	public Command intakeCommand(){
 		return new ParallelDeadlineGroup(

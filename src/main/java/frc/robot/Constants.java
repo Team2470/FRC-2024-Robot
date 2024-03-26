@@ -349,8 +349,8 @@ public static void override() {
 			.setOffset(-210.234375+180)
 			.setTab(0, 6);
 
-	ShooterPivotConstants.kP = 17.5;
-	ShooterPivotConstants.kI = 11;
+	ShooterPivotConstants.kP = 10.5;
+	ShooterPivotConstants.kI = 5;
 	ShooterPivotConstants.kD = 0.2;
 	ShooterPivotConstants.kF = 0;
 	ShooterPivotConstants.kG = 0.45;

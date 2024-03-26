@@ -58,7 +58,7 @@
         {
           "type": "named",
           "data": {
-            "name": "deploy-intake"
+            "name": "Intake-up"
           }
         },
         {
@@ -115,6 +115,12 @@
           "type": "named",
           "data": {
             "name": "auto-shoot"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Start Coast"
           }
         }
       ]
