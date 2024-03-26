@@ -116,16 +116,10 @@
           "data": {
             "name": "auto-shoot"
           }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Coast.1"
-          }
         }
       ]
     }
   },
-  "folder": "Cam Autos",
+  "folder": null,
   "choreoAuto": false
 }

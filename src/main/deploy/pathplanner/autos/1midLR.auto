@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.35,
-      "y": 5.55
+      "x": 0.75,
+      "y": 6.67576051201485
     },
-    "rotation": 180.0
+    "rotation": -120.0
   },
   "command": {
     "type": "sequential",
@@ -37,38 +37,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Note 2"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "pickup"
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "auto-shoot"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Intake-up"
-          }
-        },
-        {
-          "type": "parallel",
-          "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "Note 3"
+                  "pathName": "1midMR1"
                 }
               },
               {
@@ -99,7 +68,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Note 4"
+                  "pathName": "Copy of 1midRM2.2"
                 }
               },
               {
@@ -118,9 +87,96 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "deploy-intake"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Copy of 1midRM2.3"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "pickup"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "auto-shoot"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "deploy-intake"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "1midRM2.4"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "pickup"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "auto-shoot"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "deploy-intake"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "1midMR2.5"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "pickup"
+                }
+              }
+            ]
+          }
+        },
+        {
           "type": "path",
           "data": {
-            "pathName": "Start Coast"
+            "pathName": "1midRM2.6"
           }
         }
       ]

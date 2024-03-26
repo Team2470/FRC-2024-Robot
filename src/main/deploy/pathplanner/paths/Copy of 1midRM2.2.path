@@ -3,35 +3,40 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.3981263620890236,
-        "y": 6.719352940485241
+        "x": 2.69,
+        "y": 6.88
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.6385473340341703,
-        "y": 6.008464875767237
+        "x": 4.424460020091211,
+        "y": 6.748633317086454
       },
       "isLocked": false,
-      "linkedName": "End Note 2"
+      "linkedName": "1midMR1.1"
     },
     {
       "anchor": {
-        "x": 2.281268050080585,
-        "y": 5.5410316277334815
+        "x": 7.8,
+        "y": 4.091222468159223
       },
       "prevControl": {
-        "x": 2.154671545404776,
-        "y": 5.7650100590829885
+        "x": 3.601681437597109,
+        "y": 3.3835613617173186
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "End Note 3"
+      "linkedName": "midline test test"
     }
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.5,
-      "rotationDegrees": 170.0,
+      "waypointRelativePos": 0.45,
+      "rotationDegrees": 175.0,
+      "rotateFast": false
+    },
+    {
+      "waypointRelativePos": 0.2,
+      "rotationDegrees": 180.0,
       "rotateFast": false
     }
   ],
@@ -49,9 +54,9 @@
     "rotateFast": false
   },
   "reversed": false,
-  "folder": null,
+  "folder": "1midLR",
   "previewStartingState": {
-    "rotation": -147.0,
+    "rotation": -162.47,
     "velocity": 0
   },
   "useDefaultConstraints": true
