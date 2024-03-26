@@ -98,7 +98,14 @@ public class RobotContainer {
 
 	private boolean slowMode;
 
+	private enum Mode {
+        MODE_1,
+        MODE_2
+    }
+	private Mode currentMode = Mode.MODE_1;
+
   private final DigitalInput m_brakeButton = new DigitalInput(3);
+
   
 
 	public RobotContainer() {
@@ -148,12 +155,13 @@ public class RobotContainer {
 			put("3CEN", "3CEN");
 			put("3AMP", "3AMP");
 			put("test", "test");
+			put("4CNA", "4CNA");
 		}});
 
 		m_autoSelector.initialize();
 
 		// TODO Uncomment after test on robot that angles make sense
-		setupShooter();
+		//setupShooter();
 		addValuesToDashboard();
 		configureBindings();
 
@@ -196,198 +204,14 @@ public class RobotContainer {
 	* PS4} controllers or {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
 	* joysticks}.
 	*/
+
 	private void configureBindings() {
-		m_controller.rightBumper().toggleOnTrue(new ParallelCommandGroup(
-			m_Orchestra6.playMusicCommand(),
-			// m_Orchestra6v21.playMusiCommand(),
-			// m_Orchestra6v22.playMusiCommand(),
-			// m_Orchestra6v23.playMusiCommand(),
-			// m_Orchestra6v24.playMusiCommand(),
-			m_simpleFlywheelBottom.pidCommand(0),
-			m_simpleFlywheelTop.pidCommand(0)
-		));
+		if (currentMode == Mode.MODE_1){
+			configBindingsMainMode();
+		} else if (currentMode == Mode.MODE_2){
+			configBindingsTestMode();
+		}
 
-		m_controller.y().whileTrue(this.extendClimber());
-		m_controller.b().whileTrue(this.retractClimber());
-		// m_buttonPad.button(8).whileTrue(m_shooterPivot.openLoopCommand(2));
-		// m_buttonPad.button(12).whileTrue(m_shooterPivot.openLoopCommand(-2));
-		m_buttonPad.button(6).whileTrue(m_intakePivot.deploy());
-		m_buttonPad.button(7).whileTrue(m_intakePivot.stowCommand());
-
-		m_controller.povUp().onTrue(new InstantCommand(()-> m_camera1.offset+=1));
-		m_controller.povDown().onTrue(new InstantCommand(()-> m_camera1.offset -=1));
-		m_controller.povLeft().onTrue(new InstantCommand(()-> m_camera1.offset = 0));
-		m_buttonPad.button(8).whileTrue(intakingCommand());
-		m_buttonPad.button(12).whileTrue(intakeUpCommand());
-		
-
-		// m_buttonPad.button(11).whileTrue(new ParallelCommandGroup(
-		//   m_ShooterPivot.goToAngleCommand(()-> ShooterPivotConstants.getAngle((m_camera1.FilteredEsimatedPoseNorm()))),
-		//   m_simpleFlywheelBottom.pidCommand(()-> FlyWheelConstants.getRPM(m_camera1.FilteredEsimatedPoseNorm())),
-		//   m_simpleFlywheelTop.pidCommand(()-> FlyWheelConstants.getRPM(m_camera1.FilteredEsimatedPoseNorm())),
-		//   m_SimpleShooterFeeder.forward()
-		// ));
-		m_buttonPad.button(11).whileTrue(feed());
-		m_buttonPad.button(10).whileTrue(m_intake.test_reverseCommand());
-
-		// m_buttonPad.button(1).whileTrue(new ParallelCommandGroup(
-		//   m_ShooterPivot.goToAngleCommand(()-> ShooterPivotConstants.getAngle((m_camera1.FilteredEsimatedPoseNorm()))),
-		//   m_simpleFlywheelLeft.pidCommand(()-> FlyWheelConstants.getRPM(m_camera1.FilteredEsimatedPoseNorm())),
-		//   m_simpleFlywheelRight.pidCommand(()-> FlyWheelConstants.getRPM(m_camera1.FilteredEsimatedPoseNorm())),
-		//   m_simpleFlywheelLeft.feederShooterCommand(m_SimpleShooterFeeder)
-		// ));
-		m_buttonPad.button(1).whileTrue(visionShootAndXStop());
-   		// m_buttonPad.button(1).whileTrue(m_shooterPivot.goToAngleCommand(()-> SmartDashboard.getNumber("Select Shooter Pivot Angle", 0))); 
-		m_buttonPad.button(9).whileTrue(intakeCommand2());
-
-		//keep
-		// m_buttonPad.button(8).whileTrue(StageShoot());
-
-		m_controller.back().whileTrue(new ParallelCommandGroup(
-			m_simpleFlywheelBottom.pidCommand(10000),
-			m_simpleFlywheelTop.pidCommand(10000)
-		));
-
-		//     m_buttonPad.button(6).whileTrue(new ParallelCommandGroup(
-		//   m_ShooterPivot.goToAngleCommand(()-> ShooterPivotConstants.getAngle((m_camera1.FilteredEsimatedPoseNorm()))),
-		//   m_simpleFlywheelLeft.pidCommand(()-> FlyWheelConstants.getRPM(m_camera1.FilteredEsimatedPoseNorm())),
-		//   m_simpleFlywheelRight.pidCommand(()-> FlyWheelConstants.getRPM(m_camera1.FilteredEsimatedPoseNorm()))
-		// ));
-
-		//     m_buttonPad.button(7).whileTrue(new ParallelCommandGroup(
-		//       m_ShooterPivot.goToAngleCommand(()-> ShooterPivotConstants.getAngle(SmartDashboard.getNumber("Select Distance", 0))),
-		//       m_simpleFlywheelLeft.pidCommand(()-> FlyWheelConstants.getRPM(SmartDashboard.getNumber("Select Distance", 0))),
-		//       m_simpleFlywheelRight.pidCommand(()-> FlyWheelConstants.getRPM(SmartDashboard.getNumber("Select Distance", 0)))
-		// ));
-
-		// m_buttonPad.button(2).whileTrue(new ParallelCommandGroup(
-		//       m_ShooterPivot.goToAngleCommand(59.92836363),
-		//       m_simpleFlywheelBottom.pidCommand(2326.626089),
-		//       m_simpleFlywheelTop.pidCommand(2326.626089)
-
-		// ));
-
-		m_buttonPad.button(2).whileTrue(speakerShoot());
-	//56.92836363
-		m_buttonPad.button(3).whileTrue(new ParallelCommandGroup(
-			m_shooterPivot.goToAngleCommand(48.779296875),
-			m_simpleFlywheelBottom.pidCommand(-1700),
-			m_simpleFlywheelTop.pidCommand(-1700),
-			m_TOF1.feederIntakeCommand(m_feeder)
-		));
-
-		// m_buttonPad.button(4).whileTrue(new ParallelCommandGroup(
-		//     m_ShooterPivot.goToAngleCommand(50),
-		//     m_simpleFlywheelBottom.pidCommand(1250),
-		//     m_simpleFlywheelTop.pidCommand(700)
-
-		// ));
-
-		m_buttonPad.button(4).whileTrue(ampShoot());
-
-		m_buttonPad.button(5).whileTrue(new ParallelCommandGroup(
-			m_shooterPivot.goToAngleCommand(57.91),
-			m_simpleFlywheelBottom.pidCommand(2300),
-			m_simpleFlywheelTop.pidCommand(2300)
-		));
-
-		
-
-
-
-		//dont go 2800-3200 rpm (Harmonics ;] )
-		// Configure default commands
-
-		// Configure default commands
-
-		
-		m_drivetrain.setDefaultCommand(
-			new DriveWithController(
-				m_drivetrain,
-				// X Move Velocity - Forward
-				() -> -m_controller.getHID().getLeftY(),
-
-				// Y Move Velocity - Strafe
-				() -> -m_controller.getHID().getLeftX(),
-
-				// Rotate Angular velocity
-				() -> {
-					double leftTrigger = m_controller.getHID().getLeftTriggerAxis();
-					double rightTrigger = m_controller.getHID().getRightTriggerAxis();
-
-					if (leftTrigger < rightTrigger) {
-						return -rightTrigger;
-					} else {
-						return leftTrigger;
-					}
-				},
-
-				// Field Orientated
-				() -> !m_controller.getHID().getAButton(),
-
-				// Slow Mode
-				// () -> m_controller.getHID().getXButton() || m_ClimberLeft.getMotorRotations() > 2 || m_ClimberRight.getMotorRotations() > 2,
-				() -> m_controller.getHID().getXButton(),		
-				
-
-				// Disable X Movement
-				() -> false,
-
-				// Disable Y Movement
-				() -> false,
-
-				// Heading Override
-				() -> {
-					if (m_buttonPad.getHID().getRawButton(1)){
-						if (m_camera1.doesCameraHaveTarget())
-							return m_camera1.getRobotYaw();
-						return null;
-					}
-
-					return null;
-				},
-				() -> {
-					if (m_buttonPad.getHID().getRawButton(88)) {
-						if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Blue){
-							return 152.79;
-						} else if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Red){
-							return -152.79;
-						}
-					}
-
-				// switch (m_controller.getHID().getPOV())
-				//   case 0: return 0.0;
-				//   case 180: return 180.0;
-				//   default: return null;
-				// }
-					return null;
-				}
-			));
-
-		m_controller.start().onTrue(new InstantCommand(
-			m_drivetrain::resetHeading)); // TODO this should also do
-		// something with odometry? As
-		// it freaks out
-
-		m_controller.rightStick().toggleOnTrue(m_drivetrain.xStop());
-
-		// m_controller.povRight().whileTrue(new RobotTurnToAngle(m_drivetrain, 0));
-
-		// m_controller.povLeft().whileTrue(new RobotTurnToAngle(m_drivetrain, 180));
-    new Trigger(() -> m_brakeButton.get()).whileTrue(new StartEndCommand(
-        ()-> {
-        m_intakePivot.setBrakeMode(true);
-        m_feeder.setBrakeMode(true);
-        m_shooterPivot.setBrakeMode(true);
-      },
-      () -> {
-        m_intakePivot.setBrakeMode(false);
-        m_feeder.setBrakeMode(false);
-        m_shooterPivot.setBrakeMode(false);
-      }
-    ).ignoringDisable(true));
-
-    
 	}
 
 	/**
@@ -686,4 +510,268 @@ public class RobotContainer {
 	public void slowmodething(){
 		slowMode = !slowMode;
 	}
+
+	private void configBindingsMainMode(){
+			m_controller.rightBumper().toggleOnTrue(new ParallelCommandGroup(
+				m_Orchestra6.playMusicCommand(),
+				m_simpleFlywheelBottom.pidCommand(0),
+				m_simpleFlywheelTop.pidCommand(0)
+			));
+			m_controller.y().whileTrue(this.extendClimber());
+			m_controller.b().whileTrue(this.retractClimber());
+			m_controller.start().onTrue(new InstantCommand(m_drivetrain::resetHeading));
+			m_controller.rightStick().toggleOnTrue(m_drivetrain.xStop());
+
+			m_buttonPad.button(6).whileTrue(m_intakePivot.deploy());
+			m_buttonPad.button(7).whileTrue(m_intakePivot.stowCommand());
+			m_buttonPad.button(11).whileTrue(feed());
+			m_buttonPad.button(10).whileTrue(m_intake.test_reverseCommand());	
+			m_buttonPad.button(1).whileTrue(visionShootAndXStop());
+			m_buttonPad.button(9).whileTrue(intakeCommand2());
+			m_buttonPad.button(2).whileTrue(speakerShoot());	
+			m_buttonPad.button(4).whileTrue(ampShoot());			
+
+			m_controller.back().whileTrue(new ParallelCommandGroup(
+				m_simpleFlywheelBottom.pidCommand(10000),
+				m_simpleFlywheelTop.pidCommand(10000)
+			));		
+
+			m_buttonPad.button(3).whileTrue(new ParallelCommandGroup(
+				m_shooterPivot.goToAngleCommand(48.779296875),
+				m_simpleFlywheelBottom.pidCommand(-1700),
+				m_simpleFlywheelTop.pidCommand(-1700),
+				m_TOF1.feederIntakeCommand(m_feeder)
+			));
+	
+			m_buttonPad.button(5).whileTrue(new ParallelCommandGroup(
+				m_shooterPivot.goToAngleCommand(57.91),
+				m_simpleFlywheelBottom.pidCommand(2300),
+				m_simpleFlywheelTop.pidCommand(2300)
+			));
+			
+			m_drivetrain.setDefaultCommand(
+				new DriveWithController(
+					m_drivetrain,
+					// X Move Velocity - Forward
+					() -> -m_controller.getHID().getLeftY(),
+	
+					// Y Move Velocity - Strafe
+					() -> -m_controller.getHID().getLeftX(),
+	
+					// Rotate Angular velocity
+					() -> {
+						double leftTrigger = m_controller.getHID().getLeftTriggerAxis();
+						double rightTrigger = m_controller.getHID().getRightTriggerAxis();
+						if (leftTrigger < rightTrigger) {
+							return -rightTrigger;
+						} else {
+							return leftTrigger;
+						}},
+
+					// Field Orientated
+					() -> !m_controller.getHID().getAButton(),
+	
+					// Slow Mode
+					() -> m_controller.getHID().getXButton(),		
+				
+					// Disable X Movement
+					() -> false,
+	
+					// Disable Y Movement
+					() -> false,
+	
+					// Heading Override
+					() -> {
+						if (m_buttonPad.getHID().getRawButton(1)){
+							if (m_camera1.doesCameraHaveTarget())
+								return m_camera1.getRobotYaw();
+							return null;
+						}
+	
+						return null;
+						},
+					() -> {
+						if (m_buttonPad.getHID().getRawButton(88)) {
+							if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Blue){
+								return 152.79;
+							} else if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Red){
+								return -152.79;
+							}
+						}
+						return null;
+					}
+				));
+
+		new Trigger(() -> m_brakeButton.get()).whileTrue(new StartEndCommand(
+			()-> {
+			m_intakePivot.setBrakeMode(true);
+			m_feeder.setBrakeMode(true);
+			m_shooterPivot.setBrakeMode(true);
+		  },
+		  () -> {
+			m_intakePivot.setBrakeMode(false);
+			m_feeder.setBrakeMode(false);
+			m_shooterPivot.setBrakeMode(false);
+		  }
+		).ignoringDisable(true));
+		  
+		m_controller.povLeft().whileTrue(new InstantCommand(()-> switchMode()));
+
+	}
+
+	//TEST BINDINGS TEST BINDINGS TEST BINDINGS TEST BINDINGS TEST BINDINGS TEST BINDINGS TEST BINDINGS 
+	//TEST BINDINGS TEST BINDINGS TEST BINDINGS TEST BINDINGS TEST BINDINGS TEST BINDINGS TEST BINDINGS 
+	//TEST BINDINGS TEST BINDINGS TEST BINDINGS TEST BINDINGS TEST BINDINGS TEST BINDINGS TEST BINDINGS 
+	//TEST BINDINGS TEST BINDINGS TEST BINDINGS TEST BINDINGS TEST BINDINGS TEST BINDINGS TEST BINDINGS 
+	//TEST BINDINGS TEST BINDINGS TEST BINDINGS TEST BINDINGS TEST BINDINGS TEST BINDINGS TEST BINDINGS 
+	
+	private void configBindingsTestMode(){
+		m_controller.rightBumper().toggleOnTrue(new ParallelCommandGroup(
+			m_Orchestra6.playMusicCommand(),
+			m_simpleFlywheelBottom.pidCommand(0),
+			m_simpleFlywheelTop.pidCommand(0)
+		));
+
+		m_controller.y().whileTrue(this.extendClimber());
+		m_controller.b().whileTrue(this.retractClimber());
+		// m_buttonPad.button(8).whileTrue(m_shooterPivot.openLoopCommand(2));
+		// m_buttonPad.button(12).whileTrue(m_shooterPivot.openLoopCommand(-2));
+		m_buttonPad.button(6).whileTrue(m_intakePivot.deploy());
+		m_buttonPad.button(7).whileTrue(m_intakePivot.stowCommand());
+
+
+		m_buttonPad.button(8).whileTrue(intakingCommand());
+		m_buttonPad.button(12).whileTrue(intakeUpCommand());
+
+
+		m_controller.leftBumper().whileTrue(feed());
+		m_controller.povUp().whileTrue(new ParallelCommandGroup(
+			m_simpleFlywheelBottom.pidCommand(()-> SmartDashboard.getNumber("Select Left RPM", 0)),
+			m_simpleFlywheelTop.pidCommand(()-> SmartDashboard.getNumber("Select Left RPM", 0)),
+			m_shooterPivot.goToAngleCommand(()-> SmartDashboard.getNumber("Select Shooter Pivot Angle", 45))
+		));
+		m_controller.povDown().whileTrue(intakeCommand2());
+
+
+		m_buttonPad.button(11).whileTrue(feed());
+		m_buttonPad.button(10).whileTrue(m_intake.test_reverseCommand());
+		m_buttonPad.button(1).whileTrue(visionShootAndXStop());
+   		// m_buttonPad.button(1).whileTrue(m_shooterPivot.goToAngleCommand(()-> SmartDashboard.getNumber("Select Shooter Pivot Angle", 0))); 
+		m_buttonPad.button(9).whileTrue(intakeCommand2());
+		// m_buttonPad.button(8).whileTrue(StageShoot());
+
+		m_controller.back().whileTrue(new ParallelCommandGroup(
+			m_simpleFlywheelBottom.pidCommand(10000),
+			m_simpleFlywheelTop.pidCommand(10000)
+		));
+
+		m_buttonPad.button(2).whileTrue(speakerShoot());
+		m_buttonPad.button(3).whileTrue(new ParallelCommandGroup(
+			m_shooterPivot.goToAngleCommand(48.779296875),
+			m_simpleFlywheelBottom.pidCommand(-1700),
+			m_simpleFlywheelTop.pidCommand(-1700),
+			m_TOF1.feederIntakeCommand(m_feeder)
+		));
+
+		m_buttonPad.button(4).whileTrue(ampShoot());
+
+		m_buttonPad.button(5).whileTrue(new ParallelCommandGroup(
+			m_shooterPivot.goToAngleCommand(57.91),
+			m_simpleFlywheelBottom.pidCommand(2300),
+			m_simpleFlywheelTop.pidCommand(2300)
+		));
+
+		m_drivetrain.setDefaultCommand(
+			new DriveWithController(
+				m_drivetrain,
+				// X Move Velocity - Forward
+				() -> -m_controller.getHID().getLeftY(),
+
+				// Y Move Velocity - Strafe
+				() -> -m_controller.getHID().getLeftX(),
+
+				// Rotate Angular velocity
+				() -> {
+					double leftTrigger = m_controller.getHID().getLeftTriggerAxis();
+					double rightTrigger = m_controller.getHID().getRightTriggerAxis();
+
+					if (leftTrigger < rightTrigger) {
+						return -rightTrigger;
+					} else {
+						return leftTrigger;
+					}
+				},
+
+				// Field Orientated
+				() -> !m_controller.getHID().getAButton(),
+
+				// Slow Mode
+				// () -> m_controller.getHID().getXButton() || m_ClimberLeft.getMotorRotations() > 2 || m_ClimberRight.getMotorRotations() > 2,
+				() -> m_controller.getHID().getXButton(),		
+				
+
+				// Disable X Movement
+				() -> false,
+
+				// Disable Y Movement
+				() -> false,
+
+				// Heading Override
+				() -> {
+					if (m_buttonPad.getHID().getRawButton(1)){
+						if (m_camera1.doesCameraHaveTarget())
+							return m_camera1.getRobotYaw();
+						return null;
+					}
+
+					return null;
+				},
+				() -> {
+					if (m_buttonPad.getHID().getRawButton(88)) {
+						if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Blue){
+							return 152.79;
+						} else if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Red){
+							return -152.79;
+						}
+					}
+					return null;
+					// switch (m_controller.getHID().getPOV())
+					//   case 0: return 0.0;
+					//   case 180: return 180.0;
+					//   default: return null;
+					// }
+				}
+				
+			));
+
+		m_controller.start().onTrue(new InstantCommand(
+			m_drivetrain::resetHeading));
+
+		m_controller.rightStick().toggleOnTrue(m_drivetrain.xStop());
+		// m_controller.povRight().whileTrue(new RobotTurnToAngle(m_drivetrain, 0));	
+		// m_controller.povLeft().whileTrue(new RobotTurnToAngle(m_drivetrain, 180));
+
+    new Trigger(() -> m_brakeButton.get()).whileTrue(new StartEndCommand(
+        ()-> {
+        m_intakePivot.setBrakeMode(true);
+        m_feeder.setBrakeMode(true);
+        m_shooterPivot.setBrakeMode(true);
+		switchMode();
+      },
+      () -> {
+        m_intakePivot.setBrakeMode(false);
+        m_feeder.setBrakeMode(false);
+        m_shooterPivot.setBrakeMode(false);
+      }
+    ).ignoringDisable(true));
+
+
+	m_controller.povLeft().whileTrue(new InstantCommand(()-> switchMode()));
+
+	}
+
+    private void switchMode() {
+        currentMode = (currentMode == Mode.MODE_1) ? Mode.MODE_2 : Mode.MODE_1;
+        configureBindings();
+    }
 }
