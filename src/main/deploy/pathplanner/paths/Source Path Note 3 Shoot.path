@@ -3,41 +3,41 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 0.75,
-        "y": 6.67576051201485
+        "x": 7.822299677814065,
+        "y": 2.1229260014866425
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.3576558062207034,
-        "y": 6.9872307017341315
+        "x": 6.605025594392825,
+        "y": 1.4509907074381188
       },
       "isLocked": false,
-      "linkedName": "Amp Side Start"
+      "linkedName": "Source Path Note 3 End"
     },
     {
       "anchor": {
-        "x": 2.69,
-        "y": 6.88
+        "x": 3.5667094821734135,
+        "y": 2.4442863595098485
       },
       "prevControl": {
-        "x": 2.7504051049793805,
-        "y": 6.673162661129824
+        "x": 4.36366129586218,
+        "y": 1.8402434747258407
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "End Note 1+mid"
+      "linkedName": "End Source Path Note 2 Shoot"
     }
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.2,
-      "rotationDegrees": -147.045383330095,
+      "waypointRelativePos": 0.7,
+      "rotationDegrees": 135.0,
       "rotateFast": true
     },
     {
-      "waypointRelativePos": 0.5,
-      "rotationDegrees": -179.77837654450008,
-      "rotateFast": true
+      "waypointRelativePos": 0.2,
+      "rotationDegrees": -145.0,
+      "rotateFast": false
     }
   ],
   "constraintZones": [],
@@ -50,14 +50,14 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -150.16,
+    "rotation": 135.0,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "basic autos",
+  "folder": "Source-Middle Autos",
   "previewStartingState": {
-    "rotation": -120.0,
+    "rotation": -145.0,
     "velocity": 0
   },
-  "useDefaultConstraints": false
+  "useDefaultConstraints": true
 }
