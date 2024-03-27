@@ -1,0 +1,72 @@
+@startuml Intake
+scale 100 as 150 pixels
+
+title Intake Automation
+footer Not to scale
+
+concise "Note Location" as N
+concise "Driver Button" as B
+concise "Intake" as IN
+concise "Intake Location" as IN_P
+concise "Intake Rightsight" as IN_RS
+concise "Feeder" as F
+concise "Feeder TOF" as F_TOF
+concise "Controller Rumble" as C
+concise "Shooter Pivot" as S
+
+
+@0
+'Start
+B is "Not Pressed" #PaleVioletRed
+IN_RS is Low #PaleVioletRed
+F_TOF is Low #PaleVioletRed
+IN_P is Stowed
+IN is Off
+F is Off 
+S is "45 Degrees"
+C is Off
+N is Floor
+
+@100
+'Intake Lowered
+F is On
+IN is Spinning
+B is Pressed #PaleGreen
+IN_P is Deployed
+
+@200
+'Note in captured by rollers
+N is "Intake Rollers"
+
+@300
+'Note is sensed by rightside, and held by intake
+IN_RS is High #PaleGreen
+IN is Off
+IN_P is "Mid Way"
+C is On
+
+
+@350
+C is Off
+
+@400
+'Note is pushed into feeder
+IN is Spinning
+
+
+@500
+'Note is sensed by TOF, and captured by feeder.
+F_TOF is High #PaleGreen
+IN_RS is Off #PaleVioletRed
+N is "Captured in Feeder"
+
+
+@600
+'End
+B is "Not Pressed" #PaleVioletRed
+IN_P is Stowed
+IN is Off
+F is Off
+
+
+@enduml

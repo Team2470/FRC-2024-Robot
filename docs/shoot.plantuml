@@ -1,0 +1,87 @@
+@startuml Shooter
+scale 100 as 150 pixels
+
+title Shooter Automation
+footer Not to scale
+
+concise "Note Location" as N
+concise "Driver Button" as B
+
+concise "Robot to target yaw in range" as YAW
+concise "Drivetrain Heading Override" as DRIVE
+
+concise "Shooter Top" as ST
+concise "Shooter Top at setpoint" as ST_AS
+
+concise "Shooter Bottom" as SB
+concise "Shooter Bottom at setpoint" as SB_AS
+
+concise "Shooter Pivot" as SP
+concise "Shooter Pivot at setpoint" as SP_AS
+
+concise "Feeder" as F
+concise "Feeder TOF" as F_TOF
+
+
+@0
+'Start
+N is Feeder
+B is "Not Pressed" #PaleVioletRed
+ST is "Idle Speed"
+SB is "Idle Speed"
+SP is "45 Degrees"
+DRIVE is "Off"
+YAW is "Out of Range" #PaleVioletRed
+F_TOF is High #PaleGreen
+F is Off
+
+
+ST_AS is "At Goal" #PaleGreen
+SB_AS is "At Goal" #PaleGreen
+SP_AS is "At Goal" #PaleGreen
+
+@100
+B is "Pressed" #PaleGreen
+ST is "Range to Vision RPM"
+SB is "Range to Vision RPM"
+SP is "Range to Vision Angle"
+
+ST_AS is "Waiting to reach goal" #PaleVioletRed
+SB_AS is "Waiting to reach goal" #PaleVioletRed
+SP_AS is "Waiting to reach goal" #PaleVioletRed
+
+
+DRIVE is "Turning to face target"
+
+@200
+YAW is "In Range" #PaleGreen
+DRIVE is "X Stop"
+
+@250
+ST_AS is "At Goal" #PaleGreen
+
+@275
+SB_AS is "At Goal" #PaleGreen
+
+@300
+SP_AS is "At Goal" #PaleGreen
+F is "Feeding"
+note top of F : Robot is aligned with the speaker, and Shooter Wheels and \nPivot are at calculated setpoints based off of Vision data.\nThe Note can be Shot!
+
+@400
+N is Shooter
+F_TOF is Low #PaleVioletRed
+
+@500
+'End
+N is Scored
+B is "Not Pressed" #PaleVioletRed
+ST is "Idle Speed"
+SB is "Idle Speed"
+SP is "45 Degrees"
+DRIVE is "Off"
+YAW is "Out of Range" #PaleVioletRed
+
+
+
+@enduml
