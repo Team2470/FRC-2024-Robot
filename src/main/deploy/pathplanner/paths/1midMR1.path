@@ -12,7 +12,7 @@
         "y": 6.9872307017341315
       },
       "isLocked": false,
-      "linkedName": "Amp Side Start"
+      "linkedName": null
     },
     {
       "anchor": {
@@ -20,12 +20,12 @@
         "y": 6.88
       },
       "prevControl": {
-        "x": 2.7504051049793805,
-        "y": 6.673162661129824
+        "x": 2.517326463224355,
+        "y": 6.608548931383577
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "End Note 1+mid"
+      "linkedName": "1midMR1.1"
     }
   ],
   "rotationTargets": [
@@ -36,7 +36,7 @@
     },
     {
       "waypointRelativePos": 0.5,
-      "rotationDegrees": -179.77837654450008,
+      "rotationDegrees": -170.0,
       "rotateFast": true
     }
   ],
@@ -54,7 +54,7 @@
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "basic autos",
+  "folder": "1midMR",
   "previewStartingState": {
     "rotation": -120.0,
     "velocity": 0

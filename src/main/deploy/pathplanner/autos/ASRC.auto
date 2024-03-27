@@ -3,9 +3,9 @@
   "startingPose": {
     "position": {
       "x": 0.75,
-      "y": 6.67576051201485
+      "y": 4.42
     },
-    "rotation": -120.0
+    "rotation": 120.0
   },
   "command": {
     "type": "sequential",
@@ -37,7 +37,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "S1-D1"
+                  "pathName": "S3-D3 ASRC"
                 }
               },
               {
@@ -56,19 +56,38 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "Intake-up"
+          }
+        },
+        {
           "type": "parallel",
           "data": {
             "commands": [
               {
                 "type": "path",
                 "data": {
-                  "pathName": "FSRC S1-D1"
+                  "pathName": "D3-D5 ASRC"
                 }
               },
               {
-                "type": "named",
+                "type": "sequential",
                 "data": {
-                  "name": "IntakeP1"
+                  "commands": [
+                    {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 2.0
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "IntakeP1"
+                      }
+                    }
+                  ]
                 }
               }
             ]
@@ -81,7 +100,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "FSRC D4-D5"
+                  "pathName": "D5-D3"
                 }
               },
               {

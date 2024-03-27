@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.75,
-      "y": 6.67576051201485
+      "x": 0.6988446409325251,
+      "y": 4.400478710867333
     },
-    "rotation": -120.0
+    "rotation": 121.26373169437743
   },
   "command": {
     "type": "sequential",
@@ -37,32 +37,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "S1-D1"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "pickup"
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "auto-shoot"
-          }
-        },
-        {
-          "type": "parallel",
-          "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "FSRC S1-D1"
+                  "pathName": "FAR2'1"
                 }
               },
               {
@@ -81,7 +56,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "FSRC D4-D5"
+                  "pathName": "FAR2'2"
                 }
               },
               {
@@ -97,6 +72,31 @@
           "type": "named",
           "data": {
             "name": "auto-shoot"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "FAR2'3"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "IntakeP1"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "IntakeP2"
           }
         }
       ]

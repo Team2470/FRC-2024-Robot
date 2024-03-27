@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.75,
-      "y": 6.67576051201485
+      "x": 1.35,
+      "y": 5.55
     },
-    "rotation": -120.0
+    "rotation": 180.0
   },
   "command": {
     "type": "sequential",
@@ -37,7 +37,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "S1-D1"
+                  "pathName": "Note 2"
                 }
               },
               {
@@ -56,22 +56,9 @@
           }
         },
         {
-          "type": "parallel",
+          "type": "named",
           "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "FSRC S1-D1"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "IntakeP1"
-                }
-              }
-            ]
+            "name": "deploy-intake"
           }
         },
         {
@@ -81,13 +68,44 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "FSRC D4-D5"
+                  "pathName": "Note 3"
                 }
               },
               {
                 "type": "named",
                 "data": {
-                  "name": "IntakeP2"
+                  "name": "pickup"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "auto-shoot"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "deploy-intake"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Note 4"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "pickup"
                 }
               }
             ]

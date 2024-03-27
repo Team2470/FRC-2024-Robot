@@ -3,41 +3,41 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 0.75,
-        "y": 6.67576051201485
-      },
-      "prevControl": null,
-      "nextControl": {
-        "x": 1.3576558062207034,
-        "y": 6.9872307017341315
-      },
-      "isLocked": false,
-      "linkedName": "Amp Side Start"
-    },
-    {
-      "anchor": {
         "x": 2.69,
         "y": 6.88
       },
+      "prevControl": null,
+      "nextControl": {
+        "x": 6.531623063246126,
+        "y": 6.199063826699081
+      },
+      "isLocked": false,
+      "linkedName": "1midMR1.1"
+    },
+    {
+      "anchor": {
+        "x": 7.800355600711201,
+        "y": 5.78
+      },
       "prevControl": {
-        "x": 2.7504051049793805,
-        "y": 6.673162661129824
+        "x": 7.263325955223339,
+        "y": 6.064806415327117
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "End Note 1+mid"
+      "linkedName": null
     }
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.2,
-      "rotationDegrees": -147.045383330095,
-      "rotateFast": true
+      "waypointRelativePos": 0.85,
+      "rotationDegrees": 175.0,
+      "rotateFast": false
     },
     {
-      "waypointRelativePos": 0.5,
-      "rotationDegrees": -179.77837654450008,
-      "rotateFast": true
+      "waypointRelativePos": 0.35,
+      "rotationDegrees": 180.0,
+      "rotateFast": false
     }
   ],
   "constraintZones": [],
@@ -50,14 +50,14 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -150.16,
+    "rotation": 180.0,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "basic autos",
+  "folder": "1midRM2",
   "previewStartingState": {
-    "rotation": -120.0,
+    "rotation": -162.47,
     "velocity": 0
   },
-  "useDefaultConstraints": false
+  "useDefaultConstraints": true
 }

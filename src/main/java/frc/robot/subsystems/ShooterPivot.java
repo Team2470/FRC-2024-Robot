@@ -25,6 +25,7 @@ import com.ctre.phoenix.music.Orchestra;
 import com.ctre.phoenix.sensors.AbsoluteSensorRange;
 import com.ctre.phoenix.sensors.CANCoder;
 import com.ctre.phoenix.sensors.SensorInitializationStrategy;
+import com.revrobotics.CANSparkBase.IdleMode;
 
 public class ShooterPivot extends SubsystemBase {
 // private final int kOpenLoop = 0;
@@ -258,6 +259,14 @@ public void stop() {
 	setOutputVoltage(0);
 }
 
+	public void setBrakeMode (boolean enabled) {
+		if(enabled) {
+			m_motor.setNeutralMode(NeutralMode.Brake);
+			
+		} else {
+			m_motor.setNeutralMode(NeutralMode.Coast);
+		}
+	}
 
 /**
 * Example command factory method.
@@ -320,6 +329,9 @@ public void playMusic(){
 	// m_Orchestra.loadMusic(song + ".chrp");
 	m_controlMode = ControlMode.kMusicMode;
 }
+
+
+
 
 public Command playMusiCommand(){
 	return Commands.runEnd(

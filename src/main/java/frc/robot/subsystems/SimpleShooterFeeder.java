@@ -108,6 +108,15 @@ public class SimpleShooterFeeder extends SubsystemBase {
 		m_SimpleShooterFeeder.setVoltage(volts);
 	}
 
+	public void setBrakeMode (boolean enabled) {
+		if(enabled) {
+			m_SimpleShooterFeeder.setIdleMode(IdleMode.kBrake);
+			
+		} else {
+			m_SimpleShooterFeeder.setIdleMode(IdleMode.kCoast);
+		}
+	}
+	
 
 	public Command forward() {
 		return Commands.runEnd(

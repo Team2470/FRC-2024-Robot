@@ -37,7 +37,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "S1-D1"
+                  "pathName": "1midMR1"
                 }
               },
               {
@@ -56,22 +56,9 @@
           }
         },
         {
-          "type": "parallel",
+          "type": "named",
           "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "FSRC S1-D1"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "IntakeP1"
-                }
-              }
-            ]
+            "name": "deploy-intake"
           }
         },
         {
@@ -81,13 +68,13 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "FSRC D4-D5"
+                  "pathName": "1midRM2.2"
                 }
               },
               {
                 "type": "named",
                 "data": {
-                  "name": "IntakeP2"
+                  "name": "pickup"
                 }
               }
             ]
@@ -97,6 +84,99 @@
           "type": "named",
           "data": {
             "name": "auto-shoot"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "deploy-intake"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "1midRM2.3"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "pickup"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "auto-shoot"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "deploy-intake"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "1midRM2.4"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "pickup"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "auto-shoot"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "deploy-intake"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "1midMR2.5"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "pickup"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "1midRM2.6"
           }
         }
       ]

@@ -110,7 +110,20 @@ public static class FlyWheelConstants {
 
 	// Comp robot
 	// return (178*(Math.pow(distance, 0.633)));
-	return (166*(Math.pow(distance, 0.647)));	
+	// return (513*(Math.pow(distance, 0.439)));	
+	if (distance < 150){
+		return 4000;
+	} else if (distance >= 150 && distance < 180){
+		return 5000;
+	} else if (distance >= 180 && distance < 250){
+		return 6000;
+	} else if(distance >= 250){
+		return 5000;
+	} else {
+		return 4000;
+	}
+
+
 	}
 }
 
@@ -147,7 +160,8 @@ public static class ShooterPivotConstants {
 
 	// Comp robot
 	// return (1848*(Math.pow(distance, -0.827)));
-	return (2250*(Math.pow(distance, -0.869))) + 2;
+	// return (2250*(Math.pow(distance, -0.869))) + 2;
+	return (1053*(Math.pow(distance, -0.708)))+1;
 	}
 }
 
@@ -162,7 +176,7 @@ public static class IntakePivotConstants{
 	public static final int reverseSoftLimit = 0;
 	public static final int forwardSoftLimit = 0;
 	public static final boolean encoderDirection = false;
-	public static final double encoderOffset = -133.5-119.44;
+	public static final double encoderOffset = -133.5-119.44+60;
 
 	public static final double kP = 0;
 	public static final double kI = 0;
