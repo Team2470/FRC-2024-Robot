@@ -374,7 +374,7 @@ public class RobotContainer {
 		// m_controller.povRight().whileTrue(new RobotTurnToAngle(m_drivetrain, 0));
 
 		// m_controller.povLeft().whileTrue(new RobotTurnToAngle(m_drivetrain, 180));
-    new Trigger(() -> m_brakeButton.get()).whileTrue(new StartEndCommand(
+    new Trigger(() -> m_brakeButton.get() && !DriverStation.isEnabled()).whileTrue(new StartEndCommand(
         ()-> {
         m_intakePivot.setBrakeMode(true);
         m_feeder.setBrakeMode(true);
