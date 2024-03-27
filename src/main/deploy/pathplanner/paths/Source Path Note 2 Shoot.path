@@ -3,35 +3,35 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.3981263620890236,
-        "y": 6.719352940485241
+        "x": 7.715179558474268,
+        "y": 0.7693172207217847
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.6385473340341703,
-        "y": 6.008464875767237
+        "x": 6.692669328399155,
+        "y": 1.1491067347496495
       },
       "isLocked": false,
-      "linkedName": "End Note 2"
+      "linkedName": "End Source Path Note 2"
     },
     {
       "anchor": {
-        "x": 2.281268050080585,
-        "y": 5.5410316277334815
+        "x": 3.5667094821734135,
+        "y": 2.4442863595098485
       },
       "prevControl": {
-        "x": 2.154671545404776,
-        "y": 5.7650100590829885
+        "x": 4.608696097581994,
+        "y": 1.645754560785515
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "End Note 3"
+      "linkedName": "End Source Path Note 2 Shoot"
     }
   ],
   "rotationTargets": [
     {
       "waypointRelativePos": 0.5,
-      "rotationDegrees": 170.0,
+      "rotationDegrees": 134.0,
       "rotateFast": false
     }
   ],
@@ -45,13 +45,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 180.0,
+    "rotation": 135.0,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": null,
+  "folder": "Source-Middle Autos",
   "previewStartingState": {
-    "rotation": -147.0,
+    "rotation": 180.0,
     "velocity": 0
   },
   "useDefaultConstraints": true

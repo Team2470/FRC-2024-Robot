@@ -43,7 +43,7 @@
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "4AMP",
+  "folder": null,
   "previewStartingState": {
     "rotation": 174.99,
     "velocity": 0

@@ -3,51 +3,51 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 0.75,
-        "y": 4.42
+        "x": 5.1823360789578725,
+        "y": 6.682390507638159
       },
       "prevControl": null,
       "nextControl": {
-        "x": 0.9682874623372801,
-        "y": 4.057497528770031
+        "x": 5.867048876954897,
+        "y": 6.514568743423201
       },
       "isLocked": false,
-      "linkedName": "Source Side Start"
+      "linkedName": "1midMR3 End"
     },
     {
       "anchor": {
-        "x": 2.4799967088104524,
-        "y": 4.135934791979994
+        "x": 6.538335933814724,
+        "y": 6.125222250444501
       },
       "prevControl": {
-        "x": 1.6752173653366604,
-        "y": 4.129279008184726
+        "x": 6.112935851647252,
+        "y": 6.33246844432096
       },
       "nextControl": {
-        "x": 2.6237587260926363,
-        "y": 4.137123750062432
+        "x": 6.800137885990058,
+        "y": 5.997677709641134
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 2.35364650909482,
-        "y": 4.135934791979994
+        "x": 10.45,
+        "y": 4.18
       },
       "prevControl": {
-        "x": 2.375211560164644,
-        "y": 4.113892912470511
+        "x": 10.123008817446205,
+        "y": 4.353024420334555
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "D3"
+      "linkedName": null
     }
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 1.25,
-      "rotationDegrees": -179.70057526517712,
+      "waypointRelativePos": 1.15,
+      "rotationDegrees": -27.680000000000007,
       "rotateFast": true
     }
   ],
@@ -61,14 +61,14 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 146.77690926252467,
+    "rotation": -27.680000000000007,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "basic autos",
+  "folder": "1midLR",
   "previewStartingState": {
-    "rotation": 120.0,
-    "velocity": 0.0
+    "rotation": -165.0,
+    "velocity": 0
   },
   "useDefaultConstraints": true
 }

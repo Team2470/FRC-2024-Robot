@@ -3,38 +3,32 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.3981263620890236,
-        "y": 6.719352940485241
+        "x": 3.5667094821734135,
+        "y": 2.4442863595098485
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.6385473340341703,
-        "y": 6.008464875767237
+        "x": 4.491837785573555,
+        "y": 1.7431364874592163
       },
       "isLocked": false,
-      "linkedName": "End Note 2"
+      "linkedName": "End Source Path Note 2 Shoot"
     },
     {
       "anchor": {
-        "x": 2.281268050080585,
-        "y": 5.5410316277334815
+        "x": 7.822299677814065,
+        "y": 2.1229260014866425
       },
       "prevControl": {
-        "x": 2.154671545404776,
-        "y": 5.7650100590829885
+        "x": 5.972043071013782,
+        "y": 1.665230946120256
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "End Note 3"
+      "linkedName": "Source Path Note 3 End"
     }
   ],
-  "rotationTargets": [
-    {
-      "waypointRelativePos": 0.5,
-      "rotationDegrees": 170.0,
-      "rotateFast": false
-    }
-  ],
+  "rotationTargets": [],
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
@@ -45,13 +39,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 180.0,
+    "rotation": -145.0,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": null,
+  "folder": "Source-Middle Autos",
   "previewStartingState": {
-    "rotation": -147.0,
+    "rotation": 135.0,
     "velocity": 0
   },
   "useDefaultConstraints": true

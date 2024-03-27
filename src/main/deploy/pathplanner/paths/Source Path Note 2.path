@@ -3,35 +3,35 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.3981263620890236,
-        "y": 6.719352940485241
+        "x": 0.75,
+        "y": 4.42
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.6385473340341703,
-        "y": 6.008464875767237
+        "x": 1.0639939666606175,
+        "y": 3.0480543048863455
       },
       "isLocked": false,
-      "linkedName": "End Note 2"
+      "linkedName": "Source Side Start"
     },
     {
       "anchor": {
-        "x": 2.281268050080585,
-        "y": 5.5410316277334815
+        "x": 7.715179558474268,
+        "y": 0.7693172207217847
       },
       "prevControl": {
-        "x": 2.154671545404776,
-        "y": 5.7650100590829885
+        "x": 6.2934034290356,
+        "y": 0.8569609547311589
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "End Note 3"
+      "linkedName": "End Source Path Note 2"
     }
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.5,
-      "rotationDegrees": 170.0,
+      "waypointRelativePos": 0.8,
+      "rotationDegrees": 180.0,
       "rotateFast": false
     }
   ],
@@ -49,9 +49,9 @@
     "rotateFast": false
   },
   "reversed": false,
-  "folder": null,
+  "folder": "Source-Middle Autos",
   "previewStartingState": {
-    "rotation": -147.0,
+    "rotation": 120.0,
     "velocity": 0
   },
   "useDefaultConstraints": true

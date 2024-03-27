@@ -65,7 +65,7 @@
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "4SRC",
+  "folder": null,
   "previewStartingState": {
     "rotation": -153.5,
     "velocity": 0
