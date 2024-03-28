@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.1741479307395157,
-        "y": 4.888572719019697
+        "x": 1.5162444870344285,
+        "y": 4.533770522086499
       },
       "isLocked": false,
       "linkedName": "End Note 2.1"
@@ -20,8 +20,8 @@
         "y": 5.55076982040085
       },
       "prevControl": {
-        "x": 2.0962423894005564,
-        "y": 5.219671269710274
+        "x": 1.2923545847091693,
+        "y": 4.9628928348765795
       },
       "nextControl": null,
       "isLocked": false,
@@ -31,7 +31,7 @@
   "rotationTargets": [
     {
       "waypointRelativePos": 0.3,
-      "rotationDegrees": -155.0,
+      "rotationDegrees": -130.6971637630867,
       "rotateFast": false
     }
   ],

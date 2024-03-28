@@ -16,12 +16,12 @@
     },
     {
       "anchor": {
-        "x": 7.800355600711201,
-        "y": 7.44
+        "x": 7.813147989932344,
+        "y": 7.145819382547857
       },
       "prevControl": {
-        "x": 6.686019086323887,
-        "y": 7.403954787909576
+        "x": 6.698811475545029,
+        "y": 7.109774170457432
       },
       "nextControl": null,
       "isLocked": false,
@@ -49,7 +49,7 @@
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "1midMR",
+  "folder": null,
   "previewStartingState": {
     "rotation": -150.16,
     "velocity": 0

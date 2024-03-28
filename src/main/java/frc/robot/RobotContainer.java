@@ -118,8 +118,9 @@ public class RobotContainer {
 			put("auto-shoot", new ParallelDeadlineGroup(
 				autoShoot(), m_intakePivot.stowCommand()
 			));
-			put("pickup", intakeCommand().withTimeout(4));
-			put("deploy-intake", m_intakePivot.deploy());
+			put("pickup", intakeCommand2().until(()-> m_TOF2.isTOF1WithinRange()));
+			put("trackWhilePickup", intakeCommandAuto().until(()-> m_TOF2.isTOF1WithinRange()));		
+			put("deploy-intake", m_intakePivot.deploy().until(()-> m_intakePivot.getAngle() < 10));
 			put("Intake-up", m_intakePivot.stowCommand().until(()-> (m_intakePivot.getAngle() > 80)));
 			put("IntakeP1", intakingCommand());
 			put("IntakeP2", intakeUpCommand());
@@ -150,6 +151,7 @@ public class RobotContainer {
 			put("test", "test");
 			put("4CNA", "4CNA");
 			put("4CNS", "4CNS");
+			put("1MMR", "1midMR");
 		}});
 
 		m_autoSelector.initialize();
@@ -497,8 +499,8 @@ public class RobotContainer {
 		SmartDashboard.putNumber("Select Distance", 0);
 	}
 	private void setupShooter() {
-		m_simpleFlywheelBottom.setDefaultCommand(m_simpleFlywheelBottom.pidCommand(2000));
-		m_simpleFlywheelTop.setDefaultCommand(m_simpleFlywheelTop.pidCommand(2000));
+		m_simpleFlywheelBottom.setDefaultCommand(m_simpleFlywheelBottom.pidCommand(4000));
+		m_simpleFlywheelTop.setDefaultCommand(m_simpleFlywheelTop.pidCommand(4000));
 		// m_shooterPivot.setDefaultCommand(m_shooterPivot.goToAngleCommand(45));
 		m_intakePivot.setDefaultCommand(m_intakePivot.stowCommand());
 		m_shooterPivot.setDefaultCommand(
@@ -672,6 +674,35 @@ public class RobotContainer {
 			)
 		);
 	}
+	public Command intakeCommandAuto(){
+		return new ParallelDeadlineGroup(
+			new SequentialCommandGroup(
+				new WaitUntilCommand((() -> m_TOF2.isTOF1WithinRange()))
+			),
+			new SequentialCommandGroup(
+				m_intake.test_forwardsCommand().until(() -> m_intake.isRingIntaked()),
+				new WaitUntilCommand(()-> m_intakePivot.getAngle() > 87),
+				m_intake.test_forwardsCommand()
+				
+			),
+			new SequentialCommandGroup(
+				m_intakePivot.deploy().until(() -> m_intake.isRingIntaked()),
+				m_intakePivot.stowCommand()
+			),
+			new SequentialCommandGroup(
+				m_feeder.forward().until(()-> m_TOF1.isTOF1WithinRange()),	
+				m_feeder.forwardPercent(0.2).until(()-> m_TOF2.isTOF2WithinRange())
+			),
+			new SequentialCommandGroup(
+				new WaitUntilCommand(() -> m_intake.isRingIntaked()),
+				new StartEndCommand(
+					() -> m_controller.getHID().setRumble(RumbleType.kBothRumble, .3),
+					() -> m_controller.getHID().setRumble(RumbleType.kBothRumble, 0)
+				).withTimeout(.2)
+			),
+			m_shooterPivot.goToAngleCommand(ShooterPivotConstants.getAngle((m_camera1.FilteredEsimatedPoseNorm())))
+		);
+	}	
 
 
 	public Command extendClimber(){
