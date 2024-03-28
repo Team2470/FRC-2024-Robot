@@ -116,6 +116,18 @@
           "data": {
             "name": "auto-shoot"
           }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Start Coast"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "End Coast"
+          }
         }
       ]
     }
