@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 4.4799282391357576,
-        "y": 4.844224463223702
+        "x": 2.69,
+        "y": 6.88
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.97668066121203,
-        "y": 5.159729379947821
+        "x": 6.227177139038963,
+        "y": 7.321804913880098
       },
       "isLocked": false,
-      "linkedName": "1midMR5.1 End"
+      "linkedName": "End Note 1+mid"
     },
     {
       "anchor": {
-        "x": 7.8,
+        "x": 7.800355600711201,
         "y": 7.44
       },
       "prevControl": {
-        "x": 7.0955041910083825,
-        "y": 7.4677963641641565
+        "x": 6.686019086323887,
+        "y": 7.403954787909576
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "1midMR2 End"
     }
   ],
   "rotationTargets": [
@@ -49,9 +49,9 @@
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "1midRM2",
+  "folder": "1midRL2",
   "previewStartingState": {
-    "rotation": -165.0,
+    "rotation": -150.16,
     "velocity": 0
   },
   "useDefaultConstraints": true

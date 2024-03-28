@@ -62,7 +62,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "1midLR2"
+                  "pathName": "1midL2"
                 }
               },
               {
@@ -81,45 +81,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "1midLR3"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "IntakeP1"
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "parallel",
-          "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "1midRM2.4"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "IntakeP1"
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "parallel",
-          "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "1midMR2.5"
+                  "pathName": "1midL3"
                 }
               },
               {
@@ -134,7 +96,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "1midRM2.6"
+            "pathName": "1midL4"
           }
         }
       ]
