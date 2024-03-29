@@ -358,12 +358,21 @@ public class RobotContainer {
 							return -152.79;
 						}
 					}
+					
+					if (m_controller.getHID().getLeftBumper()) {
+						if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Blue){
+							return 90.0;
+						} else if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Red){
+							return -90.0;
+						}
+					}
 
-				// switch (m_controller.getHID().getPOV())
-				//   case 0: return 0.0;
-				//   case 180: return 180.0;
-				//   default: return null;
-				// }
+
+					// switch (m_controller.getHID().getPOV())
+					//   case 0: return 0.0;
+					//   case 180: return 180.0;
+					//   default: return null;
+					// }
 					return null;
 				}
 			));
