@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.2830258387789504,
-        "y": 5.27074145057381
+        "x": 2.3371956957436577,
+        "y": 4.508357240163049
       },
       "isLocked": false,
       "linkedName": "End Note 3"
@@ -20,8 +20,8 @@
         "y": 4.42
       },
       "prevControl": {
-        "x": 1.3676558062207032,
-        "y": 5.099536564527675
+        "x": 1.7401358155669993,
+        "y": 4.878935923519086
       },
       "nextControl": null,
       "isLocked": false,
@@ -45,7 +45,7 @@
   },
   "goalEndState": {
     "velocity": 0.0,
-    "rotation": 150.0,
+    "rotation": 151.5,
     "rotateFast": false
   },
   "reversed": false,
