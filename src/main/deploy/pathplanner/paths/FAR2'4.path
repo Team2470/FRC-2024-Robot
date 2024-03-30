@@ -3,16 +3,16 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 7.95,
-        "y": 2.35
+        "x": 7.859791719583439,
+        "y": 2.518761401159167
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.960652804188491,
-        "y": 1.488397211028657
+        "x": 4.87044452377193,
+        "y": 1.6571586121878237
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Far2 3"
     },
     {
       "anchor": {

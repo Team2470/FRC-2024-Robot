@@ -45,6 +45,12 @@
                 "data": {
                   "name": "pickup"
                 }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "idle"
+                }
               }
             ]
           }
@@ -107,6 +113,12 @@
                 "type": "named",
                 "data": {
                   "name": "IntakeP2"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "idle"
                 }
               }
             ]

@@ -50,9 +50,22 @@
           }
         },
         {
-          "type": "path",
+          "type": "parallel",
           "data": {
-            "pathName": "FAR2'2"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "FAR2'2"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "idle"
+                }
+              }
+            ]
           }
         },
         {

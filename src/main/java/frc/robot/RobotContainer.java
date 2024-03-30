@@ -574,7 +574,7 @@ public class RobotContainer {
 			m_simpleFlywheelTop.pidCommand(()-> FlyWheelConstants.getRPM(m_camera1.FilteredEsimatedPoseNorm())),
 			// m_simpleFlywheelLeft.feederShooterCommand(m_SimpleShooterFeeder)
 			new SequentialCommandGroup(
-				new WaitCommand(0.05), //wait for setpoint to change
+				new WaitCommand(0.005), //wait for setpoint to change
 				new WaitUntilCommand(() -> 
 					m_simpleFlywheelBottom.isErrorInRange() && m_simpleFlywheelTop.isErrorInRange() && m_shooterPivot.isAngleErrorInRange()),
 
