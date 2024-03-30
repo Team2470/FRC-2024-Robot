@@ -127,7 +127,8 @@ public class RobotContainer {
 			put("IntakeP2", intakeUpCommand());
 			put("45Degrees", m_shooterPivot.goToAngleCommand(45).until(()-> m_TOF2.isTOF1WithinRange())) ;
 			// put("32", m_shooterPivot.goToAngleCommand(45).until(()-> m_TOF2.isTOF1WithinRange()));
-			put("idle2", idleAuto2(32.00));
+			put("idle2", idleAuto2(30.00));
+			put("coast", new InstantCommand(m_drivetrain::disableBrakeMode));
 		}});
 
 		registerAutos(new HashMap<String, String>() {{
@@ -429,7 +430,7 @@ public class RobotContainer {
 
 				m_feeder.forward()
 			)
-		).withTimeout(2);
+		).until(()-> m_TOF2.isTOF1OutOfRange());
 	}
 
 	public Command ampShoot() {
@@ -485,12 +486,14 @@ public class RobotContainer {
 		m_intakePivot.setBrakeMode(true);
 		m_feeder.setBrakeMode(true);
 		m_shooterPivot.setBrakeMode(true);
+		m_drivetrain.enableBrakeMode();
 	}
 	public void teleopInit() {
 		m_drivetrain.setNominalVoltages(DriveConstants.kDriveVoltageCompensation);
 		m_intakePivot.setBrakeMode(true);
 		m_feeder.setBrakeMode(true);
 		m_shooterPivot.setBrakeMode(true);
+		m_drivetrain.enableBrakeMode();
 	}
 	public void robotPeriodic() {
 		SmartDashboard.putNumber("Angle", ShooterPivotConstants.getAngle(m_camera1.FilteredEsimatedPoseNorm()));
@@ -667,7 +670,7 @@ public class RobotContainer {
 				new WaitUntilCommand((() -> m_TOF2.isTOF1WithinRange()))
 			),
 			new SequentialCommandGroup(
-				m_intake.test_forwardsCommand().until(() -> m_intake.isRingIntaked() && m_intakePivot.getAngle() < 10),
+				m_intake.test_forwardsCommand().until(() -> m_intake.isRingIntaked() && m_intakePivot.getAngle() < 1),
 				new WaitUntilCommand(()-> m_intakePivot.getAngle() > 87),
 				m_intake.test_forwardsCommand()
 			),
