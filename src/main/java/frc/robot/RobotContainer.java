@@ -667,13 +667,13 @@ public class RobotContainer {
 				new WaitUntilCommand((() -> m_TOF2.isTOF1WithinRange()))
 			),
 			new SequentialCommandGroup(
-				m_intake.test_forwardsCommand().until(() -> m_intake.isRingIntaked()),
+				m_intake.test_forwardsCommand().until(() -> m_intake.isRingIntaked() && m_intakePivot.getAngle() < 10),
 				new WaitUntilCommand(()-> m_intakePivot.getAngle() > 87),
 				m_intake.test_forwardsCommand()
 			),
 			// m_shooterPivot.goToAngleCommand(45),
 			new SequentialCommandGroup(
-				m_intakePivot.deploy().until(() -> m_intake.isRingIntaked()),
+				m_intakePivot.deploy().until(() -> m_intake.isRingIntaked() && m_intakePivot.getAngle() < 10),
 				m_intakePivot.stowCommand()
 			),
 			new SequentialCommandGroup(
@@ -681,7 +681,7 @@ public class RobotContainer {
 				m_feeder.forwardPercent(0.2).until(()-> m_TOF2.isTOF2WithinRange())
 			),
 			new SequentialCommandGroup(
-				new WaitUntilCommand(() -> m_intake.isRingIntaked()),
+				new WaitUntilCommand(() -> m_intake.isRingIntaked() && m_intakePivot.getAngle() < 10),
 				new StartEndCommand(
 					() -> m_controller.getHID().setRumble(RumbleType.kBothRumble, .3),
 					() -> m_controller.getHID().setRumble(RumbleType.kBothRumble, 0)
