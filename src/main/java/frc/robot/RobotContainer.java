@@ -368,7 +368,7 @@ public class RobotContainer {
 						if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Blue){
 							return 90.0;
 						} else if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Red){
-							return -90.0;
+							return 90.0;
 						}
 					}
 
