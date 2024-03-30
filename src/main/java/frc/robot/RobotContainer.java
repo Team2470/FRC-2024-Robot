@@ -125,6 +125,9 @@ public class RobotContainer {
 			put("Intake-up", m_intakePivot.stowCommand().until(()-> (m_intakePivot.getAngle() > 80)));
 			put("IntakeP1", intakingCommand());
 			put("IntakeP2", intakeUpCommand());
+			put("45Degrees", m_shooterPivot.goToAngleCommand(45).until(()-> m_TOF2.isTOF1WithinRange())) ;
+			// put("32", m_shooterPivot.goToAngleCommand(45).until(()-> m_TOF2.isTOF1WithinRange()));
+			put("idle2", idleAuto2(32.00));
 		}});
 
 		registerAutos(new HashMap<String, String>() {{
@@ -736,6 +739,20 @@ public class RobotContainer {
 			m_shooterPivot.goToAngleCommand(()-> ShooterPivotConstants.getAngle((m_camera1.FilteredEsimatedPoseNorm()))),
 			m_simpleFlywheelBottom.pidCommand(()-> FlyWheelConstants.getRPM((m_camera1.FilteredEsimatedPoseNorm()))),
 			m_simpleFlywheelTop.pidCommand(()-> FlyWheelConstants.getRPM((m_camera1.FilteredEsimatedPoseNorm())))
+		);
+	}
+	public Command idleAuto2(double angle){
+		return new ParallelCommandGroup(
+			m_shooterPivot.goToAngleCommand(angle),
+			m_simpleFlywheelBottom.pidCommand(4000),
+			m_simpleFlywheelTop.pidCommand(4000)
+		);
+	}
+	public Command passNote(){
+		return new ParallelCommandGroup(
+			m_shooterPivot.goToAngleCommand(50),
+			m_simpleFlywheelBottom.pidCommand(5000),
+			m_simpleFlywheelTop.pidCommand(50)	
 		);
 	}
 }

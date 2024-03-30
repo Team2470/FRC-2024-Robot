@@ -45,12 +45,18 @@
                 "data": {
                   "name": "pickup"
                 }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "45Degrees"
+                }
               }
             ]
           }
         },
         {
-          "type": "parallel",
+          "type": "deadline",
           "data": {
             "commands": [
               {
@@ -62,7 +68,7 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "idle"
+                  "name": "idle2"
                 }
               }
             ]
@@ -81,7 +87,7 @@
           }
         },
         {
-          "type": "parallel",
+          "type": "deadline",
           "data": {
             "commands": [
               {
@@ -94,6 +100,31 @@
                 "type": "named",
                 "data": {
                   "name": "pickup"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "idle2"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "deadline",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "FAR2'4"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "idle2"
                 }
               }
             ]
