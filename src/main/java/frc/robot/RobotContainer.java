@@ -420,8 +420,8 @@ public class RobotContainer {
 	public Command speakerShoot() {
 		return new ParallelCommandGroup(
 			m_shooterPivot.goToAngleCommand(59.92836363),
-			m_simpleFlywheelBottom.pidCommand(2326.626089),
-			m_simpleFlywheelTop.pidCommand(2326.626089),
+			m_simpleFlywheelBottom.pidCommand(4000),
+			m_simpleFlywheelTop.pidCommand(4000),
 
 			new SequentialCommandGroup(
 				new WaitCommand(0.25), //wait for setpoint to change
@@ -435,9 +435,9 @@ public class RobotContainer {
 
 	public Command ampShoot() {
 		return new ParallelCommandGroup(
-			m_shooterPivot.goToAngleCommand(50),
-			m_simpleFlywheelBottom.pidCommand(1250),
-			m_simpleFlywheelTop.pidCommand(750),
+			m_shooterPivot.goToAngleCommand(52),//50
+			m_simpleFlywheelBottom.pidCommand(1350),//1250
+			m_simpleFlywheelTop.pidCommand(850),//750
 
 			new SequentialCommandGroup(
 				new WaitUntilCommand(() -> 
