@@ -1,65 +1,91 @@
 package frc.robot.commands;
 
+import java.util.Optional;
+
+import edu.wpi.first.apriltag.AprilTagFieldLayout;
+import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.LimelightHelpers;
 import frc.robot.subsystems.Drivetrain;
 
-public class ALignTrapShootCommand extends DriveWithController {
+public class ALignTrapShootCommand extends SequentialCommandGroup {
 
-    private final PIDController m_xController = new PIDController(0, 0, 0);
+    private final static String kLimelight = "limelight-trap";
+    private final static AprilTagFieldLayout kField = AprilTagFields.k2024Crescendo.loadAprilTagLayoutField();
+
+    private final PIDController m_xPID = new PIDController(0, 0, 0);
+    private final PIDController m_yPID = new PIDController(0,0,0);
+
+
+    private Double m_angle = null;
 
     public ALignTrapShootCommand(Drivetrain drive) {
-        super(
-            drive,
-            // X Move Velocity - Forward
-            this::x,
+        addCommands(
+            Commands.run(()->{
+                int tag = (int)LimelightHelpers.getFiducialID(kLimelight);
+                if (!(tag == 11 || tag == 12 || tag == 13 || tag == 14 || tag == 15 || tag == 16)) {
+                    // Not a target
+                    return;
+                }
 
-            // Y Move Velocity - Strafe
-            () ->0.0,
+                // get the target pose from the field info.
+                Optional<Pose3d> tagPose =  kField.getTagPose(tag);
+                if (tagPose.isPresent()) {
+                    m_angle = tagPose.get().getRotation().toRotation2d().getDegrees();
+                }
 
-            // Rotate Angular velocity
-            () ->  0.0,
-
-            // Field Orientated
-            () -> false,
-
-            // Slow Mode
-            () ->false,		
-            
-
-            // Disable X Movement
-            () -> false,
-
-            // Disable Y Movement
-            () -> false,
-
-            // Heading Override
-            () -> null,
-            () -> {
-                // if (m_controller.getHID().getLeftBumper()) {
-                //     if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Blue){
-                //         return 90.0;
-                //     } else if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Red){
-                //         return 90.0;
-                //     }
+                // if (tag == 11) {
+                // } else if (tag == 12) {
+                //     m_angle = 0.0;
+                // } else if (tag == 13) {
+                //     m_angle = 0.0;
+                // } else if (tag == 14) {
+                //     m_angle = 0.0;
+                // } else if (tag == 15) {
+                //     m_angle = 0.0;
+                // } else  if (tag == 16) {
+                //     m_angle = 0.0;
                 // }
-                return null;
+            }).until(()->m_angle != null),
+            Commands.runOnce(()->{
+                m_xPID.reset();
+                m_xPID.setTolerance(1);
+
+                m_yPID.reset();
+                m_yPID.setTolerance(1);
+            }),
+            new DriveWithController(
+                drive,
+                // X Move Velocity - Forward
+                ()-> m_xPID.calculate(LimelightHelpers.getTX(kLimelight), 0),
+
+                // Y Move Velocity - Strafe
+                ()-> m_yPID.calculate(LimelightHelpers.getTY(kLimelight), 0),
+
+                // Rotate Angular velocity
+                () ->  0.0,
+
+                // Field Orientated
+                () -> false,
+
+                // Slow Mode
+                () -> false,		
             
-            }
-    );
-    }
+                // Disable X Movement
+                () -> false,
 
-    @Override
-    public void initialize() {
+                // Disable Y Movement
+                () -> false,
 
+                // Vision Heading Override
+                () -> null,
 
-       super.initialize();
-
-
-    }
-
-    public static double x() {
-        return m_xController.calculate(LimelightHelpers.getTX("limelight"), 0);
-    }
-    
+                // Field orented override
+                () -> m_angle
+            ).until(()->m_xPID.atSetpoint() && m_yPID.atSetpoint())
+        );
+    }    
 }

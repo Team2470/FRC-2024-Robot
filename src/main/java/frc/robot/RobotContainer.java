@@ -11,6 +11,7 @@ import com.kennedyrobotics.hardware.misc.RevDigit;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.FollowPathCommand;
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.filter.Debouncer.DebounceType;
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -42,6 +43,7 @@ import frc.robot.Constants.FlyWheelConstants;
 import frc.robot.Constants.ShooterPivotConstants;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.Constants.ClimberConstants;
+import frc.robot.commands.ALignTrapShootCommand;
 import frc.robot.commands.DriveWithController;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Intake;
@@ -295,12 +297,17 @@ public class RobotContainer {
 
 		m_buttonPad.button(4).whileTrue(ampShoot());
 
-		// m_buttonPad.button(5).whileTrue(new ParallelCommandGroup(
-		// 	m_shooterPivot.goToAngleCommand(57.91),
-		// 	m_simpleFlywheelBottom.pidCommand(2300),
-		// 	m_simpleFlywheelTop.pidCommand(2300)
-		// ));
-		m_buttonPad.button(5).whileTrue();
+		m_buttonPad.button(5).whileTrue(new SequentialCommandGroup(
+			new ParallelDeadlineGroup(
+				new ALignTrapShootCommand(m_drivetrain),
+				m_shooterPivot.goToAngleCommand(45)
+			),
+			new ParallelCommandGroup(
+				m_shooterPivot.goToAngleCommand(57.91),
+				m_simpleFlywheelBottom.pidCommand(2300),
+				m_simpleFlywheelTop.pidCommand(2300)
+			)
+		));
 
 		
 
