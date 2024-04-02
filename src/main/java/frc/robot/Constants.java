@@ -161,7 +161,15 @@ public static class ShooterPivotConstants {
 	// Comp robot
 	// return (1848*(Math.pow(distance, -0.827)));
 	// return (2250*(Math.pow(distance, -0.869))) + 2;
-	return (1053*(Math.pow(distance, -0.708)))+2;
+	if ((1053*(Math.pow(distance, -0.708)))+2 <= 70){
+		return (1053*(Math.pow(distance, -0.708)))+2;
+	} else if ((1053*(Math.pow(distance, -0.708)))+2 > 70) {
+		return 45.00;
+	} else if ((1053*(Math.pow(distance, -0.708)))+2 <= 0){
+		return 45.00;
+	} else {
+		return 45;
+	}
 	}
 }
 

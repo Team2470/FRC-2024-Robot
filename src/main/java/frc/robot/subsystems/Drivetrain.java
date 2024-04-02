@@ -1,8 +1,11 @@
 package frc.robot.subsystems;
 
+
 import com.ctre.phoenix.sensors.CANCoder;
 import com.ctre.phoenix.sensors.Pigeon2;
 import com.ctre.phoenix.sensors.PigeonIMU_StatusFrame;
+import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
@@ -210,6 +213,20 @@ private void setChassisSpeeds(ChassisSpeeds chassisSpeeds) {
 
 public void stop() {
 	drive(0, 0, 0, false);
+}
+
+public void enableBrakeMode(){
+	for (int i = 0; i < 4; i++) {
+		TalonFX motor = ((TalonFX) m_swerve_modules[i].getDriveMotor());
+		motor.setNeutralMode(NeutralModeValue.Brake);
+	}	
+}
+
+public void disableBrakeMode(){
+	for (int i = 0; i < 4; i++) {
+		TalonFX motor = ((TalonFX) m_swerve_modules[i].getDriveMotor());
+		motor.setNeutralMode(NeutralModeValue.Coast);
+	}		
 }
 
 @Override
