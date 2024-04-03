@@ -6,11 +6,16 @@ import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.kinematics.SwerveModulePosition;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.Constants.DriveConstants;
 import frc.robot.LimelightHelpers;
 import frc.robot.subsystems.Drivetrain;
 
@@ -21,6 +26,21 @@ public class ALignTrapShootCommand extends SequentialCommandGroup {
 
     private final PIDController m_txPID = new PIDController(0.025, 0, 0);
     private final PIDController m_tyPID = new PIDController(0.025,0,0);
+
+    private final SwerveDrivePoseEstimator m_odometry = new SwerveDrivePoseEstimator(
+			DriveConstants.kDriveKinematics,
+			new Rotation2d(),
+			new SwerveModulePosition()[] {
+                new SwerveModulePosition(),
+                new SwerveModulePosition(),
+                new SwerveModulePosition(),
+                new SwerveModulePosition()
+			},
+			new Pose2d(),
+			VecBuilder.fill(0.1, 0.1, 0.1),
+			VecBuilder.fill(1.5, 1.5, 1.5)
+    ); // 7028 uses 1.5
+
 
 
     private Double m_angle = 0.0;
@@ -93,6 +113,15 @@ public class ALignTrapShootCommand extends SequentialCommandGroup {
                     false
                 ),
                 Commands.run(()->{
+                    m_odometry.update(drive.getIMUHeading(), drive.getModulePositions());
+                    var lastResult = LimelightHelpers.getLatestResults("limelight").targetingResults;
+
+                    Pose2d llPose = lastResult.getBotPose2d_wpiBlue();
+
+                    if (lastResult.valid) {
+                        m_odometry.addVisionMeasurement(llPose, Timer.getFPGATimestamp());
+                    }
+
                     SmartDashboard.putNumber("TRAP tx error", m_txPID.getPositionError());
                     SmartDashboard.putNumber("TRAP ty error", m_tyPID.getPositionError());
                 })
