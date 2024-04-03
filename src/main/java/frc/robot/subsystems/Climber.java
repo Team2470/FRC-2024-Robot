@@ -46,11 +46,10 @@ public Climber(int motorID, int servoChannel, int extendLimitChannel, int retrac
 	config.CurrentLimits.SupplyCurrentLimit = 20;
 	config.CurrentLimits.SupplyCurrentLimitEnable = true;
 	config.SoftwareLimitSwitch.ForwardSoftLimitEnable = true;
-	config.SoftwareLimitSwitch.ForwardSoftLimitThreshold = 25;
+	config.SoftwareLimitSwitch.ForwardSoftLimitThreshold = 34;
 	config.SoftwareLimitSwitch.ReverseSoftLimitEnable = false;
 	config.SoftwareLimitSwitch.ReverseSoftLimitThreshold = 0;
 	config.OpenLoopRamps.VoltageOpenLoopRampPeriod = 0.5;
-
 
 
 	m_motor = new TalonFX(motorID, "rio");

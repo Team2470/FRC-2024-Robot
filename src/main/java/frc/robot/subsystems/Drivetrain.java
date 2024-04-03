@@ -1,8 +1,11 @@
 package frc.robot.subsystems;
 
+
 import com.ctre.phoenix.sensors.CANCoder;
 import com.ctre.phoenix.sensors.Pigeon2;
 import com.ctre.phoenix.sensors.PigeonIMU_StatusFrame;
+import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
@@ -15,6 +18,7 @@ import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
@@ -212,6 +216,20 @@ public void stop() {
 	drive(0, 0, 0, false);
 }
 
+public void enableBrakeMode(){
+	for (int i = 0; i < 4; i++) {
+		TalonFX motor = ((TalonFX) m_swerve_modules[i].getDriveMotor());
+		motor.setNeutralMode(NeutralModeValue.Brake);
+	}	
+}
+
+public void disableBrakeMode(){
+	for (int i = 0; i < 4; i++) {
+		TalonFX motor = ((TalonFX) m_swerve_modules[i].getDriveMotor());
+		motor.setNeutralMode(NeutralModeValue.Coast);
+	}		
+}
+
 @Override
 public void periodic() {
 
@@ -253,7 +271,11 @@ public double getRoll() {
 
 public void resetHeading() {
 	// this.m_imu.setYaw(0);
-	resetOdometry(new Pose2d());
+	if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Red){
+		resetOdometry(new Pose2d(0,0,Rotation2d.fromDegrees(180)));
+	}else {
+		resetOdometry(new Pose2d());
+	}
 }
 
 /**

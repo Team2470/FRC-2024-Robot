@@ -119,7 +119,7 @@ public final class NeoSteerControllerFactoryBuilder {
 				checkNeoError(controller.setD(pidDerivative), "Failed to set NEO PID derivative constant");
 			}
 			checkNeoError(controller.setFeedbackDevice(integratedEncoder), "Failed to set NEO PID feedback device");
-
+			motor.burnFlash();
 			return new ControllerImplementation(motor, absoluteEncoder);
 		}
 	}

@@ -45,6 +45,12 @@
                 "data": {
                   "name": "pickup"
                 }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "idle"
+                }
               }
             ]
           }
@@ -75,6 +81,12 @@
                 "type": "named",
                 "data": {
                   "name": "pickup"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "idle"
                 }
               }
             ]
@@ -107,14 +119,33 @@
                 "data": {
                   "name": "pickup"
                 }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "idle"
+                }
               }
             ]
           }
         },
         {
-          "type": "path",
+          "type": "parallel",
           "data": {
-            "pathName": "D4-D5"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "D4-D5"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "idle"
+                }
+              }
+            ]
           }
         },
         {

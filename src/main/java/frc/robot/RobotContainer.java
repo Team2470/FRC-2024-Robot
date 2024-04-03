@@ -13,6 +13,7 @@ import com.pathplanner.lib.commands.FollowPathCommand;
 
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.filter.Debouncer.DebounceType;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -97,6 +98,9 @@ public class RobotContainer {
 
 	private boolean slowMode;
 
+  private final DigitalInput m_brakeButton = new DigitalInput(3);
+  
+
 	public RobotContainer() {
 		SmartDashboard.putString("roboRio Serial Number", RobotController.getSerialNumber());
 		// CameraServer.startAutomaticCapture();
@@ -111,14 +115,20 @@ public class RobotContainer {
 
 		NamedCommands.registerCommands(new HashMap<String, Command>() {{
 			put("speaker-shoot", speakerShoot());
-			put("auto-shoot", new ParallelRaceGroup(
+			put("auto-shoot", new ParallelDeadlineGroup(
 				autoShoot(), m_intakePivot.stowCommand()
 			));
-			put("pickup", intakeCommand().withTimeout(4));
-			put("deploy-intake", m_intakePivot.deploy());
+			put("pickup", intakeCommand2().until(()-> m_TOF2.isTOF1WithinRange()));
+			put("idle", idleAuto().until(()-> m_TOF2.isTOF1WithinRange()));
+			put("trackWhilePickup", intakeCommandAuto().until(()-> m_TOF2.isTOF1WithinRange()));		
+			put("deploy-intake", m_intakePivot.deploy().until(()-> m_intakePivot.getAngle() < 10));
 			put("Intake-up", m_intakePivot.stowCommand().until(()-> (m_intakePivot.getAngle() > 80)));
 			put("IntakeP1", intakingCommand());
 			put("IntakeP2", intakeUpCommand());
+			put("45Degrees", m_shooterPivot.goToAngleCommand(45).until(()-> m_TOF2.isTOF1WithinRange())) ;
+			// put("32", m_shooterPivot.goToAngleCommand(45).until(()-> m_TOF2.isTOF1WithinRange()));
+			put("idle2", idleAuto2(30.00));
+			put("coast", new InstantCommand(m_drivetrain::disableBrakeMode));
 		}});
 
 		registerAutos(new HashMap<String, String>() {{
@@ -146,6 +156,9 @@ public class RobotContainer {
 			put("test", "test");
 			put("4CNA", "4CNA");
 			put("4CNS", "4CNS");
+			put("1MMR", "1midMR");
+			put("4CEN", "4CEN");
+			put("FAR3", "FAR3");
 		}});
 
 		m_autoSelector.initialize();
@@ -195,7 +208,7 @@ public class RobotContainer {
 	* joysticks}.
 	*/
 	private void configureBindings() {
-		m_controller.rightBumper().toggleOnTrue(new ParallelCommandGroup(
+		m_controller.povRight().toggleOnTrue(new ParallelCommandGroup(
 			m_Orchestra6.playMusicCommand(),
 			// m_Orchestra6v21.playMusiCommand(),
 			// m_Orchestra6v22.playMusiCommand(),
@@ -212,9 +225,9 @@ public class RobotContainer {
 		m_buttonPad.button(6).whileTrue(m_intakePivot.deploy());
 		m_buttonPad.button(7).whileTrue(m_intakePivot.stowCommand());
 
-		m_controller.povUp().onTrue(new InstantCommand(()-> m_camera1.offset+=1));
-		m_controller.povDown().onTrue(new InstantCommand(()-> m_camera1.offset -=1));
-		m_controller.povLeft().onTrue(new InstantCommand(()-> m_camera1.offset = 0));
+		//m_controller.povUp().onTrue(new InstantCommand(()-> m_camera1.offset+=1));
+		//m_controller.povDown().onTrue(new InstantCommand(()-> m_camera1.offset -=1));
+		//m_controller.povLeft().onTrue(new InstantCommand(()-> m_camera1.offset = 0));
 		m_buttonPad.button(8).whileTrue(intakingCommand());
 		m_buttonPad.button(12).whileTrue(intakeUpCommand());
 		
@@ -268,7 +281,7 @@ public class RobotContainer {
 		m_buttonPad.button(2).whileTrue(speakerShoot());
 	//56.92836363
 		m_buttonPad.button(3).whileTrue(new ParallelCommandGroup(
-			m_shooterPivot.goToAngleCommand(48.779296875),
+			m_shooterPivot.goToAngleCommand(50),//48.779296875),
 			m_simpleFlywheelBottom.pidCommand(-1700),
 			m_simpleFlywheelTop.pidCommand(-1700),
 			m_TOF1.feederIntakeCommand(m_feeder)
@@ -284,7 +297,7 @@ public class RobotContainer {
 		m_buttonPad.button(4).whileTrue(ampShoot());
 
 		m_buttonPad.button(5).whileTrue(new ParallelCommandGroup(
-			m_shooterPivot.goToAngleCommand(57.91),
+			m_shooterPivot.goToAngleCommand(()-> SmartDashboard.getNumber("Select Shooter Pivot Angle", 45.00)),
 			m_simpleFlywheelBottom.pidCommand(2300),
 			m_simpleFlywheelTop.pidCommand(2300)
 		));
@@ -352,12 +365,29 @@ public class RobotContainer {
 							return -152.79;
 						}
 					}
+					
+					if (m_controller.getHID().getLeftBumper()) {
+						if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Blue){
+							return 90.0;
+						} else if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Red){
+							return 90.0;
+						}
+					}
 
-				// switch (m_controller.getHID().getPOV())
-				//   case 0: return 0.0;
-				//   case 180: return 180.0;
-				//   default: return null;
-				// }
+					if (m_controller.getHID().getRightBumper()) {
+						if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Blue){
+							return -60.0;
+						} else if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Red){
+							return -120.0;
+						}
+					}
+
+
+					// switch (m_controller.getHID().getPOV())
+					//   case 0: return 0.0;
+					//   case 180: return 180.0;
+					//   default: return null;
+					// }
 					return null;
 				}
 			));
@@ -372,6 +402,20 @@ public class RobotContainer {
 		// m_controller.povRight().whileTrue(new RobotTurnToAngle(m_drivetrain, 0));
 
 		// m_controller.povLeft().whileTrue(new RobotTurnToAngle(m_drivetrain, 180));
+		new Trigger(() -> !m_brakeButton.get() && DriverStation.isDisabled()).whileTrue(new StartEndCommand(
+			()-> {
+				m_intakePivot.setBrakeMode(false);
+				m_feeder.setBrakeMode(false);
+				m_shooterPivot.setBrakeMode(false);
+			},
+			() -> {
+				m_intakePivot.setBrakeMode(true);
+				m_feeder.setBrakeMode(true);
+				m_shooterPivot.setBrakeMode(true);
+			}
+		).ignoringDisable(true));
+
+    
 	}
 
 	/**
@@ -385,8 +429,8 @@ public class RobotContainer {
 	public Command speakerShoot() {
 		return new ParallelCommandGroup(
 			m_shooterPivot.goToAngleCommand(59.92836363),
-			m_simpleFlywheelBottom.pidCommand(2326.626089),
-			m_simpleFlywheelTop.pidCommand(2326.626089),
+			m_simpleFlywheelBottom.pidCommand(4000),
+			m_simpleFlywheelTop.pidCommand(4000),
 
 			new SequentialCommandGroup(
 				new WaitCommand(0.25), //wait for setpoint to change
@@ -395,14 +439,14 @@ public class RobotContainer {
 
 				m_feeder.forward()
 			)
-		).withTimeout(2);
+		).until(()-> m_TOF2.isTOF1OutOfRange());
 	}
 
 	public Command ampShoot() {
 		return new ParallelCommandGroup(
-			m_shooterPivot.goToAngleCommand(50),
-			m_simpleFlywheelBottom.pidCommand(1250),
-			m_simpleFlywheelTop.pidCommand(750),
+			m_shooterPivot.goToAngleCommand(52),//50
+			m_simpleFlywheelBottom.pidCommand(1350),//1250
+			m_simpleFlywheelTop.pidCommand(850),//750
 
 			new SequentialCommandGroup(
 				new WaitUntilCommand(() -> 
@@ -448,9 +492,17 @@ public class RobotContainer {
 	public void autonomousInit() {
 		m_drivetrain.resetHeading();
 		m_drivetrain.setNominalVoltages(AutoConstants.kAutoVoltageCompensation);
+		m_intakePivot.setBrakeMode(true);
+		m_feeder.setBrakeMode(true);
+		m_shooterPivot.setBrakeMode(true);
+		m_drivetrain.enableBrakeMode();
 	}
 	public void teleopInit() {
 		m_drivetrain.setNominalVoltages(DriveConstants.kDriveVoltageCompensation);
+		m_intakePivot.setBrakeMode(true);
+		m_feeder.setBrakeMode(true);
+		m_shooterPivot.setBrakeMode(true);
+		m_drivetrain.enableBrakeMode();
 	}
 	public void robotPeriodic() {
 		SmartDashboard.putNumber("Angle", ShooterPivotConstants.getAngle(m_camera1.FilteredEsimatedPoseNorm()));
@@ -473,23 +525,23 @@ public class RobotContainer {
 		SmartDashboard.putNumber("Select Distance", 0);
 	}
 	private void setupShooter() {
-		m_simpleFlywheelBottom.setDefaultCommand(m_simpleFlywheelBottom.pidCommand(2000));
-		m_simpleFlywheelTop.setDefaultCommand(m_simpleFlywheelTop.pidCommand(2000));
+		m_simpleFlywheelBottom.setDefaultCommand(m_simpleFlywheelBottom.pidCommand(4000));
+		m_simpleFlywheelTop.setDefaultCommand(m_simpleFlywheelTop.pidCommand(4000));
 		// m_shooterPivot.setDefaultCommand(m_shooterPivot.goToAngleCommand(45));
 		m_intakePivot.setDefaultCommand(m_intakePivot.stowCommand());
-		// m_shooterPivot.setDefaultCommand(
-		// 	new SequentialCommandGroup(
-		// 		new ParallelDeadlineGroup(
-		// 			new SequentialCommandGroup(
-		// 				new WaitCommand(0.1),
-		// 				new WaitUntilCommand( ()-> m_shooterPivot.isAngleErrorInRange())
-		// 			),
-		// 			m_shooterPivot.goToAngleCommand(45)
-		// 		),
-		// 		new RunCommand(()-> {})
-		// 	)
-		// )
-		;
+		m_shooterPivot.setDefaultCommand(
+			new SequentialCommandGroup(
+				new ParallelDeadlineGroup(
+					new SequentialCommandGroup(
+						new WaitCommand(0.1),
+						new WaitUntilCommand( ()-> m_shooterPivot.isAngleErrorInRange())
+					),
+					m_shooterPivot.goToAngleCommand(45)
+				),
+				new RunCommand(()-> {})
+			)
+		);
+
 	}
 	private void registerAutos(HashMap<String, String> autos) {
 		for (String name: autos.keySet()) {
@@ -546,7 +598,7 @@ public class RobotContainer {
 			m_simpleFlywheelTop.pidCommand(()-> FlyWheelConstants.getRPM(m_camera1.FilteredEsimatedPoseNorm())),
 			// m_simpleFlywheelLeft.feederShooterCommand(m_SimpleShooterFeeder)
 			new SequentialCommandGroup(
-				new WaitCommand(0.25), //wait for setpoint to change
+				new WaitCommand(0.005), //wait for setpoint to change
 				new WaitUntilCommand(() -> 
 					m_simpleFlywheelBottom.isErrorInRange() && m_simpleFlywheelTop.isErrorInRange() && m_shooterPivot.isAngleErrorInRange()),
 
@@ -554,8 +606,8 @@ public class RobotContainer {
 						m_feeder.forward(),
 						m_intake.test_forwardsCommand(),
 						new SequentialCommandGroup(
-							new WaitUntilCommand(()->m_TOF1.isTOF1OutOfRange()),
-							new WaitCommand(0.25)
+							new WaitUntilCommand(()-> m_TOF2.isTOF1OutOfRange() && m_TOF1.isTOF1OutOfRange())
+							// new WaitCommand(0.25)
 						)
 					)
 					)
@@ -600,7 +652,7 @@ public class RobotContainer {
 	}
 	public Command intakeUpCommand(){
 		return new ParallelDeadlineGroup(
-			new WaitUntilCommand((()->m_TOF1.isTOF2WithinRange())),//deadline
+			new WaitUntilCommand((()->m_TOF2.isTOF1WithinRange())),//deadline
 			new SequentialCommandGroup(
 				new WaitUntilCommand(()-> m_intakePivot.getAngle() > 87),
 				m_intake.test_forwardsCommand()
@@ -627,11 +679,39 @@ public class RobotContainer {
 				new WaitUntilCommand((() -> m_TOF2.isTOF1WithinRange()))
 			),
 			new SequentialCommandGroup(
-				m_intake.test_forwardsCommand().until(() -> m_intake.isRingIntaked()),
+				m_intake.test_forwardsCommand().until(() -> m_intake.isRingIntaked() && m_intakePivot.getAngle() < 1),
 				new WaitUntilCommand(()-> m_intakePivot.getAngle() > 87),
 				m_intake.test_forwardsCommand()
 			),
-			m_shooterPivot.goToAngleCommand(45),
+			// m_shooterPivot.goToAngleCommand(45),
+			new SequentialCommandGroup(
+				m_intakePivot.deploy().until(() -> m_intake.isRingIntaked() && m_intakePivot.getAngle() < 10),
+				m_intakePivot.stowCommand()
+			),
+			new SequentialCommandGroup(
+				m_feeder.forward().until(()-> m_TOF1.isTOF1WithinRange()),	
+				m_feeder.forwardPercent(0.2).until(()-> m_TOF2.isTOF2WithinRange())
+			),
+			new SequentialCommandGroup(
+				new WaitUntilCommand(() -> m_intake.isRingIntaked() && m_intakePivot.getAngle() < 10),
+				new StartEndCommand(
+					() -> m_controller.getHID().setRumble(RumbleType.kBothRumble, .3),
+					() -> m_controller.getHID().setRumble(RumbleType.kBothRumble, 0)
+				).withTimeout(.2)
+			)
+		);
+	}
+	public Command intakeCommandAuto(){
+		return new ParallelDeadlineGroup(
+			new SequentialCommandGroup(
+				new WaitUntilCommand((() -> m_TOF2.isTOF1WithinRange()))
+			),
+			new SequentialCommandGroup(
+				m_intake.test_forwardsCommand().until(() -> m_intake.isRingIntaked()),
+				new WaitUntilCommand(()-> m_intakePivot.getAngle() > 87),
+				m_intake.test_forwardsCommand()
+
+			),
 			new SequentialCommandGroup(
 				m_intakePivot.deploy().until(() -> m_intake.isRingIntaked()),
 				m_intakePivot.stowCommand()
@@ -646,9 +726,10 @@ public class RobotContainer {
 					() -> m_controller.getHID().setRumble(RumbleType.kBothRumble, .3),
 					() -> m_controller.getHID().setRumble(RumbleType.kBothRumble, 0)
 				).withTimeout(.2)
-			)
+			),
+			m_shooterPivot.goToAngleCommand(ShooterPivotConstants.getAngle((m_camera1.FilteredEsimatedPoseNorm())))
 		);
-	}
+	}	
 
 
 	public Command extendClimber(){
@@ -664,5 +745,26 @@ public class RobotContainer {
 
 	public void slowmodething(){
 		slowMode = !slowMode;
+	}
+	public Command idleAuto(){
+		return new ParallelCommandGroup(
+			m_shooterPivot.goToAngleCommand(()-> ShooterPivotConstants.getAngle((m_camera1.FilteredEsimatedPoseNorm()))),
+			m_simpleFlywheelBottom.pidCommand(()-> FlyWheelConstants.getRPM((m_camera1.FilteredEsimatedPoseNorm()))),
+			m_simpleFlywheelTop.pidCommand(()-> FlyWheelConstants.getRPM((m_camera1.FilteredEsimatedPoseNorm())))
+		);
+	}
+	public Command idleAuto2(double angle){
+		return new ParallelCommandGroup(
+			m_shooterPivot.goToAngleCommand(angle),
+			m_simpleFlywheelBottom.pidCommand(4000),
+			m_simpleFlywheelTop.pidCommand(4000)
+		);
+	}
+	public Command passNote(){
+		return new ParallelCommandGroup(
+			m_shooterPivot.goToAngleCommand(50),
+			m_simpleFlywheelBottom.pidCommand(5000),
+			m_simpleFlywheelTop.pidCommand(50)	
+		);
 	}
 }

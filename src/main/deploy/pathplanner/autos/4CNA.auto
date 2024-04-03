@@ -45,6 +45,12 @@
                 "data": {
                   "name": "pickup"
                 }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "idle"
+                }
               }
             ]
           }
@@ -75,6 +81,12 @@
                 "type": "named",
                 "data": {
                   "name": "pickup"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "idle"
                 }
               }
             ]
@@ -107,6 +119,12 @@
                 "data": {
                   "name": "pickup"
                 }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "idle"
+                }
               }
             ]
           }
@@ -115,6 +133,30 @@
           "type": "named",
           "data": {
             "name": "auto-shoot"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Intake-up"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Start Coast"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "coast"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "End Coast"
           }
         }
       ]

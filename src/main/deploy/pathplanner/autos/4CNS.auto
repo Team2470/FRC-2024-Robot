@@ -45,6 +45,12 @@
                 "data": {
                   "name": "pickup"
                 }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "idle"
+                }
               }
             ]
           }
@@ -76,6 +82,12 @@
                 "data": {
                   "name": "pickup"
                 }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "idle"
+                }
               }
             ]
           }
@@ -106,6 +118,12 @@
                 "type": "named",
                 "data": {
                   "name": "pickup"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "idle"
                 }
               }
             ]

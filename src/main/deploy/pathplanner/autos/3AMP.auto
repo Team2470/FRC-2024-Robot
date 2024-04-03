@@ -56,12 +56,6 @@
           }
         },
         {
-          "type": "named",
-          "data": {
-            "name": "Intake-up"
-          }
-        },
-        {
           "type": "parallel",
           "data": {
             "commands": [
@@ -74,7 +68,7 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "pickup"
+                  "name": "IntakeP1"
                 }
               }
             ]
@@ -88,6 +82,12 @@
                 "type": "path",
                 "data": {
                   "pathName": "FSRC D4-D5"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "IntakeP2"
                 }
               }
             ]

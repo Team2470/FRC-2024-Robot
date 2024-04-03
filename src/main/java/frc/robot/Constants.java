@@ -161,7 +161,15 @@ public static class ShooterPivotConstants {
 	// Comp robot
 	// return (1848*(Math.pow(distance, -0.827)));
 	// return (2250*(Math.pow(distance, -0.869))) + 2;
-	return (1053*(Math.pow(distance, -0.708)));
+	if ((1053*(Math.pow(distance, -0.708)))+2 <= 70){
+		return (1053*(Math.pow(distance, -0.708)))+2;
+	} else if ((1053*(Math.pow(distance, -0.708)))+2 > 70) {
+		return 45.00;
+	} else if ((1053*(Math.pow(distance, -0.708)))+2 <= 0){
+		return 45.00;
+	} else {
+		return 45;
+	}
 	}
 }
 
@@ -176,7 +184,7 @@ public static class IntakePivotConstants{
 	public static final int reverseSoftLimit = 0;
 	public static final int forwardSoftLimit = 0;
 	public static final boolean encoderDirection = false;
-	public static final double encoderOffset = -133.5-119.44;
+	public static final double encoderOffset = -133.5-119.44+60;
 
 	public static final double kP = 0;
 	public static final double kI = 0;
