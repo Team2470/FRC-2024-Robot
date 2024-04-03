@@ -296,7 +296,7 @@ public class RobotContainer {
 		m_buttonPad.button(4).whileTrue(ampShoot());
 
 		m_buttonPad.button(5).whileTrue(new ParallelCommandGroup(
-			m_shooterPivot.goToAngleCommand(57.91),
+			m_shooterPivot.goToAngleCommand(()-> SmartDashboard.getNumber("Select Shooter Pivot Angle", 45.00)),
 			m_simpleFlywheelBottom.pidCommand(2300),
 			m_simpleFlywheelTop.pidCommand(2300)
 		));
