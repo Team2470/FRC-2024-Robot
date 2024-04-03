@@ -657,7 +657,7 @@ public class RobotContainer {
 				new WaitUntilCommand(()-> m_intakePivot.getAngle() > 87),
 				m_intake.test_forwardsCommand()
 			),
-			m_shooterPivot.goToAngleCommand(45),
+			// m_shooterPivot.goToAngleCommand(45),
 			m_intakePivot.stowCommand(),
 			new SequentialCommandGroup(
 				m_feeder.forward().until(()-> m_TOF1.isTOF1WithinRange()),	
