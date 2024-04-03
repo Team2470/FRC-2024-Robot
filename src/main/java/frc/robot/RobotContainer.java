@@ -158,6 +158,7 @@ public class RobotContainer {
 			put("4CNS", "4CNS");
 			put("1MMR", "1midMR");
 			put("4CEN", "4CEN");
+			put("FAR3", "FAR3");
 		}});
 
 		m_autoSelector.initialize();
@@ -207,7 +208,7 @@ public class RobotContainer {
 	* joysticks}.
 	*/
 	private void configureBindings() {
-		m_controller.rightBumper().toggleOnTrue(new ParallelCommandGroup(
+		m_controller.povRight().toggleOnTrue(new ParallelCommandGroup(
 			m_Orchestra6.playMusicCommand(),
 			// m_Orchestra6v21.playMusiCommand(),
 			// m_Orchestra6v22.playMusiCommand(),
@@ -224,9 +225,9 @@ public class RobotContainer {
 		m_buttonPad.button(6).whileTrue(m_intakePivot.deploy());
 		m_buttonPad.button(7).whileTrue(m_intakePivot.stowCommand());
 
-		m_controller.povUp().onTrue(new InstantCommand(()-> m_camera1.offset+=1));
-		m_controller.povDown().onTrue(new InstantCommand(()-> m_camera1.offset -=1));
-		m_controller.povLeft().onTrue(new InstantCommand(()-> m_camera1.offset = 0));
+		//m_controller.povUp().onTrue(new InstantCommand(()-> m_camera1.offset+=1));
+		//m_controller.povDown().onTrue(new InstantCommand(()-> m_camera1.offset -=1));
+		//m_controller.povLeft().onTrue(new InstantCommand(()-> m_camera1.offset = 0));
 		m_buttonPad.button(8).whileTrue(intakingCommand());
 		m_buttonPad.button(12).whileTrue(intakeUpCommand());
 		
@@ -280,7 +281,7 @@ public class RobotContainer {
 		m_buttonPad.button(2).whileTrue(speakerShoot());
 	//56.92836363
 		m_buttonPad.button(3).whileTrue(new ParallelCommandGroup(
-			m_shooterPivot.goToAngleCommand(48.779296875),
+			m_shooterPivot.goToAngleCommand(50),//48.779296875),
 			m_simpleFlywheelBottom.pidCommand(-1700),
 			m_simpleFlywheelTop.pidCommand(-1700),
 			m_TOF1.feederIntakeCommand(m_feeder)
@@ -370,6 +371,14 @@ public class RobotContainer {
 							return 90.0;
 						} else if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Red){
 							return 90.0;
+						}
+					}
+
+					if (m_controller.getHID().getRightBumper()) {
+						if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Blue){
+							return -60.0;
+						} else if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Red){
+							return -120.0;
 						}
 					}
 
