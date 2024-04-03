@@ -18,6 +18,7 @@ import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
@@ -270,7 +271,11 @@ public double getRoll() {
 
 public void resetHeading() {
 	// this.m_imu.setYaw(0);
-	resetOdometry(new Pose2d());
+	if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Red){
+		resetOdometry(new Pose2d(0,0,Rotation2d.fromDegrees(180)));
+	}else {
+		resetOdometry(new Pose2d());
+	}
 }
 
 /**
