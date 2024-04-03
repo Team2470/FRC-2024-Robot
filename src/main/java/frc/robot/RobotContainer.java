@@ -300,7 +300,9 @@ public class RobotContainer {
 		m_buttonPad.button(5).whileTrue(new SequentialCommandGroup(
 			new ParallelDeadlineGroup(
 				new ALignTrapShootCommand(m_drivetrain),
-				m_shooterPivot.goToAngleCommand(45)
+				m_shooterPivot.goToAngleCommand(45),
+				m_simpleFlywheelBottom.pidCommand(2300),
+				m_simpleFlywheelTop.pidCommand(2300)
 			),
 			new ParallelCommandGroup(
 				m_shooterPivot.goToAngleCommand(57.91),
@@ -388,7 +390,8 @@ public class RobotContainer {
 					//   default: return null;
 					// }
 					return null;
-				}
+				},
+				true
 			));
 
 		m_controller.start().onTrue(new InstantCommand(

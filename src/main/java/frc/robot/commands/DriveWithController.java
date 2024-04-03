@@ -33,6 +33,8 @@ private final BooleanSupplier disableXMovementSupplier;
 private final BooleanSupplier disableYMovementSupplier;
 private final Supplier<Double> visionHeadingOverrideSupplier;
 private final Supplier<Double> fieldHeadingOvverideSupplier;
+private final boolean enableInputCurve;
+
 
 // State
 private boolean fieldOrient;
@@ -68,7 +70,8 @@ public DriveWithController(
 	BooleanSupplier disableXMovementSupplier,
 	BooleanSupplier disableYMovementSupplier,
 	Supplier<Double> visionHeadingOverrideSupplier,
-	Supplier<Double> fieldHeadingOverrideSupplier) {
+	Supplier<Double> fieldHeadingOverrideSupplier,
+	boolean enableInputCurve) {
 
 	this.drive = drive;
 	this.xVelocitySupplier = xVelocitySupplier;
@@ -80,6 +83,7 @@ public DriveWithController(
 	this.disableYMovementSupplier = disableYMovementSupplier;
 	this.visionHeadingOverrideSupplier = visionHeadingOverrideSupplier;
 	this.fieldHeadingOvverideSupplier = fieldHeadingOverrideSupplier;
+	this.enableInputCurve = enableInputCurve;
 
 	addRequirements(drive);
 
@@ -143,13 +147,15 @@ public void execute() {
 	// yMove = Math.copySign(yMove * yMove, yMove);
 	rotate = Math.copySign(rotate * rotate, rotate);
 
-	Translation2d moveTranslation = new Translation2d(xMove, yMove);
-	double moveSpeed = Math.pow(moveTranslation.getNorm(), 2);
-	Rotation2d angle = moveTranslation.getAngle();
+	if(enableInputCurve){
+		Translation2d moveTranslation = new Translation2d(xMove, yMove);
+		double moveSpeed = Math.pow(moveTranslation.getNorm(), 2);
+		Rotation2d angle = moveTranslation.getAngle();
 
-	xMove = moveSpeed * angle.getCos();
-	yMove = moveSpeed * angle.getSin();
-
+		xMove = moveSpeed * angle.getCos();
+		yMove = moveSpeed * angle.getSin();
+	}
+	
 	if (slowModeSupplier.getAsBoolean()) {
 		xMove *= 0.15;
 		yMove *= 0.15;
