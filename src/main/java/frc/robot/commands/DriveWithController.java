@@ -19,7 +19,7 @@ import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 
 public class DriveWithController extends Command {
-private static final double kDeadband = 0.05;
+private static final double kDeadband = 0.115;
 
 private final Drivetrain drive;
 

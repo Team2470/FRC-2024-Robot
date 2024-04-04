@@ -35,15 +35,22 @@
           "data": {
             "commands": [
               {
-                "type": "named",
+                "type": "parallel",
                 "data": {
-                  "name": "IntakeP1"
-                }
-              },
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "FAR2'1"
+                  "commands": [
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "FAR2'1"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "IntakeP1"
+                      }
+                    }
+                  ]
                 }
               },
               {
@@ -60,15 +67,22 @@
           "data": {
             "commands": [
               {
-                "type": "path",
+                "type": "parallel",
                 "data": {
-                  "pathName": "FAR2'2"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "IntakeP2"
+                  "commands": [
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "FAR2'2"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "IntakeP2"
+                      }
+                    }
+                  ]
                 }
               },
               {
@@ -97,15 +111,22 @@
           "data": {
             "commands": [
               {
-                "type": "named",
+                "type": "parallel",
                 "data": {
-                  "name": "IntakeP1"
-                }
-              },
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "FAR2'3"
+                  "commands": [
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "FAR2'3"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "IntakeP1"
+                      }
+                    }
+                  ]
                 }
               },
               {
@@ -122,15 +143,22 @@
           "data": {
             "commands": [
               {
-                "type": "path",
+                "type": "parallel",
                 "data": {
-                  "pathName": "FAR2'4"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "IntakeP2"
+                  "commands": [
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "FAR2'4"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "IntakeP2"
+                      }
+                    }
+                  ]
                 }
               },
               {

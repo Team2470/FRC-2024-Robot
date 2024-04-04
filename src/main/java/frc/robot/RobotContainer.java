@@ -297,7 +297,8 @@ public class RobotContainer {
 		m_buttonPad.button(4).whileTrue(ampShoot());
 
 		m_buttonPad.button(5).whileTrue(new ParallelCommandGroup(
-			m_shooterPivot.goToAngleCommand(()-> SmartDashboard.getNumber("Select Shooter Pivot Angle", 45.00)),
+			// m_shooterPivot.goToAngleCommand(()-> SmartDashboard.getNumber("Select Shooter Pivot Angle", 45.00)),
+			m_shooterPivot.goToAngleCommand(57.91),
 			m_simpleFlywheelBottom.pidCommand(2300),
 			m_simpleFlywheelTop.pidCommand(2300)
 		));
@@ -685,7 +686,7 @@ public class RobotContainer {
 			),
 			// m_shooterPivot.goToAngleCommand(45),
 			new SequentialCommandGroup(
-				m_intakePivot.deploy().until(() -> m_intake.isRingIntaked() && m_intakePivot.getAngle() < 10),
+				m_intakePivot.deploy().until(() -> m_intake.isRingIntaked() && m_intakePivot.getAngle() < 1),
 				m_intakePivot.stowCommand()
 			),
 			new SequentialCommandGroup(
@@ -693,7 +694,7 @@ public class RobotContainer {
 				m_feeder.forwardPercent(0.2).until(()-> m_TOF2.isTOF2WithinRange())
 			),
 			new SequentialCommandGroup(
-				new WaitUntilCommand(() -> m_intake.isRingIntaked() && m_intakePivot.getAngle() < 10),
+				new WaitUntilCommand(() -> m_intake.isRingIntaked() && m_intakePivot.getAngle() < 1),
 				new StartEndCommand(
 					() -> m_controller.getHID().setRumble(RumbleType.kBothRumble, .3),
 					() -> m_controller.getHID().setRumble(RumbleType.kBothRumble, 0)
