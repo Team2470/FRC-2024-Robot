@@ -4,12 +4,20 @@
   "holonomicMode": true,
   "pathFolders": [
     "1710 autos",
+<<<<<<< Updated upstream
     "4AMP",
     "4SRC",
+=======
+    "1midLR",
+    "1midMR",
+    "1midRL2",
+    "1midRM2",
+>>>>>>> Stashed changes
     "7421 autos",
     "Source-Middle Autos",
     "FAR1 Autos",
     "FAR2 Autos",
+    "1midL",
     "basic autos",
     "playoff"
   ],
