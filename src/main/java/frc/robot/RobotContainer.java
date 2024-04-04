@@ -228,8 +228,9 @@ public class RobotContainer {
 		//m_controller.povUp().onTrue(new InstantCommand(()-> m_camera1.offset+=1));
 		//m_controller.povDown().onTrue(new InstantCommand(()-> m_camera1.offset -=1));
 		//m_controller.povLeft().onTrue(new InstantCommand(()-> m_camera1.offset = 0));
-		m_buttonPad.button(8).whileTrue(intakingCommand());
-		m_buttonPad.button(12).whileTrue(intakeUpCommand());
+		// m_buttonPad.button(8).whileTrue(intakingCommand());
+		// m_buttonPad.button(12).whileTrue(intakeUpCommand());
+		m_buttonPad.button(12).whileTrue(intakeCommand2());
 		
 
 		// m_buttonPad.button(11).whileTrue(new ParallelCommandGroup(
@@ -682,15 +683,15 @@ public class RobotContainer {
 			new SequentialCommandGroup(
 				m_intake.test_forwardsCommand().until(() -> m_intake.isRingIntaked() && m_intakePivot.getAngle() < 1),
 				new WaitUntilCommand(()-> m_intakePivot.getAngle() > 87),
-				m_intake.test_forwardsCommand()
+				m_intake.intakePercentCommand(4)
 			),
-			// m_shooterPivot.goToAngleCommand(45),
 			new SequentialCommandGroup(
 				m_intakePivot.deploy().until(() -> m_intake.isRingIntaked() && m_intakePivot.getAngle() < 1),
 				m_intakePivot.stowCommand()
 			),
 			new SequentialCommandGroup(
 				m_feeder.forward().until(()-> m_TOF1.isTOF1WithinRange()),	
+				m_feeder.forward().withTimeout(0.05),
 				m_feeder.forwardPercent(0.2).until(()-> m_TOF2.isTOF2WithinRange())
 			),
 			new SequentialCommandGroup(
