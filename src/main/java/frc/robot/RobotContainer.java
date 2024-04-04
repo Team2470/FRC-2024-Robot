@@ -67,6 +67,7 @@ public class RobotContainer {
 	// OI
 	private final CommandXboxController m_controller = new CommandXboxController(0);
 		private final CommandJoystick m_buttonPad = new CommandJoystick(1);
+		private final CommandXboxController m_controller2 = new CommandXboxController(2);
 	// The robot's subsystems and commands are defined here...
 	private final PhotonVisionSubsystem m_camera1 = new PhotonVisionSubsystem(VisionConstants.kFrontRightCamera);
 	private final SimpleFlywheel m_simpleFlywheelBottom = new SimpleFlywheel(FlyWheelConstants.kLeftID, true);
@@ -231,6 +232,20 @@ public class RobotContainer {
 		// m_buttonPad.button(8).whileTrue(intakingCommand());
 		// m_buttonPad.button(12).whileTrue(intakeUpCommand());
 		m_buttonPad.button(12).whileTrue(intakeCommand2());
+		m_controller2.leftTrigger().whileTrue(intakeCommand2());
+		m_controller2.rightTrigger().whileTrue(visionShootAndXStop());
+		m_controller2.povUp().whileTrue(m_intakePivot.stowCommand());
+		m_controller2.povDown().whileTrue(m_intakePivot.deploy());
+		m_controller2.leftBumper().whileTrue(m_feeder.forward());
+		m_controller2.rightBumper().whileTrue(m_intake.test_reverseCommand());
+		m_controller2.y().whileTrue(	new ParallelCommandGroup(
+			m_shooterPivot.goToAngleCommand(50),//48.779296875),
+			m_simpleFlywheelBottom.pidCommand(-1700),
+			m_simpleFlywheelTop.pidCommand(-1700),
+			m_TOF1.feederIntakeCommand(m_feeder))
+		);
+		m_controller2.b().whileTrue(ampShoot());
+
 		
 
 		// m_buttonPad.button(11).whileTrue(new ParallelCommandGroup(
@@ -281,6 +296,7 @@ public class RobotContainer {
 
 		m_buttonPad.button(2).whileTrue(speakerShoot());
 	//56.92836363
+
 		m_buttonPad.button(3).whileTrue(new ParallelCommandGroup(
 			m_shooterPivot.goToAngleCommand(50),//48.779296875),
 			m_simpleFlywheelBottom.pidCommand(-1700),
