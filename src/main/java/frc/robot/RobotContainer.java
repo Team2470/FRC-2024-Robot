@@ -21,6 +21,7 @@ import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
@@ -160,6 +161,7 @@ public class RobotContainer {
 			put("1MMR", "1midMR");
 			put("4CEN", "4CEN");
 			put("FAR3", "FAR3");
+			put("3CNS", "3CNS");
 		}});
 
 		m_autoSelector.initialize();
@@ -467,6 +469,7 @@ public class RobotContainer {
 			m_simpleFlywheelTop.pidCommand(850),//750
 
 			new SequentialCommandGroup(
+				new WaitCommand(0.05),
 				new WaitUntilCommand(() -> 
 					m_simpleFlywheelBottom.isErrorInRange() && m_simpleFlywheelTop.isErrorInRange() && m_shooterPivot.isAngleErrorInRange()),
 				m_feeder.forward()
@@ -523,6 +526,16 @@ public class RobotContainer {
 		m_drivetrain.enableBrakeMode();
 	}
 	public void robotPeriodic() {
+		SmartDashboard.putData(CommandScheduler.getInstance());
+		SmartDashboard.putData(m_ClimberLeft);
+		SmartDashboard.putData(m_ClimberRight);
+		SmartDashboard.putData(m_simpleFlywheelBottom);
+		SmartDashboard.putData(m_simpleFlywheelTop);
+		SmartDashboard.putData(m_shooterPivot);
+		SmartDashboard.putData(m_intake);
+		SmartDashboard.putData(m_intakePivot);
+		SmartDashboard.putData(m_feeder);
+		SmartDashboard.putData(m_drivetrain);
 		SmartDashboard.putNumber("Angle", ShooterPivotConstants.getAngle(m_camera1.FilteredEsimatedPoseNorm()));
 		SmartDashboard.putNumber("RPM", FlyWheelConstants.getRPM(m_camera1.FilteredEsimatedPoseNorm()));
 	}
