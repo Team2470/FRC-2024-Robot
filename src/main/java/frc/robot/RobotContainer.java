@@ -210,7 +210,7 @@ public class RobotContainer {
 	*/
 	private void configureBindings() {
 		m_controller.povRight().toggleOnTrue(new ParallelCommandGroup(
-			m_Orchestra6.playMusicCommand(),
+			// m_Orchestra6.playMusicCommand(),
 			// m_Orchestra6v21.playMusiCommand(),
 			// m_Orchestra6v22.playMusiCommand(),
 			// m_Orchestra6v23.playMusiCommand(),
@@ -698,7 +698,8 @@ public class RobotContainer {
 			),
 			new SequentialCommandGroup(
 				m_intake.test_forwardsCommand().until(() -> m_intake.isRingIntaked() && m_intakePivot.getAngle() < 1),
-				new WaitUntilCommand(()-> m_intakePivot.getAngle() > 114),
+				// new WaitUntilCommand(()-> m_intakePivot.getAngle() > 100),
+				new WaitUntilCommand(()-> m_intakePivot.getAngle() > 100),
 				m_intake.intakePercentCommand(4)
 			),
 			new SequentialCommandGroup(
