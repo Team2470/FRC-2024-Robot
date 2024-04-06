@@ -162,6 +162,7 @@ public class RobotContainer {
 			put("4CEN", "4CEN");
 			put("FAR3", "FAR3");
 			put("3CNS", "3CNS");
+			put("FARB", "FARB");
 		}});
 
 		m_autoSelector.initialize();
