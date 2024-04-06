@@ -140,28 +140,28 @@ public class RobotContainer {
 			put("2AMP", "2AMP");
 
 			//: only moves - nothing else
-			put("MOVE", "MOVE");
+			//put("MOVE", "MOVE");
 
 			//: single note autos - shoot only
 			put("1SRC", "1SRC");
-			put("1CEN", "1CEN");
-			put("1AMP", "1AMP");
+			// put("1CEN", "1CEN");
+			// put("1AMP", "1AMP");
 			
 			//: extra autos - lots of notes
-			put("FAR1", "FAR1");	
-			put("FAR2", "FAR2");
+			// put("FAR1", "FAR1");	
+			// put("FAR2", "FAR2");
 			put("4SRC", "4SRC");	
 
-			put("3SRC", "3SRC");
-			put("3CEN", "3CEN");
-			put("3AMP", "3AMP");
-			put("test", "test");
+			// put("3SRC", "3SRC");
+			// put("3CEN", "3CEN");
+			//put("3AMP", "3AMP");
+			// put("test", "test");
 			put("4CNA", "4CNA");
 			put("4CNS", "4CNS");
-			put("1MMR", "1midMR");
+			//put("1MMR", "1midMR");
 			put("4CEN", "4CEN");
 			put("FAR3", "FAR3");
-			put("3CNS", "3CNS");
+			// put("3CNS", "3CNS");
 			put("FARB", "FARB");
 		}});
 
@@ -454,7 +454,7 @@ public class RobotContainer {
 			m_simpleFlywheelTop.pidCommand(4000),
 
 			new SequentialCommandGroup(
-				new WaitCommand(0.25), //wait for setpoint to change
+				new WaitCommand(0.005), //wait for setpoint to change
 				new WaitUntilCommand(
 					() -> m_simpleFlywheelBottom.isErrorInRange() && m_simpleFlywheelTop.isErrorInRange() && m_shooterPivot.isAngleErrorInRange()),
 
