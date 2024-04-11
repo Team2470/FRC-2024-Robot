@@ -216,10 +216,10 @@ private Command openLoopCommand(double OutputVoltage) {
 
 public Command stowCommand() {
 	return new SequentialCommandGroup(
-	new InstantCommand(()-> uplimit = 90),
+	new InstantCommand(()-> uplimit = 118),
 	openLoopCommand(()-> 4).until(()->getAngle() > 60),
-	openLoopCommand(()-> 1.5).until(()-> getAngle() > 110),
-	openLoopCommand(0.3).until(()-> getAngle() > 115)
+	openLoopCommand(()-> 2).until(()-> getAngle() > 115)
+	// openLoopCommand(0.75).until(()-> getAngle() > 118)
 	);
 }
 

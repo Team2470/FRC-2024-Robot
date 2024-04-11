@@ -21,6 +21,7 @@ import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
@@ -67,6 +68,7 @@ public class RobotContainer {
 	// OI
 	private final CommandXboxController m_controller = new CommandXboxController(0);
 		private final CommandJoystick m_buttonPad = new CommandJoystick(1);
+		private final CommandXboxController m_controller2 = new CommandXboxController(2);
 	// The robot's subsystems and commands are defined here...
 	private final PhotonVisionSubsystem m_camera1 = new PhotonVisionSubsystem(VisionConstants.kFrontRightCamera);
 	private final SimpleFlywheel m_simpleFlywheelBottom = new SimpleFlywheel(FlyWheelConstants.kLeftID, true);
@@ -138,27 +140,29 @@ public class RobotContainer {
 			put("2AMP", "2AMP");
 
 			//: only moves - nothing else
-			put("MOVE", "MOVE");
+			//put("MOVE", "MOVE");
 
 			//: single note autos - shoot only
 			put("1SRC", "1SRC");
-			put("1CEN", "1CEN");
-			put("1AMP", "1AMP");
+			// put("1CEN", "1CEN");
+			// put("1AMP", "1AMP");
 			
 			//: extra autos - lots of notes
-			put("FAR1", "FAR1");	
-			put("FAR2", "FAR2");
+			// put("FAR1", "FAR1");	
+			// put("FAR2", "FAR2");
 			put("4SRC", "4SRC");	
 
-			put("3SRC", "3SRC");
-			put("3CEN", "3CEN");
-			put("3AMP", "3AMP");
-			put("test", "test");
+			// put("3SRC", "3SRC");
+			// put("3CEN", "3CEN");
+			//put("3AMP", "3AMP");
+			// put("test", "test");
 			put("4CNA", "4CNA");
 			put("4CNS", "4CNS");
-			put("1MMR", "1midMR");
+			//put("1MMR", "1midMR");
 			put("4CEN", "4CEN");
 			put("FAR3", "FAR3");
+			// put("3CNS", "3CNS");
+			put("FARB", "FARB");
 		}});
 
 		m_autoSelector.initialize();
@@ -209,7 +213,7 @@ public class RobotContainer {
 	*/
 	private void configureBindings() {
 		m_controller.povRight().toggleOnTrue(new ParallelCommandGroup(
-			m_Orchestra6.playMusicCommand(),
+			// m_Orchestra6.playMusicCommand(),
 			// m_Orchestra6v21.playMusiCommand(),
 			// m_Orchestra6v22.playMusiCommand(),
 			// m_Orchestra6v23.playMusiCommand(),
@@ -228,8 +232,23 @@ public class RobotContainer {
 		//m_controller.povUp().onTrue(new InstantCommand(()-> m_camera1.offset+=1));
 		//m_controller.povDown().onTrue(new InstantCommand(()-> m_camera1.offset -=1));
 		//m_controller.povLeft().onTrue(new InstantCommand(()-> m_camera1.offset = 0));
-		m_buttonPad.button(8).whileTrue(intakingCommand());
-		m_buttonPad.button(12).whileTrue(intakeUpCommand());
+		// m_buttonPad.button(8).whileTrue(intakingCommand());
+		// m_buttonPad.button(12).whileTrue(intakeUpCommand());
+		m_buttonPad.button(12).whileTrue(intakeCommand2());
+		m_controller2.leftTrigger().whileTrue(intakeCommand2());
+		m_controller2.rightTrigger().whileTrue(visionShootAndXStop());
+		m_controller2.povUp().whileTrue(m_intakePivot.stowCommand());
+		m_controller2.povDown().whileTrue(m_intakePivot.deploy());
+		m_controller2.leftBumper().whileTrue(m_feeder.forward());
+		m_controller2.rightBumper().whileTrue(m_intake.test_reverseCommand());
+		m_controller2.y().whileTrue(	new ParallelCommandGroup(
+			m_shooterPivot.goToAngleCommand(50),//48.779296875),
+			m_simpleFlywheelBottom.pidCommand(-1700),
+			m_simpleFlywheelTop.pidCommand(-1700),
+			m_TOF1.feederIntakeCommand(m_feeder))
+		);
+		m_controller2.b().whileTrue(ampShoot());
+
 		
 
 		// m_buttonPad.button(11).whileTrue(new ParallelCommandGroup(
@@ -280,6 +299,7 @@ public class RobotContainer {
 
 		m_buttonPad.button(2).whileTrue(speakerShoot());
 	//56.92836363
+
 		m_buttonPad.button(3).whileTrue(new ParallelCommandGroup(
 			m_shooterPivot.goToAngleCommand(50),//48.779296875),
 			m_simpleFlywheelBottom.pidCommand(-1700),
@@ -297,7 +317,8 @@ public class RobotContainer {
 		m_buttonPad.button(4).whileTrue(ampShoot());
 
 		m_buttonPad.button(5).whileTrue(new ParallelCommandGroup(
-			m_shooterPivot.goToAngleCommand(()-> SmartDashboard.getNumber("Select Shooter Pivot Angle", 45.00)),
+			// m_shooterPivot.goToAngleCommand(()-> SmartDashboard.getNumber("Select Shooter Pivot Angle", 45.00)),
+			m_shooterPivot.goToAngleCommand(57.91),
 			m_simpleFlywheelBottom.pidCommand(2300),
 			m_simpleFlywheelTop.pidCommand(2300)
 		));
@@ -433,7 +454,7 @@ public class RobotContainer {
 			m_simpleFlywheelTop.pidCommand(4000),
 
 			new SequentialCommandGroup(
-				new WaitCommand(0.25), //wait for setpoint to change
+				new WaitCommand(0.005), //wait for setpoint to change
 				new WaitUntilCommand(
 					() -> m_simpleFlywheelBottom.isErrorInRange() && m_simpleFlywheelTop.isErrorInRange() && m_shooterPivot.isAngleErrorInRange()),
 
@@ -449,6 +470,7 @@ public class RobotContainer {
 			m_simpleFlywheelTop.pidCommand(850),//750
 
 			new SequentialCommandGroup(
+				new WaitCommand(0.05),
 				new WaitUntilCommand(() -> 
 					m_simpleFlywheelBottom.isErrorInRange() && m_simpleFlywheelTop.isErrorInRange() && m_shooterPivot.isAngleErrorInRange()),
 				m_feeder.forward()
@@ -505,6 +527,16 @@ public class RobotContainer {
 		m_drivetrain.enableBrakeMode();
 	}
 	public void robotPeriodic() {
+		SmartDashboard.putData(CommandScheduler.getInstance());
+		SmartDashboard.putData(m_ClimberLeft);
+		SmartDashboard.putData(m_ClimberRight);
+		SmartDashboard.putData(m_simpleFlywheelBottom);
+		SmartDashboard.putData(m_simpleFlywheelTop);
+		SmartDashboard.putData(m_shooterPivot);
+		SmartDashboard.putData(m_intake);
+		SmartDashboard.putData(m_intakePivot);
+		SmartDashboard.putData(m_feeder);
+		SmartDashboard.putData(m_drivetrain);
 		SmartDashboard.putNumber("Angle", ShooterPivotConstants.getAngle(m_camera1.FilteredEsimatedPoseNorm()));
 		SmartDashboard.putNumber("RPM", FlyWheelConstants.getRPM(m_camera1.FilteredEsimatedPoseNorm()));
 	}
@@ -657,7 +689,7 @@ public class RobotContainer {
 				new WaitUntilCommand(()-> m_intakePivot.getAngle() > 87),
 				m_intake.test_forwardsCommand()
 			),
-			m_shooterPivot.goToAngleCommand(45),
+			// m_shooterPivot.goToAngleCommand(45),
 			m_intakePivot.stowCommand(),
 			new SequentialCommandGroup(
 				m_feeder.forward().until(()-> m_TOF1.isTOF1WithinRange()),	
@@ -680,20 +712,21 @@ public class RobotContainer {
 			),
 			new SequentialCommandGroup(
 				m_intake.test_forwardsCommand().until(() -> m_intake.isRingIntaked() && m_intakePivot.getAngle() < 1),
-				new WaitUntilCommand(()-> m_intakePivot.getAngle() > 87),
-				m_intake.test_forwardsCommand()
+				// new WaitUntilCommand(()-> m_intakePivot.getAngle() > 100),
+				new WaitUntilCommand(()-> m_intakePivot.getAngle() > 100),
+				m_intake.intakePercentCommand(4)
 			),
-			// m_shooterPivot.goToAngleCommand(45),
 			new SequentialCommandGroup(
-				m_intakePivot.deploy().until(() -> m_intake.isRingIntaked() && m_intakePivot.getAngle() < 10),
+				m_intakePivot.deploy().until(() -> m_intake.isRingIntaked() && m_intakePivot.getAngle() < 1),
 				m_intakePivot.stowCommand()
 			),
 			new SequentialCommandGroup(
 				m_feeder.forward().until(()-> m_TOF1.isTOF1WithinRange()),	
+				m_feeder.forward().withTimeout(0.05),
 				m_feeder.forwardPercent(0.2).until(()-> m_TOF2.isTOF2WithinRange())
 			),
 			new SequentialCommandGroup(
-				new WaitUntilCommand(() -> m_intake.isRingIntaked() && m_intakePivot.getAngle() < 10),
+				new WaitUntilCommand(() -> m_intake.isRingIntaked() && m_intakePivot.getAngle() < 1),
 				new StartEndCommand(
 					() -> m_controller.getHID().setRumble(RumbleType.kBothRumble, .3),
 					() -> m_controller.getHID().setRumble(RumbleType.kBothRumble, 0)
