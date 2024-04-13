@@ -71,7 +71,7 @@ public class AlignYawWithNote extends SequentialCommandGroup {
                     ()-> 0,
 
                     // Rotate Angular velocity
-                    () -> MathUtil.clamp(m_txPID.calculate(LimelightHelpers.getTX(kLimelight), 0), -1, 1),
+                    () -> m_txPID.calculate(LimelightHelpers.getTX(kLimelight), 0),
 
                     // Field Orientated
                     () -> false,

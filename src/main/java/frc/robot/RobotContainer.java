@@ -704,9 +704,12 @@ public class RobotContainer {
 	}
 
 	public Command intakingCommand(){
-		return new ParallelRaceGroup(
-			//intake roll till ring detected by right sight
+		return new ParallelDeadlineGroup(
 			m_intake.test_forwardsCommand().until(() -> m_intake.isRingIntaked()),	
+			new SequentialCommandGroup(
+					new WaitUntilCommand(()-> m_intakePivot.getAngle() < 10),
+					new AlignYawWithNote(m_drivetrain).until(()-> m_intake.isRingIntaked()
+			)),
 			m_intakePivot.deploy()			
 		);	
 	}
