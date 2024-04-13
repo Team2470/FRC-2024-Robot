@@ -14,7 +14,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.LimelightHelpers;
 import frc.robot.subsystems.Drivetrain;
 
-public class ALignTrapShootCommand extends SequentialCommandGroup {
+public class AlignYawWithNote extends SequentialCommandGroup {
 
     private final static String kLimelight = "limelight-shooter";
     private final static AprilTagFieldLayout kField = AprilTagFields.k2024Crescendo.loadAprilTagLayoutField();
@@ -25,7 +25,7 @@ public class ALignTrapShootCommand extends SequentialCommandGroup {
 
     private Double m_angle = 0.0;
 
-    public ALignTrapShootCommand(Drivetrain drive) {
+    public AlignYawWithNote(Drivetrain drive) {
         addCommands(
             // Commands.runOnce(()->m_angle = null),
             // Commands.run(()->{
@@ -68,10 +68,10 @@ public class ALignTrapShootCommand extends SequentialCommandGroup {
                     ()-> -0.25,
 
                     // Y Move Velocity - Strafe
-                    ()-> -MathUtil.clamp(m_txPID.calculate(LimelightHelpers.getTX(kLimelight), 0), -0.4, 0.4),
+                    ()-> 0.0,
 
                     // Rotate Angular velocity
-                    () ->  0.0,
+                    () -> -MathUtil.clamp(m_txPID.calculate(LimelightHelpers.getTX(kLimelight), 0), -0.4, 0.4),
 
                     // Field Orientated
                     () -> false,
