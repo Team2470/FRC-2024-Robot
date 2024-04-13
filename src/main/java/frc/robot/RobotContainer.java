@@ -11,6 +11,7 @@ import com.kennedyrobotics.hardware.misc.RevDigit;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.FollowPathCommand;
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.filter.Debouncer.DebounceType;
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -43,6 +44,8 @@ import frc.robot.Constants.FlyWheelConstants;
 import frc.robot.Constants.ShooterPivotConstants;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.Constants.ClimberConstants;
+import frc.robot.commands.ALignTrapShootCommand;
+import frc.robot.commands.AlignYawWithNote;
 import frc.robot.commands.DriveWithController;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Intake;
@@ -213,7 +216,11 @@ public class RobotContainer {
 	*/
 	private void configureBindings() {
 		m_controller.povRight().toggleOnTrue(new ParallelCommandGroup(
+<<<<<<< HEAD
 			// m_Orchestra6.playMusicCommand(),
+=======
+			m_Orchestra6.playMusicCommand(),
+>>>>>>> note-align
 			// m_Orchestra6v21.playMusiCommand(),
 			// m_Orchestra6v22.playMusiCommand(),
 			// m_Orchestra6v23.playMusiCommand(),
@@ -316,13 +323,32 @@ public class RobotContainer {
 
 		m_buttonPad.button(4).whileTrue(ampShoot());
 
+<<<<<<< HEAD
 		m_buttonPad.button(5).whileTrue(new ParallelCommandGroup(
 			// m_shooterPivot.goToAngleCommand(()-> SmartDashboard.getNumber("Select Shooter Pivot Angle", 45.00)),
 			m_shooterPivot.goToAngleCommand(57.91),
 			m_simpleFlywheelBottom.pidCommand(2300),
 			m_simpleFlywheelTop.pidCommand(2300)
 		));
+=======
+		// m_controller.rightBumper().whileTrue(new SequentialCommandGroup(
+		// 	new ParallelDeadlineGroup(
+		// 		new ALignTrapShootCommand(m_drivetrain),
+		// 		m_shooterPivot.goToAngleCommand(45)
+		// 		// m_simpleFlywheelBottom.pidCommand(2300),
+		// 		// m_simpleFlywheelTop.pidCommand(2300)
+		// 	)
+		// ));
+>>>>>>> note-align
 
+		m_controller.rightBumper().whileTrue(new SequentialCommandGroup(
+			new ParallelDeadlineGroup(
+				new AlignYawWithNote(m_drivetrain),
+				m_shooterPivot.goToAngleCommand(45)
+				// m_simpleFlywheelBottom.pidCommand(2300),
+				// m_simpleFlywheelTop.pidCommand(2300)
+			)
+		));
 		
 
 
@@ -410,7 +436,8 @@ public class RobotContainer {
 					//   default: return null;
 					// }
 					return null;
-				}
+				},
+				true
 			));
 
 		m_controller.start().onTrue(new InstantCommand(
@@ -557,10 +584,10 @@ public class RobotContainer {
 		SmartDashboard.putNumber("Select Distance", 0);
 	}
 	private void setupShooter() {
-		m_simpleFlywheelBottom.setDefaultCommand(m_simpleFlywheelBottom.pidCommand(4000));
-		m_simpleFlywheelTop.setDefaultCommand(m_simpleFlywheelTop.pidCommand(4000));
+		// m_simpleFlywheelBottom.setDefaultCommand(m_simpleFlywheelBottom.pidCommand(4000));
+		// m_simpleFlywheelTop.setDefaultCommand(m_simpleFlywheelTop.pidCommand(4000));
 		// m_shooterPivot.setDefaultCommand(m_shooterPivot.goToAngleCommand(45));
-		m_intakePivot.setDefaultCommand(m_intakePivot.stowCommand());
+		// m_intakePivot.setDefaultCommand(m_intakePivot.stowCommand());
 		m_shooterPivot.setDefaultCommand(
 			new SequentialCommandGroup(
 				new ParallelDeadlineGroup(
