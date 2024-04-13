@@ -46,6 +46,7 @@ import frc.robot.Constants.VisionConstants;
 import frc.robot.Constants.ClimberConstants;
 import frc.robot.commands.ALignTrapShootCommand;
 import frc.robot.commands.AlignYawWithNote;
+import frc.robot.commands.AlignYawWithTAG;
 import frc.robot.commands.DriveWithController;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Intake;
@@ -651,6 +652,7 @@ public class RobotContainer {
 	}
 	public Command visionShoot() {
 		return new ParallelRaceGroup(
+			new AlignYawWithTAG(m_drivetrain, m_camera1),
 			m_shooterPivot.goToAngleCommand(()-> ShooterPivotConstants.getAngle((m_camera1.FilteredEsimatedPoseNorm()))),
 			m_simpleFlywheelBottom.pidCommand(()-> FlyWheelConstants.getRPM(m_camera1.FilteredEsimatedPoseNorm())),
 			m_simpleFlywheelTop.pidCommand(()-> FlyWheelConstants.getRPM(m_camera1.FilteredEsimatedPoseNorm())),
