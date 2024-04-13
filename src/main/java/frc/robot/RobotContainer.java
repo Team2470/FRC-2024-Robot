@@ -134,6 +134,7 @@ public class RobotContainer {
 			// put("32", m_shooterPivot.goToAngleCommand(45).until(()-> m_TOF2.isTOF1WithinRange()));
 			put("idle2", idleAuto2(30.00));
 			put("coast", new InstantCommand(m_drivetrain::disableBrakeMode));
+			put("AP", autoPickUp());
 		}});
 
 		registerAutos(new HashMap<String, String>() {{
@@ -166,6 +167,7 @@ public class RobotContainer {
 			put("FAR3", "FAR3");
 			// put("3CNS", "3CNS");
 			put("FARB", "FARB");
+			put("ATST", "ATST");
 		}});
 
 		m_autoSelector.initialize();
@@ -216,11 +218,7 @@ public class RobotContainer {
 	*/
 	private void configureBindings() {
 		m_controller.povRight().toggleOnTrue(new ParallelCommandGroup(
-<<<<<<< HEAD
 			// m_Orchestra6.playMusicCommand(),
-=======
-			m_Orchestra6.playMusicCommand(),
->>>>>>> note-align
 			// m_Orchestra6v21.playMusiCommand(),
 			// m_Orchestra6v22.playMusiCommand(),
 			// m_Orchestra6v23.playMusiCommand(),
@@ -275,7 +273,7 @@ public class RobotContainer {
 		// ));
 		m_buttonPad.button(1).whileTrue(visionShootAndXStop());
    		// m_buttonPad.button(1).whileTrue(m_shooterPivot.goToAngleCommand(()-> SmartDashboard.getNumber("Select Shooter Pivot Angle", 0))); 
-		m_buttonPad.button(9).whileTrue(intakeCommand2());
+		// m_buttonPad.button(9).whileTrue(intakeCommand2());
 
 		//keep
 		// m_buttonPad.button(8).whileTrue(StageShoot());
@@ -323,14 +321,12 @@ public class RobotContainer {
 
 		m_buttonPad.button(4).whileTrue(ampShoot());
 
-<<<<<<< HEAD
 		m_buttonPad.button(5).whileTrue(new ParallelCommandGroup(
 			// m_shooterPivot.goToAngleCommand(()-> SmartDashboard.getNumber("Select Shooter Pivot Angle", 45.00)),
 			m_shooterPivot.goToAngleCommand(57.91),
 			m_simpleFlywheelBottom.pidCommand(2300),
 			m_simpleFlywheelTop.pidCommand(2300)
 		));
-=======
 		// m_controller.rightBumper().whileTrue(new SequentialCommandGroup(
 		// 	new ParallelDeadlineGroup(
 		// 		new ALignTrapShootCommand(m_drivetrain),
@@ -339,12 +335,15 @@ public class RobotContainer {
 		// 		// m_simpleFlywheelTop.pidCommand(2300)
 		// 	)
 		// ));
->>>>>>> note-align
 
-		m_controller.rightBumper().whileTrue(new SequentialCommandGroup(
+		m_buttonPad.button(9).whileTrue(new SequentialCommandGroup(
 			new ParallelDeadlineGroup(
-				new AlignYawWithNote(m_drivetrain),
-				m_shooterPivot.goToAngleCommand(45)
+				intakeCommand2(),
+				new SequentialCommandGroup(
+					new WaitUntilCommand(()-> m_intakePivot.getAngle() < 1),
+					new AlignYawWithNote(m_drivetrain).until(()-> m_intake.isRingIntaked())
+				)		
+				// m_shooterPivot.goToAngleCommand(45)
 				// m_simpleFlywheelBottom.pidCommand(2300),
 				// m_simpleFlywheelTop.pidCommand(2300)
 			)
@@ -826,5 +825,13 @@ public class RobotContainer {
 			m_simpleFlywheelBottom.pidCommand(5000),
 			m_simpleFlywheelTop.pidCommand(50)	
 		);
+	}
+	public Command autoPickUp(){
+		return new ParallelDeadlineGroup(
+				intakeCommand2(),
+				new SequentialCommandGroup(
+					new WaitUntilCommand(()-> m_intakePivot.getAngle() < 1),
+					new AlignYawWithNote(m_drivetrain).until(()-> m_intake.isRingIntaked())
+				));	
 	}
 }

@@ -13,7 +13,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Intake extends SubsystemBase {
 	private final PWMSparkMax m_intake;
-	private final Debouncer m_debouncer = new Debouncer(.05, DebounceType.kBoth);
+	private final Debouncer m_debouncer = new Debouncer(.1, DebounceType.kBoth);
 
 
 	private DigitalInput m_rightSight;

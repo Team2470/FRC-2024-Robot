@@ -65,13 +65,13 @@ public class AlignYawWithNote extends SequentialCommandGroup {
                 new DriveWithController(
                     drive,
                     // X Move Velocity - Forward
-                    ()-> -0.25,
+                    ()-> -0.2,
 
                     // Y Move Velocity - Strafe
-                    ()-> 0.0,
+                    ()-> 0,
 
                     // Rotate Angular velocity
-                    () -> -MathUtil.clamp(m_txPID.calculate(LimelightHelpers.getTX(kLimelight), 0), -0.4, 0.4),
+                    () -> MathUtil.clamp(m_txPID.calculate(LimelightHelpers.getTX(kLimelight), 0), -1, 1),
 
                     // Field Orientated
                     () -> false,
