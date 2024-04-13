@@ -65,7 +65,7 @@ public class AlignYawWithNote extends SequentialCommandGroup {
                 new DriveWithController(
                     drive,
                     // X Move Velocity - Forward
-                    ()-> -0.2,
+                    ()-> -0.4,
 
                     // Y Move Velocity - Strafe
                     ()-> 0,
