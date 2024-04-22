@@ -6,6 +6,8 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.IntakeConstants;
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.filter.Debouncer.DebounceType;
+import edu.wpi.first.wpilibj.AnalogInput;
+import edu.wpi.first.wpilibj.AnalogTrigger;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.motorcontrol.PWMSparkMax;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -13,23 +15,26 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Intake extends SubsystemBase {
 	private final PWMSparkMax m_intake;
-	private final Debouncer m_debouncer = new Debouncer(.05, DebounceType.kBoth);
+	private final Debouncer m_debouncer = new Debouncer(.1, DebounceType.kBoth);
 
 
-	private DigitalInput m_rightSight;
+	// private DigitalInput m_rightSight;
+	private final AnalogInput m_beamBreak;
+	private final AnalogTrigger m_breamBreakTrigger;
 
 	public Intake() {
 		m_intake = new PWMSparkMax(IntakeConstants.MotorID);
 
 		m_intake.setInverted(false);
 
-		m_rightSight = new DigitalInput(0);
-
-
+		m_beamBreak = new AnalogInput(0);
+		m_beamBreak.setAverageBits(2);
+		m_breamBreakTrigger = new AnalogTrigger(m_beamBreak);
+		m_breamBreakTrigger.setLimitsVoltage(1.5, 4);
 	}
 
 public boolean isRingIntaked(){
-	return m_debouncer.calculate(!m_rightSight.get());
+	return m_debouncer.calculate(!m_breamBreakTrigger.getTriggerState());
 }
 
 @Override
