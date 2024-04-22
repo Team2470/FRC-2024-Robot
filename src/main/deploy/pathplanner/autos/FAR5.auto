@@ -2,28 +2,15 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.75,
-      "y": 4.42
+      "x": 0.6988446409325251,
+      "y": 4.400478710867333
     },
-    "rotation": 120.0
+    "rotation": 121.26373169437743
   },
   "command": {
     "type": "sequential",
     "data": {
       "commands": [
-        {
-          "type": "deadline",
-          "data": {
-            "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "speaker-shoot"
-                }
-              }
-            ]
-          }
-        },
         {
           "type": "deadline",
           "data": {
@@ -35,7 +22,7 @@
                     {
                       "type": "path",
                       "data": {
-                        "pathName": "7421P1"
+                        "pathName": "FAR5'1"
                       }
                     },
                     {
@@ -45,6 +32,12 @@
                       }
                     }
                   ]
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "45Degrees"
                 }
               }
             ]
@@ -59,15 +52,15 @@
                 "data": {
                   "commands": [
                     {
-                      "type": "named",
+                      "type": "path",
                       "data": {
-                        "name": "IntakeP2"
+                        "pathName": "FAR5'2"
                       }
                     },
                     {
-                      "type": "path",
+                      "type": "named",
                       "data": {
-                        "pathName": "7421P2"
+                        "name": "IntakeP2"
                       }
                     }
                   ]
@@ -89,22 +82,65 @@
           }
         },
         {
-          "type": "sequential",
+          "type": "path",
+          "data": {
+            "pathName": "FAR5'2.5"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "IntakeP1"
+          }
+        },
+        {
+          "type": "deadline",
           "data": {
             "commands": [
               {
-                "type": "path",
+                "type": "sequential",
                 "data": {
-                  "pathName": "7421P3"
+                  "commands": [
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "FAR5'3"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "IntakeP2"
+                      }
+                    }
+                  ]
                 }
               },
               {
                 "type": "named",
                 "data": {
-                  "name": "IntakeP1"
+                  "name": "idle2"
                 }
               }
             ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "auto-shoot"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "FAR5'3.5"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "IntakeP1"
           }
         },
         {
@@ -116,15 +152,15 @@
                 "data": {
                   "commands": [
                     {
-                      "type": "named",
+                      "type": "path",
                       "data": {
-                        "name": "IntakeP2"
+                        "pathName": "FAR5'4"
                       }
                     },
                     {
-                      "type": "path",
+                      "type": "named",
                       "data": {
-                        "pathName": "7421P4"
+                        "name": "IntakeP2"
                       }
                     }
                   ]

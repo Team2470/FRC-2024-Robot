@@ -49,7 +49,7 @@
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "1midRM2",
+  "folder": null,
   "previewStartingState": {
     "rotation": -165.0,
     "velocity": 0

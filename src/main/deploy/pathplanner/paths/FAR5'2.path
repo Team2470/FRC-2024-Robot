@@ -3,40 +3,35 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.69,
-        "y": 6.88
+        "x": 7.845000194504893,
+        "y": 0.9337150205831951
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.424460020091211,
-        "y": 6.748633317086454
+        "x": 3.645442027726161,
+        "y": 1.7967750847782404
       },
       "isLocked": false,
-      "linkedName": "1midMR1.1"
+      "linkedName": null
     },
     {
       "anchor": {
-        "x": 7.8,
-        "y": 4.091222468159223
+        "x": 1.7,
+        "y": 3.964090121162699
       },
       "prevControl": {
-        "x": 3.601681437597109,
-        "y": 3.3835613617173186
+        "x": 3.69501802512377,
+        "y": 1.7786385572771146
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "midline test test"
+      "linkedName": null
     }
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.45,
-      "rotationDegrees": 175.0,
-      "rotateFast": false
-    },
-    {
-      "waypointRelativePos": 0.2,
-      "rotationDegrees": 180.0,
+      "waypointRelativePos": 0.6,
+      "rotationDegrees": 155.62584613244613,
       "rotateFast": false
     }
   ],
@@ -50,13 +45,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 180.0,
+    "rotation": 137.29061004263855,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": null,
+  "folder": "FAR2 Autos",
   "previewStartingState": {
-    "rotation": -162.47,
+    "rotation": 179.88467453684547,
     "velocity": 0
   },
   "useDefaultConstraints": true

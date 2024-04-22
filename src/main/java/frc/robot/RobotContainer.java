@@ -46,6 +46,7 @@ import frc.robot.Constants.VisionConstants;
 import frc.robot.Constants.ClimberConstants;
 import frc.robot.commands.ALignTrapShootCommand;
 import frc.robot.commands.AlignYawWithNote;
+import frc.robot.commands.AlignYawWithNoteController;
 import frc.robot.commands.AlignYawWithTAG;
 import frc.robot.commands.DriveWithController;
 import frc.robot.subsystems.Drivetrain;
@@ -140,35 +141,38 @@ public class RobotContainer {
 
 		registerAutos(new HashMap<String, String>() {{
 			//: basic autos - 2 note score
-			put("2SRC", "2SRC");
-			put("2CEN", "2CEN");
-			put("2AMP", "2AMP");
+			// put("2SRC", "2SRC");
+			// put("2CEN", "2CEN");
+			// put("2AMP", "2AMP");
 
-			//: only moves - nothing else
-			//put("MOVE", "MOVE");
+			// //: only moves - nothing else
+			// //put("MOVE", "MOVE");
 
-			//: single note autos - shoot only
-			put("1SRC", "1SRC");
-			// put("1CEN", "1CEN");
-			// put("1AMP", "1AMP");
+			// //: single note autos - shoot only
+			// put("1SRC", "1SRC");
+			// // put("1CEN", "1CEN");
+			// // put("1AMP", "1AMP");
 			
-			//: extra autos - lots of notes
-			// put("FAR1", "FAR1");	
-			// put("FAR2", "FAR2");
-			put("4SRC", "4SRC");	
+			// //: extra autos - lots of notes
+			// // put("FAR1", "FAR1");	
+			// // put("FAR2", "FAR2");
+			// put("4SRC", "4SRC");	
 
-			// put("3SRC", "3SRC");
-			// put("3CEN", "3CEN");
-			//put("3AMP", "3AMP");
-			// put("test", "test");
-			put("4CNA", "4CNA");
-			put("4CNS", "4CNS");
-			//put("1MMR", "1midMR");
-			put("4CEN", "4CEN");
-			put("FAR3", "FAR3");
-			// put("3CNS", "3CNS");
-			put("FARB", "FARB");
+			// // put("3SRC", "3SRC");
+			// // put("3CEN", "3CEN");
+			// //put("3AMP", "3AMP");
+			// // put("test", "test");
+			// put("4CNA", "4CNA");
+			// put("4CNS", "4CNS");
+			// //put("1MMR", "1midMR");
+			// put("4CEN", "4CEN");
+			// put("FAR3", "FAR3");
+			// // put("3CNS", "3CNS");
+			// put("FARB", "FARB");
 			put("ATST", "ATST");
+			put("TST1", "TST1");
+			put("FAR4", "FAR4");
+			put("3SRC", "3SRC");
 		}});
 
 		m_autoSelector.initialize();
@@ -342,7 +346,7 @@ public class RobotContainer {
 				intakeCommand2(),
 				new SequentialCommandGroup(
 					new WaitUntilCommand(()-> m_intakePivot.getAngle() < 1),
-					new AlignYawWithNote(m_drivetrain).until(()-> m_intake.isRingIntaked())
+					new AlignYawWithNoteController(m_drivetrain, m_controller)
 				)		
 				// m_shooterPivot.goToAngleCommand(45)
 				// m_simpleFlywheelBottom.pidCommand(2300),
@@ -381,7 +385,7 @@ public class RobotContainer {
 				},
 
 				// Field Orientated
-				() -> !m_controller.getHID().getAButton(),
+				() -> !m_controller.getHID().getAButton(), //|| !m_buttonPad.getHID().getRawButton(9),
 
 				// Slow Mode
 				// () -> m_controller.getHID().getXButton() || m_ClimberLeft.getMotorRotations() > 2 || m_ClimberRight.getMotorRotations() > 2,
@@ -504,6 +508,20 @@ public class RobotContainer {
 			)
 		);
 	}
+	public Command ampShoot2() {
+		return new ParallelCommandGroup(
+			m_shooterPivot.goToAngleCommand(52),//50
+			m_simpleFlywheelBottom.pidCommand(1550),//1250
+			m_simpleFlywheelTop.pidCommand(1050),//750
+
+			new SequentialCommandGroup(
+				new WaitCommand(0.05),
+				new WaitUntilCommand(() -> 
+					m_simpleFlywheelBottom.isErrorInRange() && m_simpleFlywheelTop.isErrorInRange() && m_shooterPivot.isAngleErrorInRange()),
+				m_feeder.forward()
+			)
+		);
+	}
 
 	private double angle;
 	private double rpm;
@@ -584,10 +602,10 @@ public class RobotContainer {
 		SmartDashboard.putNumber("Select Distance", 0);
 	}
 	private void setupShooter() {
-		// m_simpleFlywheelBottom.setDefaultCommand(m_simpleFlywheelBottom.pidCommand(4000));
-		// m_simpleFlywheelTop.setDefaultCommand(m_simpleFlywheelTop.pidCommand(4000));
-		// m_shooterPivot.setDefaultCommand(m_shooterPivot.goToAngleCommand(45));
-		// m_intakePivot.setDefaultCommand(m_intakePivot.stowCommand());
+		m_simpleFlywheelBottom.setDefaultCommand(m_simpleFlywheelBottom.pidCommand(4000));
+		m_simpleFlywheelTop.setDefaultCommand(m_simpleFlywheelTop.pidCommand(4000));
+		m_shooterPivot.setDefaultCommand(m_shooterPivot.goToAngleCommand(45));
+		m_intakePivot.setDefaultCommand(m_intakePivot.stowCommand());
 		m_shooterPivot.setDefaultCommand(
 			new SequentialCommandGroup(
 				new ParallelDeadlineGroup(
@@ -708,7 +726,7 @@ public class RobotContainer {
 			m_intake.test_forwardsCommand().until(() -> m_intake.isRingIntaked()),	
 			new SequentialCommandGroup(
 					new WaitUntilCommand(()-> m_intakePivot.getAngle() < 10),
-					new AlignYawWithNote(m_drivetrain).until(()-> m_intake.isRingIntaked()
+					new AlignYawWithNote(m_drivetrain, m_controller,1.5).until(()-> m_intake.isRingIntaked()
 			)),
 			m_intakePivot.deploy()			
 		);	
@@ -836,7 +854,7 @@ public class RobotContainer {
 				intakeCommand2(),
 				new SequentialCommandGroup(
 					new WaitUntilCommand(()-> m_intakePivot.getAngle() < 1),
-					new AlignYawWithNote(m_drivetrain).until(()-> m_intake.isRingIntaked())
+					new AlignYawWithNote(m_drivetrain, m_controller,3).until(()-> m_intake.isRingIntaked())
 				));	
 	}
 }

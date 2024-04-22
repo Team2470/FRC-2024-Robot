@@ -54,7 +54,7 @@
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "1midMR",
+  "folder": null,
   "previewStartingState": {
     "rotation": -162.47,
     "velocity": 0

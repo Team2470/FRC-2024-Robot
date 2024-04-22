@@ -15,7 +15,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.LimelightHelpers;
 import frc.robot.subsystems.Drivetrain;
 
-public class AlignYawWithNote extends SequentialCommandGroup {
+public class AlignYawWithNoteController extends SequentialCommandGroup {
 
     private final static String kLimelight = "limelight-shooter";
     private final static AprilTagFieldLayout kField = AprilTagFields.k2024Crescendo.loadAprilTagLayoutField();
@@ -26,7 +26,7 @@ public class AlignYawWithNote extends SequentialCommandGroup {
 
     private Double m_angle = 0.0;
 
-    public AlignYawWithNote(Drivetrain drive, CommandXboxController m_controller, double speed) {
+    public AlignYawWithNoteController(Drivetrain drive, CommandXboxController m_controller) {
         addCommands(
             // Commands.runOnce(()->m_angle = null),
             // Commands.run(()->{
@@ -66,16 +66,31 @@ public class AlignYawWithNote extends SequentialCommandGroup {
                 new DriveWithController(
                     drive,
                     // X Move Velocity - Forward
-                    ()-> -speed,
+                    ()-> -m_controller.getHID().getLeftY(),
 
                     // Y Move Velocity - Strafe
                     ()-> -m_controller.getHID().getLeftX(),
 
                     // Rotate Angular velocity
-                    () -> m_txPID.calculate(LimelightHelpers.getTX(kLimelight), 0),
+                    () -> {
+
+                        double leftTrigger = m_controller.getHID().getLeftTriggerAxis();
+                        double rightTrigger = m_controller.getHID().getRightTriggerAxis();
+    
+                        
+                    if (LimelightHelpers.getTX(kLimelight) == 0){
+                        if (leftTrigger < rightTrigger) {
+                            return -rightTrigger;
+                        } else {
+                            return leftTrigger;
+                        }   
+                    } else {
+                        return m_txPID.calculate(LimelightHelpers.getTX(kLimelight), 0);
+                    }
+                    },
 
                     // Field Orientated
-                    () -> false,
+                    () -> true,
 
                     // Slow Mode
                     () -> false,		
