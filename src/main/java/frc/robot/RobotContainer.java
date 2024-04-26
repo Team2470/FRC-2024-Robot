@@ -241,6 +241,8 @@ public class RobotContainer {
 		// m_buttonPad.button(8).whileTrue(intakingCommand());
 		// m_buttonPad.button(12).whileTrue(intakeUpCommand());
 		m_buttonPad.button(12).whileTrue(intakeCommand2());
+
+		//Bindings for Xbox Driver 2
 		m_controller2.leftTrigger().whileTrue(intakeCommand2());
 		m_controller2.rightTrigger().whileTrue(visionShootAndXStop());
 		m_controller2.povUp().whileTrue(m_intakePivot.stowCommand());
@@ -279,6 +281,7 @@ public class RobotContainer {
 		//keep
 		// m_buttonPad.button(8).whileTrue(StageShoot());
 
+		//To attempt to get a note unstuck
 		m_controller.back().whileTrue(new ParallelCommandGroup(
 			m_simpleFlywheelBottom.pidCommand(10000),
 			m_simpleFlywheelTop.pidCommand(10000)
@@ -413,6 +416,7 @@ public class RobotContainer {
 						}
 					}
 					
+					//Align to Amp
 					if (m_controller.getHID().getLeftBumper()) {
 						if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Blue){
 							return 90.0;
@@ -420,7 +424,7 @@ public class RobotContainer {
 							return 90.0;
 						}
 					}
-
+					//Align to source, need to test both sides
 					if (m_controller.getHID().getRightBumper()) {
 						if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Blue){
 							return -60.0;
@@ -450,6 +454,8 @@ public class RobotContainer {
 		// m_controller.povRight().whileTrue(new RobotTurnToAngle(m_drivetrain, 0));
 
 		// m_controller.povLeft().whileTrue(new RobotTurnToAngle(m_drivetrain, 180));
+
+		//Allow for different elements to be put into break mode while robot is disabled
 		new Trigger(() -> !m_brakeButton.get() && DriverStation.isDisabled()).whileTrue(new StartEndCommand(
 			()-> {
 				m_intakePivot.setBrakeMode(false);
@@ -524,6 +530,7 @@ public class RobotContainer {
 		rpm = m_simpleFlywheelTop.getVelocity();
 	}
 
+	//Preset numbers to shoot from the podium
 	public Command StageShoot() {
 		return new ParallelCommandGroup(
 			m_shooterPivot.goToAngleCommand(34.56),
@@ -621,6 +628,7 @@ public class RobotContainer {
 
 	private final Debouncer m_debouncer = new Debouncer(.5, DebounceType.kBoth);
 
+	//Make sure that the yaw is in range for more than a blip
 	public boolean isYawInRangeDebounced(){
 		return m_debouncer.calculate(isYawInRange());
 	}
@@ -735,7 +743,7 @@ public class RobotContainer {
 		));
 	}
 
-
+	//Includes second TOF
 	public Command intakeCommand2(){
 		return new ParallelDeadlineGroup(
 			new SequentialCommandGroup(
@@ -759,7 +767,7 @@ public class RobotContainer {
 			new SequentialCommandGroup(
 				new WaitUntilCommand(() -> m_intake.isRingIntaked() && m_intakePivot.getAngle() < 1),
 				new StartEndCommand(
-					() -> m_controller.getHID().setRumble(RumbleType.kBothRumble, .3),
+					() -> m_controller.getHID().setRumble(RumbleType.kBothRumble, .7),
 					() -> m_controller.getHID().setRumble(RumbleType.kBothRumble, 0)
 				).withTimeout(.2)
 			)
@@ -784,13 +792,13 @@ public class RobotContainer {
 				m_feeder.forward().until(()-> m_TOF1.isTOF1WithinRange()),	
 				m_feeder.forwardPercent(0.2).until(()-> m_TOF2.isTOF2WithinRange())
 			),
-			new SequentialCommandGroup(
-				new WaitUntilCommand(() -> m_intake.isRingIntaked()),
-				new StartEndCommand(
-					() -> m_controller.getHID().setRumble(RumbleType.kBothRumble, .3),
-					() -> m_controller.getHID().setRumble(RumbleType.kBothRumble, 0)
-				).withTimeout(.2)
-			),
+			// new SequentialCommandGroup(
+			// 	new WaitUntilCommand(() -> m_intake.isRingIntaked()),
+			// 	new StartEndCommand(
+			// 		() -> m_controller.getHID().setRumble(RumbleType.kBothRumble, .3),
+			// 		() -> m_controller.getHID().setRumble(RumbleType.kBothRumble, 0)
+			// 	).withTimeout(.2)
+			// ),
 			m_shooterPivot.goToAngleCommand(ShooterPivotConstants.getAngle((m_camera1.FilteredEsimatedPoseNorm())))
 		);
 	}	
