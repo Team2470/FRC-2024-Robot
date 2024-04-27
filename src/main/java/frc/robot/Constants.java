@@ -304,7 +304,7 @@ public static class AutoConstants {
 		new PIDConstants(2.0, 0, 0); // : Theta rotation,
 
 	public static final PathConstraints kPathConstraints =
-	new PathConstraints(3, 2, Constants.DriveConstants.kMaxAngularVelocityRadiansPerSecond,
+	new PathConstraints(5, 5, Constants.DriveConstants.kMaxAngularVelocityRadiansPerSecond,
 								Constants.DriveConstants.kMaxAngularVelocityRadiansPerSecond);
 }
 

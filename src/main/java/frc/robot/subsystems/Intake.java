@@ -42,10 +42,10 @@ public void periodic() {
 	SmartDashboard.putBoolean("Intake Right Sight", isRingIntaked());
 }
 public void intake() {
-	m_intake.setVoltage(8);
+	m_intake.setVoltage(6);
 }
 public void reverse_intake () {
-	m_intake.setVoltage(-8);
+	m_intake.setVoltage(-6);
 
 }
 public void intakePercet(double volt){

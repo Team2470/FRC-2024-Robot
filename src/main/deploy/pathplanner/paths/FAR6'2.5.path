@@ -3,32 +3,38 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 8.043549946749017,
-        "y": 2.53130444857381
+        "x": 5.219756621331425,
+        "y": 1.9963516290668946
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.5835594829084405,
-        "y": 3.6557691536435706
+        "x": 5.667536425981942,
+        "y": 2.0429953587179908
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Far5 2"
     },
     {
       "anchor": {
-        "x": 4.107923479004853,
-        "y": 4.943462606223458
+        "x": 3.811115985868335,
+        "y": 1.7444754889509784
       },
       "prevControl": {
-        "x": 5.404685195335304,
-        "y": 3.991294912414387
+        "x": 3.811115985868335,
+        "y": 1.7444754889509784
       },
       "nextControl": null,
       "isLocked": false,
       "linkedName": null
     }
   ],
-  "rotationTargets": [],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.35,
+      "rotationDegrees": 24.175414533432505,
+      "rotateFast": true
+    }
+  ],
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
@@ -38,14 +44,14 @@
     "maxAngularAcceleration": 720.0
   },
   "goalEndState": {
-    "velocity": 0,
-    "rotation": 170.7066914006029,
-    "rotateFast": false
+    "velocity": 2.0,
+    "rotation": 12.528807709151618,
+    "rotateFast": true
   },
   "reversed": false,
-  "folder": "7421 autos",
+  "folder": "FAR2 Autos",
   "previewStartingState": {
-    "rotation": 169.53082574228856,
+    "rotation": 151.8583987677383,
     "velocity": 0
   },
   "useDefaultConstraints": true

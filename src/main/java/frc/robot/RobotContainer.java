@@ -136,6 +136,7 @@ public class RobotContainer {
 			// put("32", m_shooterPivot.goToAngleCommand(45).until(()-> m_TOF2.isTOF1WithinRange()));
 			put("idle2", idleAuto2(30.00));
 			put("coast", new InstantCommand(m_drivetrain::disableBrakeMode));
+			put("break", new InstantCommand(m_drivetrain::enableBrakeMode));
 			put("AP", autoPickUp());
 		}});
 

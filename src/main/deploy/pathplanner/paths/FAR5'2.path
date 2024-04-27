@@ -8,24 +8,24 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.645442027726161,
-        "y": 1.7967750847782404
+        "x": 5.894371437865684,
+        "y": 1.4884541172591117
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 1.7,
-        "y": 3.964090121162699
+        "x": 5.219756621331425,
+        "y": 1.9963516290668946
       },
       "prevControl": {
-        "x": 3.69501802512377,
-        "y": 1.7786385572771146
+        "x": 6.679747085172001,
+        "y": 1.0623204627589473
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Far5 2"
     }
   ],
   "rotationTargets": [
@@ -38,14 +38,14 @@
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 3.0,
-    "maxAcceleration": 3.0,
+    "maxVelocity": 5.0,
+    "maxAcceleration": 5.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 137.29061004263855,
+    "rotation": 143.5691418798377,
     "rotateFast": false
   },
   "reversed": false,

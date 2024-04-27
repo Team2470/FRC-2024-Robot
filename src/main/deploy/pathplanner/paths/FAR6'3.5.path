@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 8.043549946749017,
-        "y": 2.53130444857381
+        "x": 3.092802549241462,
+        "y": 3.12512988662341
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.5835594829084405,
-        "y": 3.6557691536435706
+        "x": 4.174937077146882,
+        "y": 1.9403791534855799
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Far5 3"
     },
     {
       "anchor": {
-        "x": 4.107923479004853,
-        "y": 4.943462606223458
+        "x": 6.264576165515967,
+        "y": 2.0056803749971146
       },
       "prevControl": {
-        "x": 5.404685195335304,
-        "y": 3.991294912414387
+        "x": 4.501443184704551,
+        "y": 1.4366268732537475
       },
       "nextControl": null,
       "isLocked": false,
@@ -38,14 +38,14 @@
     "maxAngularAcceleration": 720.0
   },
   "goalEndState": {
-    "velocity": 0,
-    "rotation": 170.7066914006029,
-    "rotateFast": false
+    "velocity": 2.0,
+    "rotation": -169.695153531234,
+    "rotateFast": true
   },
   "reversed": false,
-  "folder": "7421 autos",
+  "folder": "FAR2 Autos",
   "previewStartingState": {
-    "rotation": 169.53082574228856,
+    "rotation": 143.48,
     "velocity": 0
   },
   "useDefaultConstraints": true

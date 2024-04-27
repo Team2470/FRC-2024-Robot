@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 0.6988446409325251,
-        "y": 4.400478710867333
+        "x": 1.4418539363394516,
+        "y": 1.6516828647692388
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.7201153966999594,
-        "y": 1.924580584348593
+        "x": 3.627305500225036,
+        "y": 1.3252253697489855
       },
       "isLocked": false,
       "linkedName": null
@@ -20,8 +20,8 @@
         "y": 1.2980205784972974
       },
       "prevControl": {
-        "x": 3.754261192732913,
-        "y": 1.9690720960389299
+        "x": 3.645442027726161,
+        "y": 1.3252253697489855
       },
       "nextControl": null,
       "isLocked": false,
@@ -38,8 +38,8 @@
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 3.0,
-    "maxAcceleration": 3.0,
+    "maxVelocity": 5.0,
+    "maxAcceleration": 5.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0
   },
@@ -51,7 +51,7 @@
   "reversed": false,
   "folder": "FAR2 Autos",
   "previewStartingState": {
-    "rotation": 120.0,
+    "rotation": 180.0,
     "velocity": 0
   },
   "useDefaultConstraints": true
