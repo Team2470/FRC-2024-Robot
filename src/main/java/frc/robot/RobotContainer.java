@@ -243,7 +243,7 @@ public class RobotContainer {
 		//m_controller.povUp().onTrue(new InstantCommand(()-> m_camera1.offset+=1));
 		//m_controller.povDown().onTrue(new InstantCommand(()-> m_camera1.offset -=1));
 		//m_controller.povLeft().onTrue(new InstantCommand(()-> m_camera1.offset = 0));
-		// m_buttonPad.button(8).whileTrue(intakingCommand());
+		m_buttonPad.button(8).whileTrue(passNote());
 		// m_buttonPad.button(12).whileTrue(intakeUpCommand());
 		m_buttonPad.button(12).whileTrue(intakeCommand2());
 		m_controller2.leftTrigger().whileTrue(intakeCommand2());
@@ -259,6 +259,7 @@ public class RobotContainer {
 			m_TOF1.feederIntakeCommand(m_feeder))
 		);
 		m_controller2.b().whileTrue(ampShoot());
+		
 
 		
 
