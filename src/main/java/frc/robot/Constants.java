@@ -261,6 +261,13 @@ public static class DriveConstants {
 	}
 	// : specific module config
 	// When calibrating the bevel gears should face to the left
+	// Module offset:
+	// 1. Set angle to 0
+	// 2. Deploy code
+	// 3. Power off robot
+	// 4. Power on Robot
+	// 5. Read current module angle from shuffle board
+	// 6. Set offset to negative of current module angle
 
 	public static ModuleConfig kFrontLeft =
 		new ModuleConfig("Front Left")
@@ -270,12 +277,21 @@ public static class DriveConstants {
 			.setOffset(-299.04+180)
 			.setTab(0, 0);
 
+	// Module 14
+	// public static ModuleConfig kFrontRight =
+	// 	new ModuleConfig("Front Right")
+	// 		.setDrivingID(14)
+	// 		.setEncoderID(14)
+	// 		.setSteeringID(14)
+	// 		.setOffset(-186.328+180)
+	// 		.setTab(0, 2);
+
 	public static ModuleConfig kFrontRight =
 		new ModuleConfig("Front Right")
-			.setDrivingID(14)
-			.setEncoderID(14)
-			.setSteeringID(14)
-			.setOffset(-186.328+180)
+			.setDrivingID(15)
+			.setEncoderID(15)
+			.setSteeringID(15)
+			.setOffset(-183.25195369544778)
 			.setTab(0, 2);
 
 	public static ModuleConfig kBackRight =
