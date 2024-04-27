@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 5.219756621331425,
-        "y": 1.9963516290668946
+        "x": 4.370840741681484,
+        "y": 2.16426905581084
       },
       "prevControl": null,
       "nextControl": {
-        "x": 5.667536425981942,
-        "y": 2.0429953587179908
+        "x": 4.818620546332001,
+        "y": 2.210912785461936
       },
       "isLocked": false,
       "linkedName": "Far5 2"
     },
     {
       "anchor": {
-        "x": 3.811115985868335,
-        "y": 1.7444754889509784
+        "x": 2.9808575980788325,
+        "y": 1.7724617267416358
       },
       "prevControl": {
-        "x": 3.811115985868335,
-        "y": 1.7444754889509784
+        "x": 2.9808575980788325,
+        "y": 1.7724617267416358
       },
       "nextControl": null,
       "isLocked": false,
@@ -38,14 +38,14 @@
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 5.0,
-    "maxAcceleration": 5.0,
+    "maxVelocity": 4.0,
+    "maxAcceleration": 3.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0
   },
   "goalEndState": {
-    "velocity": 2.0,
-    "rotation": 12.528807709151618,
+    "velocity": 1.0,
+    "rotation": 4.573921259900789,
     "rotateFast": true
   },
   "reversed": false,

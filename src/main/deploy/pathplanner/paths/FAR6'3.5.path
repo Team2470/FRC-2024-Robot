@@ -16,12 +16,12 @@
     },
     {
       "anchor": {
-        "x": 6.264576165515967,
-        "y": 2.0056803749971146
+        "x": 5.91941256609786,
+        "y": 1.7911192186020743
       },
       "prevControl": {
-        "x": 4.501443184704551,
-        "y": 1.4366268732537475
+        "x": 4.156279585286444,
+        "y": 1.7817904726718545
       },
       "nextControl": null,
       "isLocked": false,
@@ -32,15 +32,15 @@
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 5.0,
-    "maxAcceleration": 5.0,
+    "maxVelocity": 4.0,
+    "maxAcceleration": 3.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0
   },
   "goalEndState": {
-    "velocity": 2.0,
-    "rotation": -169.695153531234,
-    "rotateFast": true
+    "velocity": 1.0,
+    "rotation": -156.9295877501754,
+    "rotateFast": false
   },
   "reversed": false,
   "folder": "FAR2 Autos",

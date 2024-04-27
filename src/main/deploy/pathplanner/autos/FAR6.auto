@@ -20,30 +20,37 @@
                 "data": {
                   "commands": [
                     {
+                      "type": "named",
+                      "data": {
+                        "name": "coast"
+                      }
+                    },
+                    {
                       "type": "path",
                       "data": {
                         "pathName": "FAR6'1"
                       }
                     },
                     {
-                      "type": "named",
+                      "type": "deadline",
                       "data": {
-                        "name": "IntakeP1"
+                        "commands": [
+                          {
+                            "type": "named",
+                            "data": {
+                              "name": "IntakeP1"
+                            }
+                          },
+                          {
+                            "type": "named",
+                            "data": {
+                              "name": "break"
+                            }
+                          }
+                        ]
                       }
                     }
                   ]
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "45Degrees"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "coast"
                 }
               }
             ]
@@ -108,9 +115,22 @@
                       }
                     },
                     {
-                      "type": "named",
+                      "type": "deadline",
                       "data": {
-                        "name": "IntakeP1"
+                        "commands": [
+                          {
+                            "type": "named",
+                            "data": {
+                              "name": "IntakeP1"
+                            }
+                          },
+                          {
+                            "type": "named",
+                            "data": {
+                              "name": "break"
+                            }
+                          }
+                        ]
                       }
                     }
                   ]
@@ -130,7 +150,7 @@
           "data": {
             "commands": [
               {
-                "type": "sequential",
+                "type": "parallel",
                 "data": {
                   "commands": [
                     {
@@ -189,9 +209,22 @@
           }
         },
         {
-          "type": "named",
+          "type": "deadline",
           "data": {
-            "name": "IntakeP1"
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "IntakeP1"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "break"
+                }
+              }
+            ]
           }
         },
         {

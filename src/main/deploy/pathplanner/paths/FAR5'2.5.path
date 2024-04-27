@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 5.219756621331425,
-        "y": 1.9963516290668946
+        "x": 4.370840741681484,
+        "y": 2.16426905581084
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.367339828778542,
-        "y": 0.9807060890038839
+        "x": 3.518423949128601,
+        "y": 1.1486235157478293
       },
       "isLocked": false,
       "linkedName": "Far5 2"
@@ -32,8 +32,8 @@
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 5.0,
-    "maxAcceleration": 5.0,
+    "maxVelocity": 4.0,
+    "maxAcceleration": 3.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0
   },

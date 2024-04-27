@@ -134,7 +134,7 @@ public class RobotContainer {
 			put("IntakeP2", intakeUpCommand());
 			put("45Degrees", m_shooterPivot.goToAngleCommand(45).until(()-> m_TOF2.isTOF1WithinRange())) ;
 			// put("32", m_shooterPivot.goToAngleCommand(45).until(()-> m_TOF2.isTOF1WithinRange()));
-			put("idle2", idleAuto2(30.00));
+			put("idle2", idleAuto2(40.00));
 			put("coast", new InstantCommand(m_drivetrain::disableBrakeMode));
 			put("break", new InstantCommand(m_drivetrain::enableBrakeMode));
 			put("AP", autoPickUp());
@@ -172,7 +172,7 @@ public class RobotContainer {
 			// put("FARB", "FARB");
 			put("ATST", "ATST");
 			put("TST1", "TST1");
-			put("FAR4", "FAR4");
+			put("FAR6", "FAR6");
 			put("3SRC", "3SRC");
 		}});
 
@@ -434,6 +434,14 @@ public class RobotContainer {
 							return -120.0;
 						}
 					}
+					if (m_controller.getHID().getRightStickButton()) {
+						if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Blue){
+							return 162.0;
+						} else if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Red){
+							return 202.0+180.0
+							;
+						}
+					}
 
 
 					// switch (m_controller.getHID().getPOV())
@@ -451,7 +459,7 @@ public class RobotContainer {
 		// something with odometry? As
 		// it freaks out
 
-		m_controller.rightStick().toggleOnTrue(m_drivetrain.xStop());
+
 
 		// m_controller.povRight().whileTrue(new RobotTurnToAngle(m_drivetrain, 0));
 
@@ -728,7 +736,7 @@ public class RobotContainer {
 			m_intake.test_forwardsCommand().until(() -> m_intake.isRingIntaked()),	
 			new SequentialCommandGroup(
 					new WaitUntilCommand(()-> m_intakePivot.getAngle() < 10),
-					new AlignYawWithNote(m_drivetrain, m_controller,1.5).until(()-> m_intake.isRingIntaked()
+					new AlignYawWithNote(m_drivetrain, m_controller,0.35).until(()-> m_intake.isRingIntaked()
 			)),
 			m_intakePivot.deploy()			
 		);	
@@ -839,18 +847,12 @@ public class RobotContainer {
 	}
 	public Command idleAuto2(double angle){
 		return new ParallelCommandGroup(
-			m_shooterPivot.goToAngleCommand(angle),
+			m_shooterPivot.goToAngleCommand(27),
 			m_simpleFlywheelBottom.pidCommand(4000),
 			m_simpleFlywheelTop.pidCommand(4000)
 		);
 	}
-	public Command passNote(){
-		return new ParallelCommandGroup(
-			m_shooterPivot.goToAngleCommand(50),
-			m_simpleFlywheelBottom.pidCommand(5000),
-			m_simpleFlywheelTop.pidCommand(50)	
-		);
-	}
+	
 	public Command autoPickUp(){
 		return new ParallelDeadlineGroup(
 				intakeCommand2(),
@@ -859,4 +861,25 @@ public class RobotContainer {
 					new AlignYawWithNote(m_drivetrain, m_controller,3).until(()-> m_intake.isRingIntaked())
 				));	
 	}
+
+	public Command passNote(){
+		return new ParallelRaceGroup(
+			m_shooterPivot.goToAngleCommand(45),
+			m_simpleFlywheelBottom.pidCommand(3000),
+			m_simpleFlywheelTop.pidCommand(3000),
+			new SequentialCommandGroup(
+				new WaitCommand(0.005), //wait for setpoint to change
+				new WaitUntilCommand(() -> m_simpleFlywheelBottom.isErrorInRange() && m_simpleFlywheelTop.isErrorInRange() && m_shooterPivot.isAngleErrorInRange()),
+				new ParallelRaceGroup(
+					m_feeder.forward(),
+					new SequentialCommandGroup(
+						new WaitUntilCommand(()-> m_TOF2.isTOF1OutOfRange()),
+						new WaitCommand(0.25)
+					)
+				)
+			)
+
+		);
+		// ).until(() -> m_TOF1.isTOF1OutOfRange());
+	}	
 }
