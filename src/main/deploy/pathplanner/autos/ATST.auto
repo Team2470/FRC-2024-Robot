@@ -39,15 +39,34 @@
                 "data": {
                   "commands": [
                     {
+                      "type": "named",
+                      "data": {
+                        "name": "coast"
+                      }
+                    },
+                    {
                       "type": "path",
                       "data": {
                         "pathName": "Copy of Note 2"
                       }
                     },
                     {
-                      "type": "named",
+                      "type": "deadline",
                       "data": {
-                        "name": "AP"
+                        "commands": [
+                          {
+                            "type": "named",
+                            "data": {
+                              "name": "AP"
+                            }
+                          },
+                          {
+                            "type": "named",
+                            "data": {
+                              "name": "break"
+                            }
+                          }
+                        ]
                       }
                     }
                   ]
@@ -82,6 +101,12 @@
                 "type": "sequential",
                 "data": {
                   "commands": [
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "coast"
+                      }
+                    },
                     {
                       "type": "path",
                       "data": {
@@ -89,9 +114,22 @@
                       }
                     },
                     {
-                      "type": "named",
+                      "type": "deadline",
                       "data": {
-                        "name": "AP"
+                        "commands": [
+                          {
+                            "type": "named",
+                            "data": {
+                              "name": "AP"
+                            }
+                          },
+                          {
+                            "type": "named",
+                            "data": {
+                              "name": "break"
+                            }
+                          }
+                        ]
                       }
                     }
                   ]
@@ -127,15 +165,34 @@
                 "data": {
                   "commands": [
                     {
+                      "type": "named",
+                      "data": {
+                        "name": "coast"
+                      }
+                    },
+                    {
                       "type": "path",
                       "data": {
                         "pathName": "Copy of Note 4"
                       }
                     },
                     {
-                      "type": "named",
+                      "type": "deadline",
                       "data": {
-                        "name": "AP"
+                        "commands": [
+                          {
+                            "type": "named",
+                            "data": {
+                              "name": "AP"
+                            }
+                          },
+                          {
+                            "type": "named",
+                            "data": {
+                              "name": "break"
+                            }
+                          }
+                        ]
                       }
                     }
                   ]

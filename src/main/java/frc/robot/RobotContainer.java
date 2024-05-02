@@ -857,8 +857,8 @@ public class RobotContainer {
 		return new ParallelDeadlineGroup(
 				intakeCommand2(),
 				new SequentialCommandGroup(
-					new WaitUntilCommand(()-> m_intakePivot.getAngle() < 1),
-					new AlignYawWithNote(m_drivetrain, m_controller,3).until(()-> m_intake.isRingIntaked())
+					new WaitUntilCommand(()-> m_intakePivot.getAngle() < 10),
+					new AlignYawWithNote(m_drivetrain, m_controller,0.35).until(()-> m_intake.isRingIntaked())
 				));	
 	}
 
