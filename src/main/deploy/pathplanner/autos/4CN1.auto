@@ -18,12 +18,6 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "speaker-shoot"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
                   "name": "deploy-intake"
                 }
               }
@@ -39,15 +33,15 @@
                 "data": {
                   "commands": [
                     {
-                      "type": "named",
-                      "data": {
-                        "name": "coast"
-                      }
-                    },
-                    {
                       "type": "path",
                       "data": {
                         "pathName": "Copy of Copy of Note 2"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "auto-shoot"
                       }
                     },
                     {
@@ -59,23 +53,11 @@
                             "data": {
                               "name": "AP"
                             }
-                          },
-                          {
-                            "type": "named",
-                            "data": {
-                              "name": "break"
-                            }
                           }
                         ]
                       }
                     }
                   ]
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "idle"
                 }
               }
             ]

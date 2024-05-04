@@ -121,6 +121,7 @@ public class RobotContainer {
 
 		NamedCommands.registerCommands(new HashMap<String, Command>() {{
 			put("speaker-shoot", speakerShoot());
+			put("speaker-shoot2", speakerShoot2());
 			put("auto-shoot", new ParallelDeadlineGroup(
 				autoShoot(), m_intakePivot.stowCommand()
 			));
@@ -505,6 +506,24 @@ public class RobotContainer {
 		).until(()-> m_TOF2.isTOF1OutOfRange());
 	}
 
+	public Command speakerShoot2() {
+		return new ParallelCommandGroup(
+			m_shooterPivot.goToAngleCommand(59.92836363),
+			m_simpleFlywheelBottom.pidCommand(3000),
+			m_simpleFlywheelTop.pidCommand(3000),
+
+			new SequentialCommandGroup(
+				new WaitCommand(0.005), //wait for setpoint to change
+				new WaitUntilCommand(
+					() -> m_simpleFlywheelBottom.isErrorInRange() && m_simpleFlywheelTop.isErrorInRange() && m_shooterPivot.isAngleErrorInRange()),
+
+				m_feeder.forward()
+			)
+		).until(()-> m_TOF2.isTOF1OutOfRange());
+	}
+
+	
+
 	public Command ampShoot() {
 		return new ParallelCommandGroup(
 			m_shooterPivot.goToAngleCommand(52),//50
@@ -519,6 +538,8 @@ public class RobotContainer {
 			)
 		);
 	}
+
+	
 	public Command ampShoot2() {
 		return new ParallelCommandGroup(
 			m_shooterPivot.goToAngleCommand(52),//50
@@ -646,7 +667,7 @@ public class RobotContainer {
 	//
 
 	public boolean isYawInRange(){
-		return (m_camera1.getRobotYaw() < 2.5 && m_camera1.getRobotYaw() > -2.5);
+		return (m_camera1.getRobotYaw() < 4 && m_camera1.getRobotYaw() > -4);
 	}
 
 	private final Debouncer m_debouncer = new Debouncer(.5, DebounceType.kBoth);
