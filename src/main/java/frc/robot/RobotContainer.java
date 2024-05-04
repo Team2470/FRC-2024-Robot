@@ -173,6 +173,7 @@ public class RobotContainer {
 			put("TST1", "TST1");
 			put("FAR6", "FAR6");
 			put("3SRC", "3SRC");
+			put("4CN1", "4CN1");
 		}});
 
 		m_autoSelector.initialize();
@@ -427,14 +428,14 @@ public class RobotContainer {
 						}
 					}
 
-					if (m_controller.getHID().getRightBumper()) {
+					if (m_controller.getHID().getRightStickButton()) {
 						if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Blue){
 							return -60.0;
 						} else if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Red){
 							return -120.0;
 						}
 					}
-					if (m_controller.getHID().getRightStickButton()) {
+					if (m_controller.getHID().getRightBumper()) {
 						if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Blue){
 							return 162.0;
 						} else if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Red){
@@ -859,8 +860,8 @@ public class RobotContainer {
 		return new ParallelDeadlineGroup(
 				intakeCommand2(),
 				new SequentialCommandGroup(
-					new WaitUntilCommand(()-> m_intakePivot.getAngle() < 10),
-					new AlignYawWithNote(m_drivetrain, m_controller,0.35).until(()-> m_intake.isRingIntaked())
+					new WaitUntilCommand(()-> m_intakePivot.getAngle() < 30),
+					new AlignYawWithNote(m_drivetrain, m_controller,0.45).until(()-> m_intake.isRingIntaked())
 				));	
 	}
 
