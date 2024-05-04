@@ -88,12 +88,6 @@
           }
         },
         {
-          "type": "named",
-          "data": {
-            "name": "deploy-intake"
-          }
-        },
-        {
           "type": "deadline",
           "data": {
             "commands": [
@@ -101,12 +95,6 @@
                 "type": "sequential",
                 "data": {
                   "commands": [
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "coast"
-                      }
-                    },
                     {
                       "type": "path",
                       "data": {
@@ -164,12 +152,6 @@
                 "type": "sequential",
                 "data": {
                   "commands": [
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "coast"
-                      }
-                    },
                     {
                       "type": "path",
                       "data": {

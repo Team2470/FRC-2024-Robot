@@ -46,7 +46,6 @@ import frc.robot.Constants.VisionConstants;
 import frc.robot.Constants.ClimberConstants;
 import frc.robot.commands.ALignTrapShootCommand;
 import frc.robot.commands.AlignYawWithNote;
-import frc.robot.commands.AlignYawWithNoteController;
 import frc.robot.commands.AlignYawWithTAG;
 import frc.robot.commands.DriveWithController;
 import frc.robot.subsystems.Drivetrain;
@@ -134,7 +133,7 @@ public class RobotContainer {
 			put("IntakeP2", intakeUpCommand());
 			put("45Degrees", m_shooterPivot.goToAngleCommand(45).until(()-> m_TOF2.isTOF1WithinRange())) ;
 			// put("32", m_shooterPivot.goToAngleCommand(45).until(()-> m_TOF2.isTOF1WithinRange()));
-			put("idle2", idleAuto2(40.00));
+			put("idle2", idleAuto2(27.00));
 			put("coast", new InstantCommand(m_drivetrain::disableBrakeMode));
 			put("break", new InstantCommand(m_drivetrain::enableBrakeMode));
 			put("AP", autoPickUp());
@@ -245,7 +244,7 @@ public class RobotContainer {
 		//m_controller.povLeft().onTrue(new InstantCommand(()-> m_camera1.offset = 0));
 		m_buttonPad.button(8).whileTrue(passNote());
 		// m_buttonPad.button(12).whileTrue(intakeUpCommand());
-		m_buttonPad.button(12).whileTrue(intakeCommand2());
+		// m_buttonPad.button(12).whileTrue(intakeCommand2());
 		m_controller2.leftTrigger().whileTrue(intakeCommand2());
 		m_controller2.rightTrigger().whileTrue(visionShootAndXStop());
 		m_controller2.povUp().whileTrue(m_intakePivot.stowCommand());
@@ -280,7 +279,7 @@ public class RobotContainer {
 		// ));
 		m_buttonPad.button(1).whileTrue(visionShootAndXStop());
    		// m_buttonPad.button(1).whileTrue(m_shooterPivot.goToAngleCommand(()-> SmartDashboard.getNumber("Select Shooter Pivot Angle", 0))); 
-		// m_buttonPad.button(9).whileTrue(intakeCommand2());
+		m_buttonPad.button(9).whileTrue(intakeCommand2());
 
 		//keep
 		// m_buttonPad.button(8).whileTrue(StageShoot());
@@ -327,6 +326,7 @@ public class RobotContainer {
 		// ));
 
 		m_buttonPad.button(4).whileTrue(ampShoot());
+		m_buttonPad.button(12).whileTrue(ampShoot2());
 
 		m_buttonPad.button(5).whileTrue(new ParallelCommandGroup(
 			// m_shooterPivot.goToAngleCommand(()-> SmartDashboard.getNumber("Select Shooter Pivot Angle", 45.00)),
@@ -343,18 +343,18 @@ public class RobotContainer {
 		// 	)
 		// ));
 
-		m_buttonPad.button(9).whileTrue(new SequentialCommandGroup(
-			new ParallelDeadlineGroup(
-				intakeCommand2(),
-				new SequentialCommandGroup(
-					new WaitUntilCommand(()-> m_intakePivot.getAngle() < 1),
-					new AlignYawWithNoteController(m_drivetrain, m_controller)
-				)		
-				// m_shooterPivot.goToAngleCommand(45)
-				// m_simpleFlywheelBottom.pidCommand(2300),
-				// m_simpleFlywheelTop.pidCommand(2300)
-			)
-		));
+		// m_buttonPad.button(9).whileTrue(new SequentialCommandGroup(
+		// 	new ParallelDeadlineGroup(
+		// 		intakeCommand2(),
+		// 		new SequentialCommandGroup(
+		// 			new WaitUntilCommand(()-> m_intakePivot.getAngle() < 1),
+		// 			new AlignYawWithNoteController(m_drivetrain, m_controller)
+		// 		)		
+		// 		// m_shooterPivot.goToAngleCommand(45)
+		// 		// m_simpleFlywheelBottom.pidCommand(2300),
+		// 		// m_simpleFlywheelTop.pidCommand(2300)
+		// 	)
+		// ));
 		
 
 
@@ -594,6 +594,7 @@ public class RobotContainer {
 		SmartDashboard.putData(m_drivetrain);
 		SmartDashboard.putNumber("Angle", ShooterPivotConstants.getAngle(m_camera1.FilteredEsimatedPoseNorm()));
 		SmartDashboard.putNumber("RPM", FlyWheelConstants.getRPM(m_camera1.FilteredEsimatedPoseNorm()));
+		SmartDashboard.putBoolean("isYaw", isYawInRangeDebounced());
 	}
 	public void disabledPeriodic() {
 		m_drivetrain.resetSteerEncoders();
@@ -687,6 +688,7 @@ public class RobotContainer {
 			// m_simpleFlywheelLeft.feederShooterCommand(m_SimpleShooterFeeder)
 			new SequentialCommandGroup(
 				new WaitCommand(0.005), //wait for setpoint to change
+				new WaitUntilCommand(()-> isYawInRangeDebounced()), 
 				new WaitUntilCommand(() -> 
 					m_simpleFlywheelBottom.isErrorInRange() && m_simpleFlywheelTop.isErrorInRange() && m_shooterPivot.isAngleErrorInRange()),
 
@@ -770,13 +772,13 @@ public class RobotContainer {
 				new WaitUntilCommand((() -> m_TOF2.isTOF1WithinRange()))
 			),
 			new SequentialCommandGroup(
-				m_intake.test_forwardsCommand().until(() -> m_intake.isRingIntaked() && m_intakePivot.getAngle() < 1),
+				m_intake.test_forwardsCommand().until(() -> m_intake.isRingIntaked() && m_intakePivot.getAngle() < 10),
 				// new WaitUntilCommand(()-> m_intakePivot.getAngle() > 100),
 				new WaitUntilCommand(()-> m_intakePivot.getAngle() > 100),
 				m_intake.intakePercentCommand(4)
 			),
 			new SequentialCommandGroup(
-				m_intakePivot.deploy().until(() -> m_intake.isRingIntaked() && m_intakePivot.getAngle() < 1),
+				m_intakePivot.deploy().until(() -> m_intake.isRingIntaked() && m_intakePivot.getAngle() < 10),
 				m_intakePivot.stowCommand()
 			),
 			new SequentialCommandGroup(
@@ -785,7 +787,7 @@ public class RobotContainer {
 				m_feeder.forwardPercent(0.2).until(()-> m_TOF2.isTOF2WithinRange())
 			),
 			new SequentialCommandGroup(
-				new WaitUntilCommand(() -> m_intake.isRingIntaked() && m_intakePivot.getAngle() < 1),
+				new WaitUntilCommand(() -> m_intake.isRingIntaked() && m_intakePivot.getAngle() < 10),
 				new StartEndCommand(
 					() -> m_controller.getHID().setRumble(RumbleType.kBothRumble, .3),
 					() -> m_controller.getHID().setRumble(RumbleType.kBothRumble, 0)
