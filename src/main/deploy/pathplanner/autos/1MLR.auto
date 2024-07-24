@@ -56,9 +56,22 @@
           }
         },
         {
-          "type": "named",
+          "type": "parallel",
           "data": {
-            "name": "deploy-intake"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "1midLR2"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "IntakeP1"
+                }
+              }
+            ]
           }
         },
         {
@@ -68,59 +81,16 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Copy of 1midRM2.2"
+                  "pathName": "1midLR3"
                 }
               },
               {
                 "type": "named",
                 "data": {
-                  "name": "pickup"
+                  "name": "IntakeP1"
                 }
               }
             ]
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "auto-shoot"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "deploy-intake"
-          }
-        },
-        {
-          "type": "parallel",
-          "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "Copy of 1midRM2.3"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "pickup"
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "auto-shoot"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "deploy-intake"
           }
         },
         {
@@ -136,22 +106,10 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "pickup"
+                  "name": "IntakeP1"
                 }
               }
             ]
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "auto-shoot"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "deploy-intake"
           }
         },
         {
@@ -167,7 +125,7 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "pickup"
+                  "name": "IntakeP2"
                 }
               }
             ]

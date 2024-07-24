@@ -3,40 +3,35 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.69,
-        "y": 6.88
+        "x": 4.4799282391357576,
+        "y": 4.844224463223702
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.424460020091211,
-        "y": 6.748633317086454
+        "x": 4.97668066121203,
+        "y": 5.159729379947821
       },
       "isLocked": false,
-      "linkedName": "1midMR1.1"
+      "linkedName": "1midMR5.1 End"
     },
     {
       "anchor": {
         "x": 7.8,
-        "y": 4.091222468159223
+        "y": 7.44
       },
       "prevControl": {
-        "x": 3.601681437597109,
-        "y": 3.3835613617173186
+        "x": 7.0955041910083825,
+        "y": 7.4677963641641565
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "midline test test"
+      "linkedName": null
     }
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.45,
-      "rotationDegrees": 175.0,
-      "rotateFast": false
-    },
-    {
-      "waypointRelativePos": 0.2,
-      "rotationDegrees": 180.0,
+      "waypointRelativePos": 0.8,
+      "rotationDegrees": -175.0,
       "rotateFast": false
     }
   ],
@@ -56,7 +51,7 @@
   "reversed": false,
   "folder": "1midLR",
   "previewStartingState": {
-    "rotation": -162.47,
+    "rotation": -165.0,
     "velocity": 0
   },
   "useDefaultConstraints": true
