@@ -18,7 +18,7 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "speaker-shoot"
+                  "name": "speaker-shoot2"
                 }
               },
               {
@@ -39,15 +39,34 @@
                 "data": {
                   "commands": [
                     {
+                      "type": "named",
+                      "data": {
+                        "name": "coast"
+                      }
+                    },
+                    {
                       "type": "path",
                       "data": {
                         "pathName": "Copy of Note 2"
                       }
                     },
                     {
-                      "type": "named",
+                      "type": "deadline",
                       "data": {
-                        "name": "AP"
+                        "commands": [
+                          {
+                            "type": "named",
+                            "data": {
+                              "name": "AP"
+                            }
+                          },
+                          {
+                            "type": "named",
+                            "data": {
+                              "name": "break"
+                            }
+                          }
+                        ]
                       }
                     }
                   ]
@@ -69,12 +88,6 @@
           }
         },
         {
-          "type": "named",
-          "data": {
-            "name": "deploy-intake"
-          }
-        },
-        {
           "type": "deadline",
           "data": {
             "commands": [
@@ -89,9 +102,22 @@
                       }
                     },
                     {
-                      "type": "named",
+                      "type": "deadline",
                       "data": {
-                        "name": "AP"
+                        "commands": [
+                          {
+                            "type": "named",
+                            "data": {
+                              "name": "AP"
+                            }
+                          },
+                          {
+                            "type": "named",
+                            "data": {
+                              "name": "break"
+                            }
+                          }
+                        ]
                       }
                     }
                   ]
@@ -133,9 +159,22 @@
                       }
                     },
                     {
-                      "type": "named",
+                      "type": "deadline",
                       "data": {
-                        "name": "AP"
+                        "commands": [
+                          {
+                            "type": "named",
+                            "data": {
+                              "name": "AP"
+                            }
+                          },
+                          {
+                            "type": "named",
+                            "data": {
+                              "name": "break"
+                            }
+                          }
+                        ]
                       }
                     }
                   ]

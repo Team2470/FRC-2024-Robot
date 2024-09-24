@@ -1,0 +1,63 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 2.1038371901305206,
+        "y": 1.4612493260074246
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 2.78495393354423,
+        "y": 2.2762140069734693
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 3.092802549241462,
+        "y": 3.12512988662341
+      },
+      "prevControl": {
+        "x": 2.8502551550557644,
+        "y": 2.406816449996536
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "Far5 3"
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.6,
+      "rotationDegrees": -179.37946599899215,
+      "rotateFast": true
+    },
+    {
+      "waypointRelativePos": 0.3,
+      "rotationDegrees": -163.13724187912896,
+      "rotateFast": false
+    }
+  ],
+  "constraintZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 4.0,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 145.49147701233161,
+    "rotateFast": false
+  },
+  "reversed": false,
+  "folder": "FAR2 Autos",
+  "previewStartingState": {
+    "rotation": -37.04247477308282,
+    "velocity": 0
+  },
+  "useDefaultConstraints": true
+}

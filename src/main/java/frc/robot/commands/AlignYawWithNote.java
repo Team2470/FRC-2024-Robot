@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.LimelightHelpers;
 import frc.robot.subsystems.Drivetrain;
 
@@ -19,13 +20,13 @@ public class AlignYawWithNote extends SequentialCommandGroup {
     private final static String kLimelight = "limelight-shooter";
     private final static AprilTagFieldLayout kField = AprilTagFields.k2024Crescendo.loadAprilTagLayoutField();
 
-    private final PIDController m_txPID = new PIDController(0.025, 0, 0);
+    private final PIDController m_txPID = new PIDController(0.035, 0, 0);
     private final PIDController m_tyPID = new PIDController(0.025,0,0);
 
 
     private Double m_angle = 0.0;
 
-    public AlignYawWithNote(Drivetrain drive) {
+    public AlignYawWithNote(Drivetrain drive, CommandXboxController m_controller, double speed) {
         addCommands(
             // Commands.runOnce(()->m_angle = null),
             // Commands.run(()->{
@@ -65,10 +66,10 @@ public class AlignYawWithNote extends SequentialCommandGroup {
                 new DriveWithController(
                     drive,
                     // X Move Velocity - Forward
-                    ()-> -0.4,
+                    ()-> -speed,
 
                     // Y Move Velocity - Strafe
-                    ()-> 0,
+                    ()-> -m_controller.getHID().getLeftX(),
 
                     // Rotate Angular velocity
                     () -> m_txPID.calculate(LimelightHelpers.getTX(kLimelight), 0),

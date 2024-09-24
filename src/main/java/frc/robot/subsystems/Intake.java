@@ -15,7 +15,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Intake extends SubsystemBase {
 	private final PWMSparkMax m_intake;
-	private final Debouncer m_debouncer = new Debouncer(.1, DebounceType.kBoth);
+	private final Debouncer m_debouncer = new Debouncer(0.0, DebounceType.kBoth);
 
 
 	// private DigitalInput m_rightSight;
@@ -42,10 +42,10 @@ public void periodic() {
 	SmartDashboard.putBoolean("Intake Right Sight", isRingIntaked());
 }
 public void intake() {
-	m_intake.setVoltage(8);
+	m_intake.setVoltage(4);
 }
 public void reverse_intake () {
-	m_intake.setVoltage(-8);
+	m_intake.setVoltage(-6);
 
 }
 public void intakePercet(double volt){
