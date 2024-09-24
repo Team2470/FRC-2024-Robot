@@ -503,7 +503,7 @@ public class RobotContainer {
 
 				m_feeder.forward()
 			)
-		).until(()-> m_TOF2.isTOF1OutOfRange());
+		).until(()-> m_TOF2.isTOF2OutOfRange());
 	}
 
 	public Command speakerShoot2() {
@@ -519,7 +519,7 @@ public class RobotContainer {
 
 				m_feeder.forward()
 			)
-		).until(()-> m_TOF2.isTOF1OutOfRange());
+		).until(()-> m_TOF2.isTOF2OutOfRange());
 	}
 
 	
@@ -718,7 +718,7 @@ public class RobotContainer {
 						m_feeder.forward(),
 						m_intake.test_forwardsCommand(),
 						new SequentialCommandGroup(
-							new WaitUntilCommand(()-> m_TOF2.isTOF1OutOfRange() && m_TOF1.isTOF1OutOfRange())
+							new WaitUntilCommand(()-> m_TOF2.isTOF2OutOfRange() && m_TOF1.isTOF1OutOfRange())
 							// new WaitCommand(0.25)
 						)
 					)

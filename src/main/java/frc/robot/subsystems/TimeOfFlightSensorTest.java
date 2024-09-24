@@ -69,12 +69,12 @@ public class TimeOfFlightSensorTest extends SubsystemBase {
 	}
 
 	public boolean isTOF1OutOfRange(){
-		return (this.getRange_TOF1() > 300);
+		return (this.getRange_TOF1() > 350);
 	}
-	// public boolean isTOF2WithinRange() {
-	//     return (this.getRange_TOF2() < 200);
+	public boolean isTOF2OutOfRange() {
+	    return (this.getRange_TOF1() > 200);
 
-	// }
+	}
 
 	public double variableVoltage(){
 		double range = this.getRange_TOF1();
